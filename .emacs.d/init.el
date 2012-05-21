@@ -29,6 +29,12 @@
   ;; ツールバーを表示しない
   (if (eq tool-bar-mode t)
       (tool-bar-mode nil))
+
+  ;; 配色設定
+  (set-background-color "#efefdf");background
+  (set-foreground-color "#202041");foreground
+  (set-cursor-color "#202041");cursor
+
   ;; VL Gothic
   (set-default-font "VL Gothic-8")
   (set-fontset-font (frame-parameter nil 'font)
@@ -169,6 +175,19 @@
 
 ;; gtags
 (autoload 'gtags-mode "gtags" "" t)
+(setq gtags-mode-hook
+  '(lambda ()
+        (define-key gtags-mode-map "\eh" 'gtags-display-browser)
+        (define-key gtags-mode-map "\C-]" 'gtags-find-tag-from-here)
+        (define-key gtags-mode-map "\C-t" 'gtags-pop-stack)
+        (define-key gtags-mode-map "\el" 'gtags-find-file)
+;;        (define-key gtags-mode-map "\eg" 'gtags-find-with-grep)
+;;        (define-key gtags-mode-map "\eI" 'gtags-find-with-idutils)
+        (define-key gtags-mode-map "\es" 'gtags-find-symbol)
+        (define-key gtags-mode-map "\er" 'gtags-find-rtag)
+        (define-key gtags-mode-map "\et" 'gtags-find-tag)
+;        (define-key gtags-mode-map "\ev" 'gtags-visit-rootdir)
+        ))
 (add-hook 'c-mode-common-hook
           '(lambda ()
              (progn
