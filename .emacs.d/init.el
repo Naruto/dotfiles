@@ -154,6 +154,7 @@
 ;; skk
 (when (require 'skk-autoloads nil t)
   (define-key global-map (kbd "C-x C-j") 'skk-mode)
+  (define-key global-map (kbd "C-x j") 'skk-mode)
   (setq skk-dcomp-activate t)
   (setq skk-large-jisyo "~/.emacs.d/share/skk/SKK-JISYO.L")
   ;(setq skk-server-host "HOST")
