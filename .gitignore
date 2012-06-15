@@ -4,3 +4,4 @@
 .emacs.d/auto-save-list/*
 .emacs.d/undohist/*
 .emacs.d/elisp/wget-log
+.emacs.d/elpa
