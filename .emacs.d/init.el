@@ -99,11 +99,12 @@
   (global-set-key (kbd "C-'") 'redo))
 
 ;; ELPA 用 package.el
-(when (require 'package nil t)
-  (add-to-list 'package-archives
-	       '("marmalade" . "http://marmalade-repo.org/packages/"))
-  (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
-  (package-initialize))
+(when (<= emacs-major-version 23)
+  (when (require 'package nil t)
+    (add-to-list 'package-archives
+                 '("marmalade" . "http://marmalade-repo.org/packages/"))
+    (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
+    (package-initialize)))
 
 ;; auto-complete mode
 (when (require 'auto-complete-config nil t)
