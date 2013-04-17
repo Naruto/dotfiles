@@ -30,6 +30,8 @@
   (if (eq tool-bar-mode t)
       (tool-bar-mode nil))
 
+  (require 'xclip)
+
   ;; 配色設定
   (set-background-color "#efefdf");background
   (set-foreground-color "#202041");foreground
@@ -95,8 +97,8 @@
   (auto-install-compatibility-setup))
 
 ;; redo+
-(when (require 'redo+ nil t)
-  (global-set-key (kbd "C-'") 'redo))
+;(when (require 'redo+ nil t)
+;  (global-set-key (kbd "C-'") 'redo))
 
 ;; ELPA 用 package.el
 (when (<= emacs-major-version 23)
@@ -167,12 +169,20 @@
   ;; e17-c-style
   (c-add-style "e"
                '("gnu"
-                 (c-offsets-alsit . ((defun-block-intro . 3)
-                                     (statement-block-intro . 3)
-                                     (case-label . 1)
-                                     (statement-case-intro . 3)))))
+                 (show-trailing-whitespace t)
+                 (indent-tabs-mode . nil)
+                 (tab-width . 8)
+                 (c-offsets-alist .
+                                  ((defun-block-intro . 3)
+                                   (statement-block-intro . 3)
+                                   (case-label . 1)
+                                   (statement-case-intro . 3)
+                                   (inclass . 3)
+                                   ))))
   ;; インデントスタイルを e style をデフォルトに
-  (setq c-default-style "e")
+  (setq c-default-style
+        '((c-mode . "e")
+          (c++-mode . "e")))
   )
 
 ;; gtags
@@ -205,4 +215,6 @@
 ;;; window mode               
 (windmove-default-keybindings)
 (setq windmove-wrap-around t) 
+
+(require 'rust-mode)
 
