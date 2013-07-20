@@ -216,7 +216,7 @@
 (windmove-default-keybindings)
 (setq windmove-wrap-around t) 
 
-(require 'rust-mode)
+; (require 'rust-mode)
 
 ;; markdown mode
 (autoload 'markdown-mode "markdown-mode"
