@@ -242,3 +242,14 @@ elif compctl &>/dev/null; then
   }
   compctl -K _npm_completion npm
 fi
+export PATH=/home/naruto/bin:$PATH
+
+
+
+
+
+
+
+
+
+
