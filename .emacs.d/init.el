@@ -225,3 +225,17 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
+;; migemo
+;; http://qiita.com/catatsuy/items/c5fa34ead92d496b8a51
+(when (and (executable-find "cmigemo")
+           (require 'migemo nil t))
+  (setq migemo-options '("-q" "--emacs"))
+
+  (setq migemo-user-dictionary nil)
+  (setq migemo-regex-dictionary nil)
+  (setq migemo-coding-system 'utf-8-unix)
+  (setq migemo-command "cmigemo")
+  (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict")
+  (load-library "migemo")
+  (migemo-init)
+)
