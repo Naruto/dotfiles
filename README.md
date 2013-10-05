@@ -18,6 +18,6 @@ This is naruto's dotfiles.
 
 Ubuntu
 
-    $ sudo apt-get install emacs tmux zsh
+    $ sudo apt-get install emacs tmux zsh fonts-vlgothic 
     $ sudo apt-get install cmigemo migemo-el
 
