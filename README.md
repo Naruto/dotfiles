@@ -16,6 +16,7 @@ install applications
     $ sudo apt-get -y install emacs tmux zsh fonts-vlgothic 
     $ sudo apt-get -y install global id-utils gdb
     $ sudo apt-get -y install cmigemo migemo-el
+    $ sudo apt-get -y install xclip
 
 # Get and Set up dotfiles
 
