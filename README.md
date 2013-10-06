@@ -6,6 +6,17 @@ This is naruto's dotfiles.
     .tmux.conf - tmux dotfile
     .zshrc     - zsh dotfile
 
+# Prepare
+
+install applications
+
+## Ubuntu
+
+    $ sudo apt-get -y install git
+    $ sudo apt-get -y install emacs tmux zsh fonts-vlgothic 
+    $ sudo apt-get -y install global id-utils gdb
+    $ sudo apt-get -y install cmigemo migemo-el
+
 # Get and Set up dotfiles
 
     $ git clone https://github.com/Naruto/dotfiles.git
@@ -13,11 +24,4 @@ This is naruto's dotfiles.
     $ ln -sf ${DOTFILES_PATH}/.emacs.d ~/
     $ ln -sf ${DOTFILES_PATH}/.tmux.conf ~/
     $ ln -sf ${DOTFILES_PATH}/.zshrc ~/
-
-# Install applications
-
-Ubuntu
-
-    $ sudo apt-get install emacs tmux zsh fonts-vlgothic 
-    $ sudo apt-get install cmigemo migemo-el
 
