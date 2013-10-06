@@ -12,11 +12,17 @@ install applications
 
 ## Ubuntu
 
+must install
+
     $ sudo apt-get -y install git
     $ sudo apt-get -y install emacs tmux zsh fonts-vlgothic 
-    $ sudo apt-get -y install global id-utils gdb
-    $ sudo apt-get -y install cmigemo migemo-el
-    $ sudo apt-get -y install xclip
+
+shall install
+
+    $ sudo apt-get -y install global id-utils gdb  # for c developer
+    $ sudo apt-get -y install cmigemo migemo-el    # incremental japanese search
+    $ sudo apt-get -y install xclip                # seemless copy&paste between emacs and another X applications.
+    $ sudo apt-get -y install lv                   # high convenience pager
 
 # Get and Set up dotfiles
 
