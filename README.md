@@ -24,6 +24,13 @@ shall install
     $ sudo apt-get -y install xclip                # seemless copy&paste between emacs and another X applications.
     $ sudo apt-get -y install lv                   # high convenience pager
 
+For mobile platform(ex: Android, Tizen) developer.
+
+    $ sudo apt-get -y install curl
+    $ mkdir -p ~/bin
+    $ curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+    $ chmod a+x ~/bin/repo
+
 # Get and Set up dotfiles
 
     $ git clone https://github.com/Naruto/dotfiles.git
