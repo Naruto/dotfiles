@@ -1,3 +1,6 @@
 [submodule ".emacs.d/public_repos/ag.el"]
 	path = .emacs.d/public_repos/ag.el
 	url = https://github.com/Wilfred/ag.el
+[submodule ".emacs.d/public_repos/egg"]
+	path = .emacs.d/public_repos/egg
+	url = https://github.com/bogolisk/egg.git
