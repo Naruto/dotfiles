@@ -39,4 +39,7 @@ For mobile platform(ex: Android, Tizen) developer.
     $ ln -sf ${DOTFILES_PATH}/.emacs.d ~/
     $ ln -sf ${DOTFILES_PATH}/.tmux.conf ~/
     $ ln -sf ${DOTFILES_PATH}/.zshrc ~/
+    $ cd ${DOTFILES_PATH}
+    $ git submodule init
+    $ git submodule update 
 
