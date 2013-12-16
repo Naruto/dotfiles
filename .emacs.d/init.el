@@ -127,9 +127,22 @@
   (define-key global-map (kbd "C-c ,,") 'howm-menu)
   (setq howm-refresh-after-save nil)
   (setq howm-history-limit nil)
-  (setq howm-view-use-grep t)
-  ;(setq howm-view-grep-command "PATH")
-  ;(setq howm-view-fgrep-command "PATH")
+  (cond ((executable-find "ack")
+             (progn
+               (setq howm-view-use-grep t)
+               (setq howm-view-grep-command "ack")
+               (setq howm-view-grep-option "-Hnr")
+               (setq howm-view-grep-extended-option "")
+               (setq howm-view-grep-fixed-option "--literal")
+               (setq howm-view-grep-expr-option "--match")
+               (setq howm-view-grep-file-stdin-option nil)
+               ))
+        ((executable-find "grep")
+         (progn
+           (setq howm-view-use-grep t)
+           (setq howm-view-grep-command "grep")
+           (setq howm-view-fgrep-command "fgrep")
+           )))
 )
 
 ;; cua-mode
