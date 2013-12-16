@@ -119,9 +119,12 @@
 )
 
 ;; auto-complete mode
-(when (require 'auto-complete-config nil t)
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory
+                                 "public_repos/auto-complete")))
+  (require 'auto-complete-config nil t)
   (add-to-list 'ac-dictionary-directories
-	       "~/.emacs.d/elisp/auto-complete/ac-dict")
+               "~/.emacs.d/public_repos/auto-complete/ac-dict")
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (ac-config-default)
 
@@ -308,7 +311,6 @@
 )
 
 ;; ag
-
 (when (file-exists-p
        (expand-file-name (concat user-emacs-directory "public_repos/ag.el")))
   (add-to-load-path "public_repos/ag.el")
