@@ -4,3 +4,6 @@
 [submodule ".emacs.d/public_repos/egg"]
 	path = .emacs.d/public_repos/egg
 	url = https://github.com/bogolisk/egg.git
+[submodule ".emacs.d/public_repos/yasnippet"]
+	path = .emacs.d/public_repos/yasnippet
+	url = https://github.com/capitaomorte/yasnippet.git

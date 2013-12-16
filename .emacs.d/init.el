@@ -108,12 +108,47 @@
     (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
     (package-initialize)))
 
+;; yasnippet
+(when (require 'yasnippet nil t)
+  (setq yas-snippet-dirs
+        '(
+          "~/.emacs.d/snippets"
+          "~/.emacs.d/public_repos/yasnippet/snippets"
+          ))
+  (yas-global-mode 1)
+)
+
 ;; auto-complete mode
 (when (require 'auto-complete-config nil t)
   (add-to-list 'ac-dictionary-directories
 	       "~/.emacs.d/elisp/auto-complete/ac-dict")
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-  (ac-config-default))
+  (ac-config-default)
+
+  ;; auto-complete-yasnippet
+  (add-to-list 'ac-sources 'ac-source-yasnippet)
+
+  ;; auto-complete-clang
+  (require 'auto-complete-clang)
+  (setq ac-auto-start nil)
+  (setq ac-quick-help-delay 0.5)
+  (defun my-ac-config ()
+    (setq-default ac-sources
+                  '(ac-source-abbrev
+                    ac-source-dictionary ac-source-words-in-same-mode-buffers))
+    (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
+    ;; (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
+    (add-hook 'ruby-mode-hook 'ac-ruby-mode-setup)
+    (add-hook 'css-mode-hook 'ac-css-mode-setup)
+    (add-hook 'auto-complete-mode-hook 'ac-common-setup)
+    (global-auto-complete-mode t))
+  (defun my-ac-cc-mode-setup ()
+    (setq ac-sources 
+          (append '(ac-source-clang ac-source-yasnippet) ac-sources)))
+  (add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
+  ;; ac-source-gtags
+  (my-ac-config)
+)
 
 ;; undohist
 (when (require 'undohist nil t)
