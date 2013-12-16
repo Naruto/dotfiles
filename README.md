@@ -23,6 +23,7 @@ shall install
     $ sudo apt-get -y install cmigemo migemo-el    # incremental japanese search
     $ sudo apt-get -y install xclip                # seemless copy&paste between emacs and another X applications.
     $ sudo apt-get -y install lv                   # high convenience pager
+    $ sudo apt-get install silversearcher-ag
 
 For mobile platform(ex: Android, Tizen) developer.
 
