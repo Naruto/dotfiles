@@ -41,5 +41,5 @@ For mobile platform(ex: Android, Tizen) developer.
     $ ln -sf ${DOTFILES_PATH}/.zshrc ~/
     $ cd ${DOTFILES_PATH}
     $ git submodule init
-    $ git submodule update 
-
+    $ git submodule update --recursive
+    
