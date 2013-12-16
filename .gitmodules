@@ -7,3 +7,6 @@
 [submodule ".emacs.d/public_repos/yasnippet"]
 	path = .emacs.d/public_repos/yasnippet
 	url = https://github.com/capitaomorte/yasnippet.git
+[submodule ".emacs.d/public_repos/auto-complete"]
+	path = .emacs.d/public_repos/auto-complete
+	url = https://github.com/auto-complete/auto-complete.git
