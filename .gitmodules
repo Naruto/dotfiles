@@ -1,0 +1,3 @@
+[submodule ".emacs.d/public_repos/ag.el"]
+	path = .emacs.d/public_repos/ag.el
+	url = https://github.com/Wilfred/ag.el

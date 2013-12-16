@@ -3,5 +3,5 @@
 .emacs.d/ac-comphist.dat
 .emacs.d/auto-save-list/*
 .emacs.d/undohist/*
-.emacs.d/elisp/wget-log
+wget-log
 .emacs.d/elpa

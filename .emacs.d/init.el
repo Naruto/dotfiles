@@ -2,18 +2,18 @@
 (setq user-full-name "Naruto TAKAHASHI")
 (setq user-mail-address "tnaruto@gmail.com")
 
-(when (> emacs-major-version 23)
-  (defvar user-emacs-directory "~/.emacs.d"))
+(when (< emacs-major-version 23)
+  (defvar user-emacs-directory "~/.emacs.d/"))
 
 ;; path
 (defun add-to-load-path (&rest paths)
   (let (path)
     (dolist (path paths paths)
       (let ((default-directory
-	      (expand-file-name (concat user-emacs-directory path))))
-	(add-to-list 'load-path default-directory)
-	(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
-	    (normal-top-level-add-subdirs-to-load-path))))))
+              (expand-file-name (concat user-emacs-directory path))))
+        (add-to-list 'load-path default-directory)
+        (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+            (normal-top-level-add-subdirs-to-load-path))))))
 (add-to-load-path "elisp" "conf" "public_repos")
 
 ;; code
@@ -257,4 +257,13 @@
   (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict")
   (load-library "migemo")
   (migemo-init)
+)
+
+;; ag
+
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/ag.el")))
+  (add-to-load-path "public_repos/ag.el")
+  (require 'ag nil t)
+  ; (setq ag-highlight-search t)
 )
