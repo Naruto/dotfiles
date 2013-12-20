@@ -317,3 +317,11 @@
   (require 'ag nil t)
   ; (setq ag-highlight-search t)
 )
+
+;; cmake
+(when (require 'cmake-mode nil t)
+  (setq auto-mode-alist
+        (append '(("CMakeLists\\.txt\\'" . cmake-mode)
+                  ("\\.cmake\\'" . cmake-mode))
+                auto-mode-alist))
+)
