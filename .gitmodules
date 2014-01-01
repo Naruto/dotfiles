@@ -13,3 +13,6 @@
 [submodule ".emacs.d/public_repos/helm"]
 	path = .emacs.d/public_repos/helm
 	url = https://github.com/emacs-helm/helm.git
+[submodule ".emacs.d/public_repos/helm-ag"]
+	path = .emacs.d/public_repos/helm-ag
+	url = https://github.com/syohex/emacs-helm-ag.git

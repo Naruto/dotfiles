@@ -306,6 +306,20 @@
        (expand-file-name (concat user-emacs-directory "public_repos/helm")))
   (require 'helm-config)
   (global-set-key (kbd "C-c h") 'helm-mini)
+  ; (custom-set-variables '(helm-ff-auto-update-initial-value nil))
+  ;; helm commands
+  ;; (global-set-key (kbd "M-x") 'helm-M-x)
+  ;; helm find files
+  ;(global-set-key (kbd "C-x C-f") 'helm-find-files)
+  
+  ;; helm-ag
+  (require 'helm-ag)
+  (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+  (setq helm-ag-command-option "--all-text")
+  (setq helm-ag-thing-at-point 'symbol)
+  (global-set-key (kbd "M-g .") 'helm-ag)
+  (global-set-key (kbd "M-g ,") 'helm-ag-pop-stack)
+  (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
 )
 
 ;; ag
