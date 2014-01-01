@@ -113,38 +113,52 @@
 (when (file-exists-p
        (expand-file-name (concat user-emacs-directory
                                  "public_repos/auto-complete")))
-  (require 'auto-complete-config nil t)
+  (require 'auto-complete-config)
   (add-to-list 'ac-dictionary-directories
-               "~/.emacs.d/public_repos/auto-complete/ac-dict")
-  (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-  (ac-config-default)
+               (concat user-emacs-directory
+                       "public_repos/auto-complete/ac-dict"))
+  ;; (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+  (ac-set-trigger-key "TAB")
+  (setq ac-quick-help-delay 0.5)
+  (setq ac-dwim t)
+  ;; (ac-config-default)
 
   ;; auto-complete-yasnippet
   (add-to-list 'ac-sources 'ac-source-yasnippet)
-
   ;; auto-complete-clang
   (require 'auto-complete-clang)
-  (setq ac-auto-start nil)
-  (setq ac-quick-help-delay 0.5)
+
+  (defun my-ac-cc-mode-setup ()
+    (setq ac-auto-start nil)
+    ;(setq ac-clang-prefix-header
+    ;      (concat user-emacs-directory
+    ;              "auto_complete/stdafx.pch"))
+    ; (setq ac-clang-flags '("-w" "-ferror-limit" "1"))
+    (setq-default ac-sources 
+                  (append '(ac-source-clang
+                            ac-source-gtags)
+                          ac-sources)))
   (defun my-ac-config ()
+    (define-key ac-complete-mode-map "M-n" 'ac-next)
+    (define-key ac-complete-mode-map "M-p" 'ac-previous)
+    (setq ac-auto-start nil)
     (setq-default ac-sources
                   '(ac-source-abbrev
-                    ac-source-dictionary ac-source-words-in-same-mode-buffers))
+                    ac-source-dictionary
+                    ac-source-words-in-same-mode-buffers))
+    (add-hook 'c++-mode-hook 'ac-cc-mode-setup)
     (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
-    ;; (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
     (add-hook 'ruby-mode-hook 'ac-ruby-mode-setup)
     (add-hook 'css-mode-hook 'ac-css-mode-setup)
     (add-hook 'auto-complete-mode-hook 'ac-common-setup)
+    (add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
     (global-auto-complete-mode t))
-  (defun my-ac-cc-mode-setup ()
-    (setq ac-sources 
-          (append '(ac-source-clang ac-source-yasnippet) ac-sources)))
-  (add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
+
   ;; ac-source-gtags
   (my-ac-config)
 )
 
-;; undohist
+;; Undohist
 (when (require 'undohist nil t)
   (undohist-initialize))
 
