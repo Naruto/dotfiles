@@ -33,7 +33,6 @@
 
   (require 'xclip)
 
-  ;; 配色設定
   (set-background-color "#efefdf");background
   (set-foreground-color "#202041");foreground
   (set-cursor-color "#202041");cursor
@@ -55,29 +54,20 @@
   )
 
 ;;; misc
-;; タイトルを表示しない
 (setq inhibit-startup-message t)
-;; メニューバーは表示する
 (menu-bar-mode t)
-;; 時間を表示するようにする
 (setq display-time-day-and-date t)
 (setq display-time-24hr-format t)
 (display-time)
-;; インデントに tab を使わない
 (setq-default indent-tabs-mode nil)
 (setq indent-line-function 'indent-relative-maybe)
-;; 同一ファイル名のバッファ名をわかりやすくする
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq uniquify-ignore-buffers-re "*[^*]+*")
-;; 括弧をハイライトする
 (show-paren-mode)
-;; バッファの検索を便利に
 (iswitchb-mode)
-;; dired を便利に
 (require 'dired-x)
 
-;;; shell モードで Escape Seaquence を有効に
 (autoload 'ansi-color-for-comint-mode-on "ansi-color"
   "Set `ansi-color-for-comint-mode' to t." t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -101,7 +91,7 @@
 ;(when (require 'redo+ nil t)
 ;  (global-set-key (kbd "C-'") 'redo))
 
-;; ELPA 用 package.el
+;; package.el for ELPA
 (when (<= emacs-major-version 23)
   (when (require 'package nil t)
     (add-to-list 'package-archives
@@ -250,7 +240,7 @@
                                    c-lineup-gcc-asm-reg
                                    c-lineup-arglist-tabs-only))))
 
-  ;; インデントスタイルを e style をデフォルトに
+  ;; set e-style as default indent style.
   (setq c-default-style
         '((c-mode . "e")
           (c++-mode . "e")))
