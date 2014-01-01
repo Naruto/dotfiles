@@ -92,7 +92,6 @@ setopt nolistbeep
 export PROMPT='[$HOST %c]%(!.#.%%) '
 
 # Setting alias
-alias ls="ls -F --color=auto --show-control-char"
 alias rm="rm -i"
 
 export LANG="ja_JP.UTF-8"
@@ -102,20 +101,30 @@ export PAGER="lv"
 export MANPATH="/usr/local/man:/usr/local/share/man:/usr/share/man:$MANPATH"
 
 export PATH="/usr/local/bin:$PATH"
-
-# for E
-export E_PREFIX='/usr/local'
+export PATH=~/bin:$PATH
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-# go language
-export GOARCH=amd64
-export GOOS=linux
+case ${OSTYPE} in
+    linux*)
+        alias ls="ls -F --color=auto --show-control-char"
 
-# Java
-export PATH=/opt/java/bin:$PATH
-export JAVA_HOME=/opt/java
-export JAVA_FONTS=/usr/share/fonts/TTF
+        # for E
+        export E_PREFIX='/usr/local'
+
+        # go language
+        export GOARCH=amd64
+        export GOOS=linux
+
+        # Java
+        export PATH=/opt/java/bin:$PATH
+        export JAVA_HOME=/opt/java
+        export JAVA_FONTS=/usr/share/fonts/TTF
+        ;;
+
+    darwin*)
+        ;;
+esac
 
 # npm command completion script
 COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
@@ -123,33 +132,31 @@ COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
 export COMP_WORDBREAKS
 
 if complete &>/dev/null; then
-  _npm_completion () {
-    local si="$IFS"
-    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
-                           COMP_LINE="$COMP_LINE" \
-                           COMP_POINT="$COMP_POINT" \
-                           npm completion -- "${COMP_WORDS[@]}" \
-                           2>/dev/null)) || return $?
-    IFS="$si"
-  }
-  complete -F _npm_completion npm
+    _npm_completion () {
+        local si="$IFS"
+        IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
+            COMP_LINE="$COMP_LINE" \
+            COMP_POINT="$COMP_POINT" \
+            npm completion -- "${COMP_WORDS[@]}" \
+            2>/dev/null)) || return $?
+        IFS="$si"
+    }
+    complete -F _npm_completion npm
 elif compctl &>/dev/null; then
-  _npm_completion () {
-    local cword line point words si
-    read -Ac words
-    read -cn cword
-    let cword-=1
-    read -l line
-    read -ln point
-    si="$IFS"
-    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
-                       COMP_LINE="$line" \
-                       COMP_POINT="$point" \
-                       npm completion -- "${words[@]}" \
-                       2>/dev/null)) || return $?
-    IFS="$si"
-  }
-  compctl -K _npm_completion npm
+    _npm_completion () {
+        local cword line point words si
+        read -Ac words
+        read -cn cword
+        let cword-=1
+        read -l line
+        read -ln point
+        si="$IFS"
+        IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+            COMP_LINE="$line" \
+            COMP_POINT="$point" \
+            npm completion -- "${words[@]}" \
+            2>/dev/null)) || return $?
+        IFS="$si"
+    }
+    compctl -K _npm_completion npm
 fi
-export PATH=~/bin:$PATH
-
