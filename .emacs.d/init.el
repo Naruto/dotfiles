@@ -26,9 +26,10 @@
 
 (when (and (eq (window-system) 'x)
 	 (>= emacs-major-version 23))
-  ;; ツールバーを表示しない
-  (if (eq tool-bar-mode t)
-      (tool-bar-mode nil))
+
+  ;; disable toolbar
+  (cond ((eq emacs-major-version 24) (tool-bar-mode 0))
+        (t (tool-bar-mode nil)))
 
   (require 'xclip)
 
