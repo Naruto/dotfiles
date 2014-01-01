@@ -310,6 +310,13 @@
   (migemo-init)
 )
 
+;; emacs helm
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/helm")))
+  (require 'helm-config)
+  (global-set-key (kbd "C-c h") 'helm-mini)
+)
+
 ;; ag
 (when (file-exists-p
        (expand-file-name (concat user-emacs-directory "public_repos/ag.el")))
