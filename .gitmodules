@@ -19,3 +19,6 @@
 [submodule ".emacs.d/public_repos/autopair"]
 	path = .emacs.d/public_repos/autopair
 	url = https://github.com/capitaomorte/autopair.git
+[submodule ".emacs.d/public_repos/mark-multiple"]
+	path = .emacs.d/public_repos/mark-multiple
+	url = https://github.com/magnars/mark-multiple.el.git
