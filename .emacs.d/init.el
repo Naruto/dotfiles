@@ -152,7 +152,9 @@
     (add-hook 'css-mode-hook 'ac-css-mode-setup)
     (add-hook 'auto-complete-mode-hook 'ac-common-setup)
     (add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
-    (global-auto-complete-mode t))
+    (global-auto-complete-mode t)
+    (auto-complete-mode t)
+    )
 
   ;; ac-source-gtags
   (my-ac-config)
