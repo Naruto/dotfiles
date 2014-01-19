@@ -146,7 +146,7 @@
                   '(ac-source-abbrev
                     ac-source-dictionary
                     ac-source-words-in-same-mode-buffers))
-    (add-hook 'c++-mode-hook 'ac-cc-mode-setup)
+    (add-hook 'c++-mode-hook 'my-ac-cc-mode-setup)
     (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
     (add-hook 'ruby-mode-hook 'ac-ruby-mode-setup)
     (add-hook 'css-mode-hook 'ac-css-mode-setup)
