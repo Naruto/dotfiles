@@ -93,6 +93,7 @@ export PROMPT='[$HOST %c]%(!.#.%%) '
 
 # Setting alias
 alias rm="rm -i"
+alias ag='ag --pager "less -R"'
 
 export LANG="ja_JP.UTF-8"
 export LC_ALL="ja_JP.UTF-8"
