@@ -93,13 +93,15 @@ export PROMPT='[$HOST %c]%(!.#.%%) '
 
 # Setting alias
 alias rm="rm -i"
+alias less="less -R"
 alias ag='ag --pager "less -R"'
 
 export LANG="ja_JP.UTF-8"
 export LC_ALL="ja_JP.UTF-8"
 export EDITOR="emacs"
-export PAGER="lv"
+export PAGER="less"
 export MANPATH="/usr/local/man:/usr/local/share/man:/usr/share/man:$MANPATH"
+export GREP_OPTIONS='-n --color=always'
 
 export PATH="/usr/local/bin:$PATH"
 export PATH=~/bin:$PATH
@@ -108,7 +110,7 @@ export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 case ${OSTYPE} in
     linux*)
-        alias ls="ls -F --color=auto --show-control-char"
+        alias ls="ls -F --show-control-char --color=always"
 
         # for E
         export E_PREFIX='/usr/local'
