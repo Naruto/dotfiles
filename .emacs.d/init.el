@@ -363,3 +363,114 @@
                   ("\\.cmake\\'" . cmake-mode))
                 auto-mode-alist))
 )
+
+;; ;; autopair
+;; (cond ((<= emacs-major-version 24)
+;;        (progn
+;;          (defadvice electric-pair-post-self-insert-function
+;;            (around electric-pair-post-self-insert-function-around activate)
+;;            "Don't insert the closing pair in comments or strings"
+;;            (unless (nth 8 (save-excursion (syntax-ppss (1- (point)))))
+;;              ad-do-it))
+;;          (defun electric-pair ()
+;;            "If at end of line, insert character pair without surrounding spaces.
+;;     Otherwise, just insert the typed character."
+;;            (interactive)
+;;            (if (eolp) (let (parens-require-spaces) (insert-pair)) (self-insert-command 1)))
+;;          (defun electrify-mode (mode-map)
+;;            (define-key mode-map "\"" 'electric-pair)
+;;            (define-key mode-map "\'" 'electric-pair)
+;;            (define-key mode-map "("  'electric-pair)
+;;            (define-key mode-map "["  'electric-pair)
+;;            (define-key mode-map "{"  'electric-pair))
+;;          (electrify-mode c-mode-map)
+;;          (electrify-mode c++-mode-map)
+;;          ; (electrify-mode python-mode-map)
+;;          ; (electrify-mode lua-mode-map)
+;;          ))
+;;       ((file-exists-p
+;;         (expand-file-name (concat user-emacs-directory
+;;                                   "public_repos/autopair")))
+;;        (progn
+;;          (require 'autopair)
+;;          (autopair-global-mode) ;; enable autopair in all buffers
+;;          ;; auto pairs at cc-mode
+;;          (defun autopair-close-block (arg)
+;;            (interactive "P")
+;;            (cond
+;;             (mark-active
+;;              (autopair-close arg))
+;;             ((not (looking-back "^[[:space:]]*"))
+;;              (newline-and-indent)
+;;              (autopair-close arg))
+;;             (t
+;;              (autopair-close arg))))
+;;          (add-hook 'c-mode-common-hook
+;;                    '(lambda ()
+;;                       (local-set-key "(" 'autopair-insert)
+;;                       (local-set-key ")" 'autopair-insert)
+;;                       (local-set-key "{" 'autopair-insert)
+;;                       (local-set-key "}" 'autopair-close-block)))))
+;;       )
+(when (require 'skeleton nil t)
+  (setq skeleton-pair t)
+  (setq skeleton-pair-alist
+        '((?\( _ ?\))
+          (?[  _ ?])
+          (?{  _ ?})
+          (?\" _ ?\")
+          (?< _ ?>)))
+  (defun autopair-insert (arg)
+    (interactive "P")
+    (let (pair)
+      (cond
+       ((assq last-command-event skeleton-pair-alist)
+        (autopair-open arg))
+       (t
+        (autopair-close arg)))))
+  (defun autopair-open (arg)
+    (interactive "P")
+    (let ((pair (assq last-command-event
+                      skeleton-pair-alist)))
+      (cond
+       ((and (not mark-active)
+             (eq (car pair) (car (last pair)))
+             (eq (car pair) (char-after)))
+        (autopair-close arg))
+       (t
+        (skeleton-pair-insert-maybe arg)))))
+  (defun autopair-close (arg)
+    (interactive "P")
+    (cond
+     (mark-active
+      (let (pair open)
+        (dolist (pair skeleton-pair-alist)
+          (when (eq last-command-event (car (last pair)))
+            (setq open (car pair))))
+        (setq last-command-event open)
+        (skeleton-pair-insert-maybe arg)))
+     ((looking-at
+       (concat "[ \t\n]*"
+               (regexp-quote (string last-command-event))))
+      (replace-match (string last-command-event))
+      (indent-according-to-mode))
+     (t
+      (self-insert-command (prefix-numeric-value arg))
+      (indent-according-to-mode))))
+  (defadvice delete-backward-char (before autopair activate)
+    (when (and (char-after)
+               (eq this-command 'delete-backward-char)
+               (eq (char-after)
+                   (car (last (assq (char-before) skeleton-pair-alist)))))
+      (delete-char 1)))
+  (global-set-key "("  'autopair-insert)
+  (global-set-key ")"  'autopair-insert)
+  (global-set-key "["  'autopair-insert)
+  (global-set-key "]"  'autopair-insert)
+  (global-set-key "{"  'autopair-insert)
+  (global-set-key "}"  'autopair-insert)
+  (global-set-key "<" 'autopair-insert)
+  (global-set-key ">" 'autopair-insert)
+  (global-set-key "\"" 'autopair-insert)
+  (global-set-key "\'" 'autopair-insert)
+)

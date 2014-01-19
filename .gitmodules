@@ -16,3 +16,6 @@
 [submodule ".emacs.d/public_repos/helm-ag"]
 	path = .emacs.d/public_repos/helm-ag
 	url = https://github.com/syohex/emacs-helm-ag.git
+[submodule ".emacs.d/public_repos/autopair"]
+	path = .emacs.d/public_repos/autopair
+	url = https://github.com/capitaomorte/autopair.git
