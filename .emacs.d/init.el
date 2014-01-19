@@ -261,6 +261,15 @@
   (require 'google-c-style)
   (add-hook 'c++-mode-hook 'google-set-c-style)
   (add-hook 'c++-mode-hook 'google-make-newline-indent)
+
+  ;; switch source file and header file
+  ;(global-set-key (kbd "C-x C-o") 'ff-find-other-file)
+  (define-key c-mode-base-map (kbd "C-x C-o") 'ff-find-other-file)
+  (defcustom cc-search-directories
+    '("." "/usr/include" "/usr/local/include/*")
+    "*See the description of the `ff-search-directories' variable."
+    :type '(repeat directory)
+    :group 'ff)
   )
 
 ;; gtags
