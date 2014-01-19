@@ -256,8 +256,11 @@
 
   ;; set e-style as default indent style.
   (setq c-default-style
-        '((c-mode . "e")
-          (c++-mode . "e")))
+        '((c-mode . "e")))
+  ;; set google code style at c++-mode
+  (require 'google-c-style)
+  (add-hook 'c++-mode-hook 'google-set-c-style)
+  (add-hook 'c++-mode-hook 'google-make-newline-indent)
   )
 
 ;; gtags
