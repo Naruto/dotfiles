@@ -22,3 +22,6 @@
 [submodule ".emacs.d/public_repos/mark-multiple"]
 	path = .emacs.d/public_repos/mark-multiple
 	url = https://github.com/magnars/mark-multiple.el.git
+[submodule ".emacs.d/public_repos/expand-region"]
+	path = .emacs.d/public_repos/expand-region
+	url = https://github.com/magnars/expand-region.el.git

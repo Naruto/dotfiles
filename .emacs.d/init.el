@@ -495,3 +495,12 @@
               (require 'rename-sgml-tag)
               (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)))
   )
+
+;; expand-region
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/expand-region")))
+  (require 'expand-region)
+  (global-set-key (kbd "C-@") 'er/expand-region)
+  (global-set-key (kbd "C-M-@") 'er/contract-region)
+  (transient-mark-mode t)
+  )
