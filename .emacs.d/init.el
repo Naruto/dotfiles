@@ -485,3 +485,13 @@
   (require 'grizzl)
   (setq projectile-completion-system 'grizzl)
 )
+
+;; smex
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/smex")))
+  (require 'smex)
+  (smex-initialize)
+  ;; bind keys
+  (global-set-key (kbd "M-x") 'smex)
+  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+)
