@@ -24,6 +24,11 @@
 (set-buffer-file-coding-system 'utf-8)
 (setq default-buffer-file-coding-system 'utf-8)
 
+;; theme
+(add-to-list 'custom-theme-load-path
+             (expand-file-name (concat user-emacs-directory "themes")))
+(load-theme 'zenburn t)
+
 (when (and (eq (window-system) 'x)
 	 (>= emacs-major-version 23))
 
@@ -33,9 +38,9 @@
 
   (require 'xclip)
 
-  (set-background-color "#efefdf");background
-  (set-foreground-color "#202041");foreground
-  (set-cursor-color "#202041");cursor
+  ;(set-background-color "#efefdf");background
+  ;(set-foreground-color "#202041");foreground
+  ;(set-cursor-color "#202041");cursor
 
   ;; VL Gothic
   (set-default-font "VL Gothic-8")
@@ -495,3 +500,4 @@
   (global-set-key (kbd "M-x") 'smex)
   (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 )
+
