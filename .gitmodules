@@ -58,3 +58,6 @@
 [submodule ".emacs.d/public_repos/smex"]
 	path = .emacs.d/public_repos/smex
 	url = https://github.com/nonsequitur/smex.git
+[submodule ".emacs.d/public_repos/undo-tree"]
+	path = .emacs.d/public_repos/undo-tree
+	url = http://www.dr-qubit.org/git/undo-tree.git

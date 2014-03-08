@@ -92,10 +92,6 @@
   ;; (setq url-proxy-services '(("http" . "HOST:PORT")))
   (auto-install-compatibility-setup))
 
-;; redo+
-;(when (require 'redo+ nil t)
-;  (global-set-key (kbd "C-'") 'redo))
-
 ;; package.el for ELPA
 (when (>= emacs-major-version 23)
   (when (require 'package nil t)
@@ -501,3 +497,9 @@
   (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 )
 
+;; undo-tree
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/undo-tree")))
+  (require 'undo-tree)
+  (global-undo-tree-mode)
+  )
