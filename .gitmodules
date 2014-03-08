@@ -31,3 +31,9 @@
 [submodule ".emacs.d/public_repos/git-modes"]
 	path = .emacs.d/public_repos/git-modes
 	url = https://github.com/magit/git-modes.git
+[submodule ".emacs.d/public_repos/smartparens"]
+	path = .emacs.d/public_repos/smartparens
+	url = https://github.com/Fuco1/smartparens.git
+[submodule ".emacs.d/public_repos/dash.el"]
+	path = .emacs.d/public_repos/dash.el
+	url = https://github.com/magnars/dash.el.git
