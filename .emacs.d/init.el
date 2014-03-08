@@ -167,7 +167,7 @@
 ;; howm
 (setq howm-menu-lang 'ja)
 (setq howm-process-coding-system 'utf-8-unix)
-(when (require 'howm-mode nil t)
+(when (require 'howm nil t)
   (setq howm-directory "~/howm")
   (define-key global-map (kbd "C-c ,,") 'howm-menu)
   (setq howm-refresh-after-save nil)
