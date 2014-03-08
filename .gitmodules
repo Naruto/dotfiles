@@ -37,3 +37,6 @@
 [submodule ".emacs.d/public_repos/dash.el"]
 	path = .emacs.d/public_repos/dash.el
 	url = https://github.com/magnars/dash.el.git
+[submodule ".emacs.d/public_repos/grizzl"]
+	path = .emacs.d/public_repos/grizzl
+	url = https://github.com/d11wtq/grizzl.git

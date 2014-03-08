@@ -370,6 +370,12 @@
                 auto-mode-alist))
 )
 
+;;; cask
+;(when (file-exists-p "~/.cask/cask.el")
+;  (require 'cask "~/.cask/cask.el")
+;  (cask-initialize)
+;)
+
 ;; mark-multiple
 (when (file-exists-p
        (expand-file-name (concat user-emacs-directory "public_repos/mark-multiple")))
@@ -426,3 +432,29 @@
   (require 'smartparens-config)
   (smartparens-global-mode t)
   )
+
+;; ;; projectile
+;; (require 'projectile)
+;; (projectile-global-mode)
+;; (setq projectile-enable-caching t)
+;; ;; https://github.com/abesto/dotfiles/blob/master/.emacs.d/my-projectile.el
+;; (defun projectile-ag ()
+;;   "Run an `ag' search in the project"
+;;   (interactive)
+;;   (let ((search-regexp (if (and transient-mark-mode mark-active)
+;;                            (buffer-substring (region-beginning) (region-end))
+;;                          (read-string (projectile-prepend-project-name "Ag for: ") (thing-at-point 'symbol))))
+;;         (root-dir (expand-file-name (projectile-project-root))))
+;;     (ag/search search-regexp root-dir)))
+
+;; (setq projectile-show-paths-function 'projectile-hashify-with-relative-paths)
+;; (global-set-key '[f1] 'helm-projectile)
+;; (global-set-key '[f2] 'projectile-ag)
+;; ; (global-set-key "\C-xb" 'helm-mini)
+
+;; grizzl
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/grizzl")))
+  (require 'grizzl)
+  (setq projectile-completion-system 'grizzl)
+)
