@@ -3,5 +3,8 @@
 .emacs.d/ac-comphist.dat
 .emacs.d/auto-save-list/*
 .emacs.d/undohist/*
+.emacs.d/auto_complete/
+.emacs.d/projectile-bookmarks.eld
+.emacs.d/projectile.cache
 wget-log
 .emacs.d/elpa
