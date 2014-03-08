@@ -504,3 +504,18 @@
   (global-set-key (kbd "C-M-@") 'er/contract-region)
   (transient-mark-mode t)
   )
+
+;; git-modes
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/git-modes")))
+  (require 'git-commit-mode)
+  (require 'git-rebase-mode)
+  (require 'gitconfig-mode)
+  (require 'gitignore-mode)
+)
+
+;; magit
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/magit")))
+  (require 'magit)
+  )

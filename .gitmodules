@@ -25,3 +25,9 @@
 [submodule ".emacs.d/public_repos/expand-region"]
 	path = .emacs.d/public_repos/expand-region
 	url = https://github.com/magnars/expand-region.el.git
+[submodule ".emacs.d/public_repos/magit"]
+	path = .emacs.d/public_repos/magit
+	url = https://github.com/magit/magit.git
+[submodule ".emacs.d/public_repos/git-modes"]
+	path = .emacs.d/public_repos/git-modes
+	url = https://github.com/magit/git-modes.git
