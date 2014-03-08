@@ -324,7 +324,11 @@
   (setq migemo-regex-dictionary nil)
   (setq migemo-coding-system 'utf-8-unix)
   (setq migemo-command "cmigemo")
-  (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict")
+  (cond
+   ((string-match "apple-darwin" system-configuration)
+    (setq migemo-dictionary "/usr/local/share/migemo/utf-8/migemo-dict"))
+   (t
+    (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict")))
   (load-library "migemo")
   (migemo-init)
 )
