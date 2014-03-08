@@ -108,6 +108,8 @@ export PATH=~/bin:$PATH
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 
+export PATH="${HOME}/.cask/bin:$PATH"
+
 case ${OSTYPE} in
     linux*)
         alias ls="ls -F --show-control-char --color=always"

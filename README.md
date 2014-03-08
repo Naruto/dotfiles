@@ -16,6 +16,7 @@ must install
 
     $ sudo apt-get -y install git
     $ sudo apt-get -y install emacs tmux zsh fonts-vlgothic 
+    $ curl -fsSkL https://raw.github.com/cask/cask/master/go | python
 
 shall install
 
