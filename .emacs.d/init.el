@@ -354,6 +354,17 @@
   (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
 )
 
+;; ack-and-a-half
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/ack-and-a-half")))
+  (require 'ack-and-a-half)
+  ;; Create shorter aliases
+  (defalias 'ack 'ack-and-a-half)
+  (defalias 'ack-same 'ack-and-a-half-same)
+  (defalias 'ack-find-file 'ack-and-a-half-find-file)
+  (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+)
+
 ;; ag
 (when (file-exists-p
        (expand-file-name (concat user-emacs-directory "public_repos/ag.el")))
