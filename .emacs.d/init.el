@@ -92,7 +92,7 @@
 ;  (global-set-key (kbd "C-'") 'redo))
 
 ;; package.el for ELPA
-(when (<= emacs-major-version 23)
+(when (>= emacs-major-version 23)
   (when (require 'package nil t)
     (add-to-list 'package-archives
                  '("marmalade" . "http://marmalade-repo.org/packages/"))

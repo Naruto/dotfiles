@@ -37,3 +37,12 @@
 [submodule ".emacs.d/public_repos/dash.el"]
 	path = .emacs.d/public_repos/dash.el
 	url = https://github.com/magnars/dash.el.git
+[submodule ".emacs.d/public_repos/projectile"]
+	path = .emacs.d/public_repos/projectile
+	url = https://github.com/bbatsov/projectile.git
+[submodule ".emacs.d/public_repos/s.el"]
+	path = .emacs.d/public_repos/s.el
+	url = https://github.com/magnars/s.el.git
+[submodule ".emacs.d/public_repos/pkg-info.el"]
+	path = .emacs.d/public_repos/pkg-info.el
+	url = https://github.com/lunaryorn/pkg-info.el.git
