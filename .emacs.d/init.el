@@ -503,3 +503,13 @@
   (require 'undo-tree)
   (global-undo-tree-mode)
   )
+
+;; glsl mode
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/glsl-mode")))
+  (autoload 'glsl-mode "glsl-mode" nil t)
+  (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
+  (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode))
+)

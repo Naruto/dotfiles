@@ -61,3 +61,6 @@
 [submodule ".emacs.d/public_repos/undo-tree"]
 	path = .emacs.d/public_repos/undo-tree
 	url = http://www.dr-qubit.org/git/undo-tree.git
+[submodule ".emacs.d/public_repos/glsl-mode"]
+	path = .emacs.d/public_repos/glsl-mode
+	url = https://github.com/jimhourihan/glsl-mode.git
