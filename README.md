@@ -16,7 +16,6 @@ must install
 
     $ sudo apt-get -y install git
     $ sudo apt-get -y install emacs tmux zsh fonts-vlgothic 
-    $ curl -fsSkL https://raw.github.com/cask/cask/master/go | python
 
 shall install
 
@@ -26,6 +25,13 @@ shall install
     $ sudo apt-get -y install lv                   # high convenience pager
     $ sudo apt-get install silversearcher-ag
     $ sudo apt-get install ack-grep
+    $ curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+
+For chromium developer
+
+    $ mkdir -p ~/projects/
+    $ cd ~/projects
+    $ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
 
 For mobile platform(ex: Android, Tizen) developer.
 

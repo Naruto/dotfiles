@@ -108,7 +108,12 @@ export PATH=~/bin:$PATH
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 
+# cask
 export PATH="${HOME}/.cask/bin:$PATH"
+
+# depot tools
+export DEPOT_TOOLS_PATH=${HOME}/projects/depot_tools
+export PATH="${DEPOT_TOOLS_PATH}:$PATH"
 
 case ${OSTYPE} in
     linux*)

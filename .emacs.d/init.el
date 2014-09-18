@@ -70,7 +70,7 @@
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq uniquify-ignore-buffers-re "*[^*]+*")
 (show-paren-mode)
-(iswitchb-mode)
+;(iswitchb-mode)
 (require 'dired-x)
 
 (autoload 'ansi-color-for-comint-mode-on "ansi-color"
@@ -107,6 +107,7 @@
           "~/.emacs.d/snippets"
           "~/.emacs.d/public_repos/yasnippet/snippets"
           ))
+  (setq yas/use-menu nil)
   (yas-global-mode 1)
 )
 
@@ -294,26 +295,54 @@
           '(lambda ()
              (progn
                (gtags-mode 1)
-               ;(c-toggle-hungry-state 1)
+                                        ;(c-toggle-hungry-state 1)
                )))
 
 ;;; gud-mode                  
 ;; many widnows mode          
 (setq gdb-many-windows t)     
 (setq gdb-use-separate-io-buffer t)
-                              
+
 ;;; window mode               
 (windmove-default-keybindings)
 (setq windmove-wrap-around t) 
 
-; (require 'rust-mode)
+                                        ; (require 'rust-mode)
 
 ;; markdown mode
 (when (require 'markdown-mode nil t)
   (add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
   (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
   (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-)
+  )
+
+;; objective-c mode
+(add-to-list 'auto-mode-alist '("\\.mm?$" . objc-mode))
+(add-to-list 'magic-mode-alist '("\\(.\\|\n\\)*\n@implementation" . objc-mode))
+(add-to-list 'magic-mode-alist '("\\(.\\|\n\\)*\n@interface" . objc-mode))
+(add-to-list 'magic-mode-alist '("\\(.\\|\n\\)*\n@protocol" . objc-mode))
+(setq ff-other-file-alist
+      '(("\\.mm?$" (".h"))
+        ("\\.cc$"  (".hh" ".h"))
+        ("\\.hh$"  (".cc" ".C"))
+
+        ("\\.c$"   (".h"))
+        ("\\.h$"   (".c" ".cc" ".C" ".CC" ".cxx" ".cpp" ".m" ".mm"))
+
+        ("\\.C$"   (".H"  ".hh" ".h"))
+        ("\\.H$"   (".C"  ".CC"))
+
+        ("\\.CC$"  (".HH" ".H"  ".hh" ".h"))
+        ("\\.HH$"  (".CC"))
+
+        ("\\.cxx$" (".hh" ".h"))
+        ("\\.cpp$" (".hpp" ".hh" ".h"))
+
+        ("\\.hpp$" (".cpp" ".c"))))
+(add-hook 'objc-mode-hook
+          (lambda ()
+            (define-key c-mode-base-map (kbd "C-c o") 'ff-find-other-file)
+            ))
 
 ;; migemo
 ;; http://qiita.com/catatsuy/items/c5fa34ead92d496b8a51
@@ -339,11 +368,11 @@
        (expand-file-name (concat user-emacs-directory "public_repos/helm")))
   (require 'helm-config)
   (global-set-key (kbd "C-c h") 'helm-mini)
-  ; (custom-set-variables '(helm-ff-auto-update-initial-value nil))
+  (custom-set-variables '(helm-ff-auto-update-initial-value nil))
   ;; helm commands
-  ;; (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "M-x") 'helm-M-x)
   ;; helm find files
-  ;(global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
   
   ;; helm-ag
   (require 'helm-ag)
@@ -407,13 +436,13 @@
   )
 
 ;; expand-region
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/expand-region")))
-  (require 'expand-region)
-  (global-set-key (kbd "C-@") 'er/expand-region)
-  (global-set-key (kbd "C-M-@") 'er/contract-region)
-  (transient-mark-mode t)
-  )
+;(when (file-exists-p
+;       (expand-file-name (concat user-emacs-directory "public_repos/expand-region")))
+;  (require 'expand-region)
+;  (global-set-key (kbd "C-@") 'er/expand-region)
+;  (global-set-key (kbd "C-M-@") 'er/contract-region)
+;  (transient-mark-mode t)
+;  )
 
 ;; git-modes
 (when (file-exists-p
@@ -484,24 +513,25 @@
 (when (file-exists-p
        (expand-file-name (concat user-emacs-directory "public_repos/grizzl")))
   (require 'grizzl)
-  (setq projectile-completion-system 'grizzl)
+  ; (setq projectile-completion-system 'grizzl)
 )
 
-;; smex
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/smex")))
-  (require 'smex)
-  (smex-initialize)
-  ;; bind keys
-  (global-set-key (kbd "M-x") 'smex)
-  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-)
+;; ;; smex
+;; (when (file-exists-p
+;;        (expand-file-name (concat user-emacs-directory "public_repos/smex")))
+;;   (require 'smex)
+;;   (smex-initialize)
+;;   ;; bind keys
+;;   (global-set-key (kbd "M-x") 'smex)
+;;   (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; )
 
 ;; undo-tree
 (when (file-exists-p
        (expand-file-name (concat user-emacs-directory "public_repos/undo-tree")))
   (require 'undo-tree)
   (global-undo-tree-mode)
+  (global-set-key (kbd "M-/") 'undo-tree-redo)
   )
 
 ;; glsl mode
@@ -512,4 +542,10 @@
   (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode))
+)
+
+;; company-mode
+(when (file-exists-p
+       (expand-file-name (concat user-emacs-directory "public_repos/company-mode")))
+  (add-hook 'after-init-hook 'global-company-mode)
 )
