@@ -136,7 +136,6 @@
                (concat user-emacs-directory
                        "ac-dict"))
   (ac-config-default)
-  (require 'auto-complete-clang)
   (require 'auto-complete-clang-async)
 
   ;; Select candidates with C-n/C-p only when completion menu is displayed:
@@ -160,11 +159,8 @@
   (define-key ac-mode-map  [(control tab)] 'auto-complete)
   
   (defun my-ac-cc-mode-setup ()
-    (setq-default ac-sources 
-                  (append '(ac-source-clang-async
-                            ac-source-clang
-                            ac-source-gtags)
-                          ac-sources))
+    (setq ac-sources  '(ac-source-clang-async
+                        ac-source-gtags))
     (setq ac-clang-complete-executable 
           (concat user-emacs-directory "bin/clang-complete"))
     (setq clang-completion-suppress-error 't)
@@ -181,7 +177,8 @@
                     ac-source-dictionary
                     ac-source-words-in-same-mode-buffers
                     ac-source-filename
-                    ac-source-yasnippet))
+                    ;;ac-source-yasnippet
+                    ))
     (add-hook 'c++-mode-hook 'my-ac-cc-mode-setup)
     (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
     (add-hook 'ruby-mode-hook 'ac-ruby-mode-setup)
@@ -415,10 +412,10 @@
   (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
     "Emulate `kill-line' in helm minibuffer"
     (kill-new (buffer-substring (point) (field-end))))
-  ;; For find-file etc.
-  (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-  ;; For helm-find-files etc.
-  (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+  ;; ;; For find-file etc.
+  ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+  ;; ;; For helm-find-files etc.
+  ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
 
   (defadvice helm-ff-kill-or-find-buffer-fname (around execute-only-if-exist activate)
     "Execute command only if CANDIDATE exists"
