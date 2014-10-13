@@ -118,6 +118,7 @@ export PATH="${DEPOT_TOOLS_PATH}:$PATH"
 case ${OSTYPE} in
     linux*)
         alias ls="ls -F --show-control-char --color=always"
+	alias open=xdg-open
 
         # for E
         export E_PREFIX='/usr/local'
