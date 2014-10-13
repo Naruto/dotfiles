@@ -544,8 +544,8 @@
   (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode))
 )
 
-;; company-mode
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/company-mode")))
-  (add-hook 'after-init-hook 'global-company-mode)
-)
+;; ;; company-mode
+;; (when (file-exists-p
+;;        (expand-file-name (concat user-emacs-directory "public_repos/company-mode")))
+;;   (add-hook 'after-init-hook 'global-company-mode)
+;; )
