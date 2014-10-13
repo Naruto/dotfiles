@@ -67,3 +67,9 @@
 [submodule ".emacs.d/public_repos/popup-el"]
 	path = .emacs.d/public_repos/popup-el
 	url = https://github.com/auto-complete/popup-el.git
+[submodule ".emacs.d/public_repos/emacs-clang-complete-async"]
+	path = .emacs.d/public_repos/emacs-clang-complete-async
+	url = https://github.com/Golevka/emacs-clang-complete-async.git
+[submodule ".emacs.d/public_repos/fuzzy-el"]
+	path = .emacs.d/public_repos/fuzzy-el
+	url = https://github.com/auto-complete/fuzzy-el.git

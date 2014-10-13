@@ -69,9 +69,11 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'post-forward-angle-brackets)
 (setq uniquify-ignore-buffers-re "*[^*]+*")
-(show-paren-mode)
+(show-paren-mode 1)
+(setq show-paren-delay 0)
 ;(iswitchb-mode)
 (require 'dired-x)
+(iimage-mode)
 
 (autoload 'ansi-color-for-comint-mode-on "ansi-color"
   "Set `ansi-color-for-comint-mode' to t." t)
@@ -100,54 +102,86 @@
     (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
     (package-initialize)))
 
-;; yasnippet
-(when (require 'yasnippet nil t)
-  (setq yas-snippet-dirs
-        '(
-          "~/.emacs.d/snippets"
-          "~/.emacs.d/public_repos/yasnippet/snippets"
-          ))
-  (setq yas/use-menu nil)
-  (yas-global-mode 1)
-)
+;; ;; yasnippet
+;; (when (require 'yasnippet nil t)
+;;   (setq yas-snippet-dirs
+;;         '(
+;;           "~/.emacs.d/snippets"
+;;           "~/.emacs.d/public_repos/yasnippet/snippets"
+;;           ))
+;;   (setq yas/use-menu nil)
+;;   (yas-global-mode 1)
+;;   (defun reload-snippets ()
+;;     (interactive)
+;;     (yas-reload-all)
+;;     (yas-recompile-all)
+;;     (yas-reload-all)
+;;     (yas-recompile-all)
+;;     )
+;;   (defun snippet-mode-before-save ()
+;;     (interactive)
+;;     (when (eq major-mode 'snippet-mode) (reload-snippets)))
+;;   (add-hook 'after-save-hook 'snippet-mode-before-save)
+;; )
 
 ;; auto-complete mode
 (when (file-exists-p
        (expand-file-name (concat user-emacs-directory
                                  "public_repos/auto-complete")))
+  (require 'cl)
   (require 'auto-complete-config)
   (add-to-list 'ac-dictionary-directories
                (concat user-emacs-directory
-                       "public_repos/auto-complete/ac-dict"))
-  ;; (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-  (ac-set-trigger-key "TAB")
+                       "public_repos/auto-complete/dict")
+               (concat user-emacs-directory
+                       "ac-dict"))
+  (ac-config-default)
+  (require 'auto-complete-clang)
+  (require 'auto-complete-clang-async)
+
+  ;; Select candidates with C-n/C-p only when completion menu is displayed:
+  (setq ac-use-menu-map t)
+  (define-key ac-menu-map "C-n" 'ac-next)
+  (define-key ac-menu-map "C-p" 'ac-previous)
+
+  ;; auto-complete common setting
   (setq ac-quick-help-delay 0.5)
   (setq ac-dwim t)
-  ;; (ac-config-default)
-
-  ;; auto-complete-yasnippet
-  (add-to-list 'ac-sources 'ac-source-yasnippet)
-  ;; auto-complete-clang
-  (require 'auto-complete-clang)
-
+  (setq ac-candidate-limit 100) 
+  (setq ac-auto-start nil)
+  (setq ac-auto-show-menu t)
+  (setq ac-quick-help-delay 0)
+  (setq ac-use-fuzzy 1.5)
+  (setq ac-show-menu-immediately-on-auto-complete t)
+  (setq ac-expand-on-auto-complete nil)
+  (setq ac-quick-help-height 20)
+  (setq ac-menu-height 20)
+  (ac-set-trigger-key "TAB")
+  (define-key ac-mode-map  [(control tab)] 'auto-complete)
+  
   (defun my-ac-cc-mode-setup ()
-    (setq ac-auto-start nil)
-    ;(setq ac-clang-prefix-header
-    ;      (concat user-emacs-directory
-    ;              "auto_complete/stdafx.pch"))
-    ; (setq ac-clang-flags '("-w" "-ferror-limit" "1"))
     (setq-default ac-sources 
-                  (append '(ac-source-clang
+                  (append '(ac-source-clang-async
+                            ac-source-clang
                             ac-source-gtags)
-                          ac-sources)))
+                          ac-sources))
+    (setq ac-clang-complete-executable 
+          (concat user-emacs-directory "bin/clang-complete"))
+    (setq clang-completion-suppress-error 't)
+    (setq ac-clang-cflags (append '("-std=c++11") ac-clang-cflags))
+    (ac-clang-launch-completion-process)
+    )
+
   (defun my-ac-config ()
-    (define-key ac-complete-mode-map "M-n" 'ac-next)
-    (define-key ac-complete-mode-map "M-p" 'ac-previous)
+    ;(define-key ac-complete-mode-map "M-n" 'ac-next)
+    ;(define-key ac-complete-mode-map "M-p" 'ac-previous)
     (setq ac-auto-start nil)
     (setq-default ac-sources
                   '(ac-source-abbrev
                     ac-source-dictionary
-                    ac-source-words-in-same-mode-buffers))
+                    ac-source-words-in-same-mode-buffers
+                    ac-source-filename
+                    ac-source-yasnippet))
     (add-hook 'c++-mode-hook 'my-ac-cc-mode-setup)
     (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
     (add-hook 'ruby-mode-hook 'ac-ruby-mode-setup)
@@ -158,7 +192,6 @@
     (auto-complete-mode t)
     )
 
-  ;; ac-source-gtags
   (my-ac-config)
 )
 
@@ -549,3 +582,39 @@
 ;;        (expand-file-name (concat user-emacs-directory "public_repos/company-mode")))
 ;;   (add-hook 'after-init-hook 'global-company-mode)
 ;; )
+
+
+;; Create Header Guards with f12
+(global-set-key [f12] 
+  		'(lambda () 
+  		   (interactive)
+  		   (if (buffer-file-name)
+  		       (let*
+  			   ((fName (upcase (file-name-nondirectory (file-name-sans-extension buffer-file-name))))
+  			    (ifDef (concat "#ifndef " fName "_H" "\n#define " fName "_H" "\n"))
+  			    (begin (point-marker))
+  			    )
+  			 (progn
+  					; If less then 5 characters are in the buffer, insert the class definition
+  			   (if (< (- (point-max) (point-min)) 5 )
+  			       (progn
+  				 (insert "\nclass " (capitalize fName) "{\npublic:\n\nprivate:\n\n};\n")
+  				 (goto-char (point-min))
+  				 (next-line-nomark 3)
+  				 (setq begin (point-marker))
+  				 )
+  			     )
+  			   
+  					;Insert the Header Guard
+  			   (goto-char (point-min))
+  			   (insert ifDef)
+  			   (goto-char (point-max))
+  			   (insert "\n#endif" " //" fName "_H")
+  			   (goto-char begin))
+  			 )
+                                        ;else
+  		     (message (concat "Buffer " (buffer-name) " must have a filename"))
+  		     )
+  		   )
+  		)
+
