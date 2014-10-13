@@ -52,9 +52,6 @@
 [submodule ".emacs.d/public_repos/epl"]
 	path = .emacs.d/public_repos/epl
 	url = https://github.com/cask/epl.git
-[submodule ".emacs.d/public_repos/ack-and-a-half"]
-	path = .emacs.d/public_repos/ack-and-a-half
-	url = https://github.com/jhelwig/ack-and-a-half.git
 [submodule ".emacs.d/public_repos/smex"]
 	path = .emacs.d/public_repos/smex
 	url = https://github.com/nonsequitur/smex.git
@@ -67,3 +64,6 @@
 [submodule ".emacs.d/public_repos/company-mode"]
 	path = .emacs.d/public_repos/company-mode
 	url = https://github.com/company-mode/company-mode.git
+[submodule ".emacs.d/public_repos/popup-el"]
+	path = .emacs.d/public_repos/popup-el
+	url = https://github.com/auto-complete/popup-el.git
