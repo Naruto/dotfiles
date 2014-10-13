@@ -131,6 +131,11 @@ case ${OSTYPE} in
         export PATH=/opt/java/bin:$PATH
         export JAVA_HOME=/opt/java
         export JAVA_FONTS=/usr/share/fonts/TTF
+
+        # android
+        export PATH=$PATH:/opt/android/android-ndk
+        export PATH=$PATH:/opt/android/adt-bundle-linux-x86_64/sdk/platform-tools
+        export PATH=$PATH:/opt/android/adt-bundle-linux-x86_64/sdk/tools
         ;;
 
     darwin*)
