@@ -26,6 +26,7 @@ shall install
     $ sudo apt-get install silversearcher-ag
     $ sudo apt-get install ack-grep
     $ curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+    $ sudo pip install percol
 
 For chromium developer
 
@@ -44,9 +45,10 @@ For mobile platform(ex: Android, Tizen) developer.
 
     $ git clone https://github.com/Naruto/dotfiles.git
     $ DOTFILES_PATH=$(pwd)/dotfiles
-    $ ln -sf ${DOTFILES_PATH}/.emacs.d ~/
-    $ ln -sf ${DOTFILES_PATH}/.tmux.conf ~/
-    $ ln -sf ${DOTFILES_PATH}/.zshrc ~/
+    $ ln -sfn ${DOTFILES_PATH}/.emacs.d ~/
+    $ ln -sfn ${DOTFILES_PATH}/.tmux.conf ~/
+    $ ln -sfn ${DOTFILES_PATH}/.zshrc ~/
+    $ ln -sfn ${DOTFILES_PATH}/.percol.d ~/
     $ cd ${DOTFILES_PATH}
     $ git submodule init
     $ git submodule update --recursive
