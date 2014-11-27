@@ -1,12 +1,13 @@
-;;; migemo.el --- Japanese incremental search through dynamic pattern expansion
+;;; migemo.el --- Japanese incremental search through dynamic pattern expansion -*- lexical-binding: t; -*-
 
 ;; $Id: migemo.el.in,v 1.9 2012/06/24 04:09:59 kaworu Exp $
 ;; Copyright (C) Satoru Takabayashi
 
 ;; Author: Satoru Takabayashi <satoru-t@is.aist-nara.ac.jp>
 ;; URL: https://github.com/emacs-jp/migemo
-;; Version: 1.9
+;; Version: 1.9.1
 ;; Keywords:
+;; Package-Requires: ((cl-lib "0.5"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -28,6 +29,9 @@
 ;;
 
 ;;; Code:
+
+(require 'cl-lib)
+
 (defgroup migemo nil
   "migemo - Japanese incremental search trough dynamic pattern expansion."
   :group 'matching)
@@ -65,6 +69,11 @@
 
 (defcustom migemo-isearch-enable-p t
   "*Enable the migemo feature on isearch or not."
+  :group 'migemo
+  :type 'boolean)
+
+(defcustom migemo-use-default-isearch-keybinding t
+  "*If non-nil, set migemo default keybinding for isearch in `migemo-init'."
   :group 'migemo
   :type 'boolean)
 
@@ -159,6 +168,7 @@
 (defconst migemo-emacs21p (and (> emacs-major-version 20) (not (featurep 'xemacs))))
 (defvar migemo-search-pattern-alist nil)
 (defvar migemo-do-isearch nil)
+(defvar migemo-register-isearch-keybinding-function nil)
 
 ;; For warnings of byte-compile. Following functions are defined in XEmacs
 (declare-function set-process-input-coding-system "code-process")
@@ -201,6 +211,9 @@
 	     (null migemo-pattern-alist))
     (setq migemo-pattern-alist
 	  (migemo-pattern-alist-load migemo-pattern-alist-file)))
+  (when (and migemo-use-default-isearch-keybinding
+             migemo-register-isearch-keybinding-function)
+    (funcall migemo-register-isearch-keybinding-function))
   (or (and migemo-process
 	   (eq (process-status migemo-process) 'run))
       (let ((options
@@ -544,6 +557,14 @@ into the migemo's regexp pattern."
 	   (fboundp 'search-forward-lax-whitespace))
   (setq isearch-search-fun-function 'isearch-search-fun-migemo)
 
+  (when (fboundp 'isearch-search-fun-default)
+    (defadvice multi-isearch-search-fun (after support-migemo activate)
+      (setq ad-return-value
+            `(lambda (string bound noerror)
+               (cl-letf (((symbol-function 'isearch-search-fun-default)
+                          'isearch-search-fun-migemo))
+                 (funcall ,ad-return-value string bound noerror))))))
+
   (defun isearch-search-fun-migemo ()
 	"Return default functions to use for the search with migemo."
 	(cond
@@ -676,12 +697,13 @@ This function used with Megemo feature."
 ;; supports C-w C-d for GNU emacs only [migemo:00171]
 (when (and (not (featurep 'xemacs))
 	   (fboundp 'isearch-yank-line))
-  (add-hook 'isearch-mode-hook
-	    (lambda ()
-	      (define-key isearch-mode-map "\C-d" 'migemo-isearch-yank-char)
-	      (define-key isearch-mode-map "\C-w" 'migemo-isearch-yank-word)
-	      (define-key isearch-mode-map "\C-y" 'migemo-isearch-yank-line)
-	      (define-key isearch-mode-map "\M-m" 'migemo-isearch-toggle-migemo)))
+  (defun migemo-register-isearch-keybinding ()
+    (define-key isearch-mode-map "\C-d" 'migemo-isearch-yank-char)
+    (define-key isearch-mode-map "\C-w" 'migemo-isearch-yank-word)
+    (define-key isearch-mode-map "\C-y" 'migemo-isearch-yank-line)
+    (define-key isearch-mode-map "\M-m" 'migemo-isearch-toggle-migemo))
+
+  (setq migemo-register-isearch-keybinding-function 'migemo-register-isearch-keybinding)
 
   (defun migemo-isearch-toggle-migemo ()
     "Toggle migemo mode in isearch."
@@ -758,7 +780,6 @@ This function used with Megemo feature."
 
 ;; Local Variables:
 ;; coding: euc-japan-unix
-;; lexical-binding: t
 ;; indent-tabs-mode: nil
 ;; End:
 
