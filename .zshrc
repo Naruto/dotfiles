@@ -193,3 +193,6 @@ if exists percol; then
     bindkey '^R' percol_select_history
 fi
 
+# gnu global uses pygments
+export GTAGSCONF=/usr/local/share/gtags/gtags.conf
+export GTAGSLABEL=pygments
