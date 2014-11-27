@@ -76,3 +76,6 @@
 [submodule ".emacs.d/public_repos/auto-save-buffers-enhanced"]
 	path = .emacs.d/public_repos/auto-save-buffers-enhanced
 	url = https://github.com/kentaro/auto-save-buffers-enhanced.git
+[submodule ".emacs.d/public_repos/ace-jump-mode"]
+	path = .emacs.d/public_repos/ace-jump-mode
+	url = https://github.com/winterTTr/ace-jump-mode.git
