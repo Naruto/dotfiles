@@ -73,3 +73,6 @@
 [submodule ".emacs.d/public_repos/fuzzy-el"]
 	path = .emacs.d/public_repos/fuzzy-el
 	url = https://github.com/auto-complete/fuzzy-el.git
+[submodule ".emacs.d/public_repos/auto-save-buffers-enhanced"]
+	path = .emacs.d/public_repos/auto-save-buffers-enhanced
+	url = https://github.com/kentaro/auto-save-buffers-enhanced.git

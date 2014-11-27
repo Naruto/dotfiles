@@ -80,11 +80,15 @@
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 
-;; auto-save-buffers
-(when (require 'auto-save-buffers nil t)
+;; auto-save-buffers-enhanced
+(when (require 'auto-save-buffers-enhanced nil t)
   (setq make-backup-files nil)
   (setq auto-save-default nil)
-  (run-with-idle-timer 0.5 t 'auto-save-buffers)
+  (setq auto-save-buffers-enhanced-include-regexps '(".+")) ;all files
+  (setq auto-save-buffers-enhanced-quiet-save-p t)  ;;; quiet Wrote messsage.
+  (auto-save-buffers-enhanced t)
+  ;; toggle auto-save-buffers-enhanced
+  (global-set-key "\C-xas" 'auto-save-buffers-enhanced-toggle-activity)
 )
 
 ;; auto-install 
