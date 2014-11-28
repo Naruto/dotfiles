@@ -1,4 +1,4 @@
-;; user info
+; user info
 (setq user-full-name "Naruto TAKAHASHI")
 (setq user-mail-address "tnaruto@gmail.com")
 
@@ -79,19 +79,8 @@
   "Set `ansi-color-for-comint-mode' to t." t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-
-;; auto-save-buffers-enhanced
-(when (require 'auto-save-buffers-enhanced nil t)
-  (setq make-backup-files nil)
-  (setq auto-save-default nil)
-  (setq auto-save-buffers-enhanced-include-regexps '(".+")) ;all files
-  (setq auto-save-buffers-enhanced-quiet-save-p t)  ;;; quiet Wrote messsage.
-  (auto-save-buffers-enhanced t)
-  ;; toggle auto-save-buffers-enhanced
-  (global-set-key "\C-xas" 'auto-save-buffers-enhanced-toggle-activity)
-)
-
 ;; auto-install 
+(setq enable-quelpa nil)
 (when (require 'auto-install nil t)
   (setq auto-install-directory "~/.emacs.d/elisp/")
   (auto-install-update-emacswiki-package-name t)
@@ -101,45 +90,94 @@
 ;; package.el for ELPA
 (when (>= emacs-major-version 23)
   (when (require 'package nil t)
+    (package-initialize)
+    (add-to-list 'package-archives
+                 '("gnu" . "http://elpa.gnu.org/packages/"))
     (add-to-list 'package-archives
                  '("marmalade" . "http://marmalade-repo.org/packages/"))
-    (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
-    (package-initialize)))
+    (add-to-list 'package-archives
+                 '("ELPA" . "http://tromey.com/elpa/"))
+    (add-to-list 'package-archives
+                 '("melpa . "http://melpa.milkbox.net/packages/))
 
-;; ;; yasnippet
-;; (when (require 'yasnippet nil t)
-;;   (setq yas-snippet-dirs
-;;         '(
-;;           "~/.emacs.d/snippets"
-;;           "~/.emacs.d/public_repos/yasnippet/snippets"
-;;           ))
-;;   (setq yas/use-menu nil)
-;;   (yas-global-mode 1)
-;;   (defun reload-snippets ()
-;;     (interactive)
-;;     (yas-reload-all)
-;;     (yas-recompile-all)
-;;     (yas-reload-all)
-;;     (yas-recompile-all)
-;;     )
-;;   (defun snippet-mode-before-save ()
-;;     (interactive)
-;;     (when (eq major-mode 'snippet-mode) (reload-snippets)))
-;;   (add-hook 'after-save-hook 'snippet-mode-before-save)
-;; )
+    (when (require 'quelpa nil t)
+        (quelpa-self-upgrade)
+      (with-temp-buffer
+        (url-insert-file-contents "https://raw.github.com/quelpa/quelpa/master/bootstrap.el")
+        (eval-buffer))
+      (setq enable-quelpa t)
+      )
+     ))
+
+;; dash
+(when enable-quelpa
+  (quelpa 'dash)
+  (require 'dash)
+  )
+;; s
+(when enable-quelpa
+  (quelpa 's)
+  (require 's)
+  )
+
+;; auto-save-buffers-enhanced
+(when enable-quelpa
+  (quelpa 'auto-save-buffers-enhanced)
+  (setq make-backup-files nil)
+  (setq auto-save-default nil)
+  (setq auto-save-buffers-enhanced-include-regexps '(".+")) ;all files
+  (setq auto-save-buffers-enhanced-quiet-save-p t)  ;;; quiet Wrote messsage.
+  (auto-save-buffers-enhanced t)
+  ;; toggle auto-save-buffers-enhanced
+  (global-set-key "\C-xas" 'auto-save-buffers-enhanced-toggle-activity)
+)
+
+;; yasnippet
+(when enable-quelpa
+  (quelpa 'yasnippet)
+  (require 'yasnippet nil t)
+  (setq yas-snippet-dirs
+        '(
+          "~/.emacs.d/snippets"
+          "~/.emacs.d/public_repos/yasnippet/snippets"
+          ))
+  (setq yas/use-menu nil)
+  (yas-global-mode 1)
+  (defun reload-snippets ()
+    (interactive)
+    (yas-reload-all)
+    (yas-recompile-all)
+    (yas-reload-all)
+    (yas-recompile-all)
+    )
+  (defun snippet-mode-before-save ()
+    (interactive)
+    (when (eq major-mode 'snippet-mode) (reload-snippets)))
+  (add-hook 'after-save-hook 'snippet-mode-before-save)
+)
+
+;; fuzzy
+(when enable-quelpa
+  (quelpa 'fuzzy)
+  )
+
+(when enable-quelpa
+  (quelpa 'popup)
+  )
 
 ;; auto-complete mode
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory
-                                 "public_repos/auto-complete")))
+(when enable-quelpa
+  (quelpa 'auto-complete)
   (require 'cl)
   (require 'auto-complete-config)
   (add-to-list 'ac-dictionary-directories
                (concat user-emacs-directory
-                       "public_repos/auto-complete/dict")
+                       "quelpa/build/auto-complete/dict/")
                (concat user-emacs-directory
                        "ac-dict"))
   (ac-config-default)
+
+  (quelpa 'auto-complete-clang-async)
   (require 'auto-complete-clang-async)
 
   ;; Select candidates with C-n/C-p only when completion menu is displayed:
@@ -219,9 +257,10 @@
   (my-ac-config)
 )
 
-;; Undohist
-(when (require 'undohist nil t)
-  (undohist-initialize))
+;; ;; Undohist
+;; (when enable-quelpa
+;;   (quelpa 'undohist)
+;;   (undohist-initialize))
 
 ;; howm
 (setq howm-menu-lang 'ja)
@@ -250,26 +289,28 @@
 )
 
 ;; cua-mode
-(cua-mode t)
-(setq cua-enable-cua-keys nil)
+;;(cua-mode t)
+;;(setq cua-enable-cua-keys nil)
 
 ;; psvn
 (when (executable-find "svn")
   (setq svn-status-verbose nil)
   (autoload 'svn-status"psvn" "Run `svn status'." t))
 
-;; egg
-(when (executable-find "git")
-  (require 'egg nil t))
-
 ;; multi-term
 (when (require 'multi-term nil t)
   )
 
 ;; elscren
-(when (require 'elscreen nil t)
+(when enable-quelpa
+  (quelpa 'elscreen)
+  (require 'elscreen nil t)
   (require 'elscreen-howm nil t)
-  (require 'elscreen-gf nil t))
+  (require 'elscreen-gf nil t)
+  (elscreen-start)
+  (setq elscreen-tab-display-kill-screen nil)
+  (setq elscreen-tab-display-control nil)
+  )
 
 ;; skk
 (when (require 'skk-autoloads nil t)
@@ -421,47 +462,47 @@
 )
 
 ;; emacs helm
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/helm")))
-  (require 'helm-config)
-  (global-set-key (kbd "C-c h") 'helm-mini)
-  (custom-set-variables '(helm-ff-auto-update-initial-value nil))
-  ;; helm commands
-  (define-key global-map (kbd "M-x")     'helm-M-x)
-  (define-key global-map (kbd "C-x C-f") 'helm-find-files)
-  (define-key global-map (kbd "C-x C-r") 'helm-recentf)
-  (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
-  (define-key global-map (kbd "C-c i")   'helm-imenu)
-  (define-key global-map (kbd "C-x b")   'helm-buffers-list)
+(when enable-quelpa
+  ;;  (quelpa 'helm)
+  ;; (require 'helm-config)
+  ;; (global-set-key (kbd "C-c h") 'helm-mini)
+  ;; (custom-set-variables '(helm-ff-auto-update-initial-value nil))
+  ;; ;; helm commands
+  ;; (define-key global-map (kbd "M-x")     'helm-M-x)
+  ;; (define-key global-map (kbd "C-x C-f") 'helm-find-files)
+  ;; (define-key global-map (kbd "C-x C-r") 'helm-recentf)
+  ;; (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
+  ;; (define-key global-map (kbd "C-c i")   'helm-imenu)
+  ;; (define-key global-map (kbd "C-x b")   'helm-buffers-list)
 
-  ;; Emulate `kill-line' in helm minibuffer
-  (setq helm-delete-minibuffer-contents-from-point t)
-  (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
-    "Emulate `kill-line' in helm minibuffer"
-    (kill-new (buffer-substring (point) (field-end))))
-  ;; ;; For find-file etc.
-  ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-  ;; ;; For helm-find-files etc.
-  ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+  ;; ;; Emulate `kill-line' in helm minibuffer
+  ;; (setq helm-delete-minibuffer-contents-from-point t)
+  ;; (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
+  ;;   "Emulate `kill-line' in helm minibuffer"
+  ;;   (kill-new (buffer-substring (point) (field-end))))
+  ;; ;; ;; For find-file etc.
+  ;; ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+  ;; ;; ;; For helm-find-files etc.
+  ;; ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
 
-  (defadvice helm-ff-kill-or-find-buffer-fname (around execute-only-if-exist activate)
-    "Execute command only if CANDIDATE exists"
-    (when (file-exists-p candidate)
-      ad-do-it))
+  ;; (defadvice helm-ff-kill-or-find-buffer-fname (around execute-only-if-exist activate)
+  ;;   "Execute command only if CANDIDATE exists"
+  ;;   (when (file-exists-p candidate)
+  ;;     ad-do-it))
 
-  ;; helm-ag
-  (require 'helm-ag)
-  (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
-  (setq helm-ag-command-option "--all-text")
-  (setq helm-ag-thing-at-point 'symbol)
-  (global-set-key (kbd "M-g .") 'helm-ag)
-  (global-set-key (kbd "M-g ,") 'helm-ag-pop-stack)
-  (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
+  ;; ;; helm-ag
+  ;; (require 'helm-ag)
+  ;; (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+  ;; (setq helm-ag-command-option "--all-text")
+  ;; (setq helm-ag-thing-at-point 'symbol)
+  ;; (global-set-key (kbd "M-g .") 'helm-ag)
+  ;; (global-set-key (kbd "M-g ,") 'helm-ag-pop-stack)
+  ;; (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
 )
 
 ;; ack-and-a-half
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/ack-and-a-half")))
+(when enable-quelpa
+  (quelpa 'ack-and-a-half)
   (require 'ack-and-a-half)
   ;; Create shorter aliases
   (defalias 'ack 'ack-and-a-half)
@@ -470,16 +511,18 @@
   (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 )
 
-;; ag
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/ag.el")))
-  (add-to-load-path "public_repos/ag.el")
+;; ag.el
+(when enable-quelpa
+  (quelpa 'ag)
   (require 'ag nil t)
-  ; (setq ag-highlight-search t)
+  ;; (setq ag-highlight-search t)
 )
 
+
 ;; cmake
-(when (require 'cmake-mode nil t)
+(when enable-quelpa
+  (quelpa 'cmake-mode)
+  (require 'cmake-mode nil t)
   (setq auto-mode-alist
         (append '(("CMakeLists\\.txt\\'" . cmake-mode)
                   ("\\.cmake\\'" . cmake-mode))
@@ -493,8 +536,8 @@
 ;)
 
 ;; mark-multiple
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/mark-multiple")))
+(when enable-quelpa
+  (quelpa 'mark-multiple)
   (require 'inline-string-rectangle)
   (global-set-key (kbd "C-x r t") 'inline-string-rectangle)
 
@@ -520,51 +563,35 @@
 ;  )
 
 ;; git-modes
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/git-modes")))
+(when enable-quelpa
+  (quelpa 'git)
   (require 'git-commit-mode)
   (require 'git-rebase-mode)
-  (require 'gitconfig-mode)
-  (require 'gitignore-mode)
 )
 
 ;; magit
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/magit")))
+(when enable-quelpa
+  (quelpa 'magit)
   (require 'magit)
   )
 
-;; dash.el
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/dash.el")))
-  (add-to-load-path "public_repos/dash.el")
-  (require 'dash)
-  )
-
-;; s.el
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/s.el")))
-  (add-to-load-path "public_repos/s.el")
-  (require 's)
-  )
-
 ;; epl
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/epl")))
+(when enable-quelpa
+  (quelpa 'epl)
   (require 'epl)
   )
 
 ;; smartparens
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/smartparens")))
+(when enable-quelpa
+  (quelpa 'smartparens)
   (require 'smartparens)
   (require 'smartparens-config)
   (smartparens-global-mode t)
   )
 
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/projectile")))
-  ;; projectile
+;; projectile
+(when enable-quelpa
+  (quelpa 'projectile)
   (require 'projectile)
   (projectile-global-mode)
   (setq projectile-enable-caching t)
@@ -585,33 +612,23 @@
 )
 
 ;; grizzl
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/grizzl")))
+(when enable-quelpa
+  (quelpa 'grizzl)
   (require 'grizzl)
   ; (setq projectile-completion-system 'grizzl)
 )
 
-;; ;; smex
-;; (when (file-exists-p
-;;        (expand-file-name (concat user-emacs-directory "public_repos/smex")))
-;;   (require 'smex)
-;;   (smex-initialize)
-;;   ;; bind keys
-;;   (global-set-key (kbd "M-x") 'smex)
-;;   (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-;; )
-
 ;; undo-tree
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/undo-tree")))
+(when enable-quelpa
+  (quelpa 'undo-tree)
   (require 'undo-tree)
   (global-undo-tree-mode)
   (global-set-key (kbd "M-/") 'undo-tree-redo)
   )
 
 ;; glsl mode
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/glsl-mode")))
+(when enable-quelpa
+  (quelpa 'glsl-mode)
   (autoload 'glsl-mode "glsl-mode" nil t)
   (add-to-list 'auto-mode-alist '("\\.glsl\\'" . glsl-mode))
   (add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
@@ -619,72 +636,101 @@
   (add-to-list 'auto-mode-alist '("\\.geom\\'" . glsl-mode))
 )
 
-;; ;; company-mode
+
+;; ;; ace-jump-mode
 ;; (when (file-exists-p
-;;        (expand-file-name (concat user-emacs-directory "public_repos/company-mode")))
-;;   (add-hook 'after-init-hook 'global-company-mode)
+;;        (expand-file-name (concat user-emacs-directory "public_repos/ace-jump-mode")))
+;;   (autoload
+;;     'ace-jump-mode
+;;     "ace-jump-mode"
+;;     "Emacs quick move minor mode"
+;;     t)
+;;   ;; you can select the key you prefer to
+;;   (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+
+;;   ;; 
+;;   ;; enable a more powerful jump back function from ace jump mode
+;;   ;;
+;;   (autoload
+;;     'ace-jump-mode-pop-mark
+;;     "ace-jump-mode"
+;;     "Ace jump back:-)"
+;;     t)
+;;   (eval-after-load "ace-jump-mode"
+;;     '(ace-jump-mode-enable-mark-sync))
+;;   (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+;;   )
+
+;; ;; helm-swoop
+;; (when (file-exists-p
+;;        (expand-file-name (concat user-emacs-directory "public_repos/helm-swoop")))
+;;   (require 'helm-swoop)
+;;   ;; Change the keybinds to whatever you like :)
+;;   (global-set-key (kbd "M-i") 'helm-swoop)
+;;   (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+;;   (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+;;   (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+
+;;   ;; When doing isearch, hand the word over to helm-swoop
+;;   (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+;;   ;; From helm-swoop to helm-multi-swoop-all
+;;   (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+;;   ;; When doing evil-search, hand the word over to helm-swoop
+;;   ;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
+
+;;   ;; Save buffer when helm-multi-swoop-edit complete
+;;   (setq helm-multi-swoop-edit-save t)
+
+;;   ;; If this value is t, split window inside the current window
+;;   (setq helm-swoop-split-with-multiple-windows nil)
+
+;;   ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+;;   (setq helm-swoop-split-direction 'split-window-vertically)
+
+;;   ;; If nil, you can slightly boost invoke speed in exchange for text color
+;;   (setq helm-swoop-speed-or-color nil)
+
+;;   ;; ;; Go to the opposite side of line from the end or beginning of line
+;;   (setq helm-swoop-move-to-line-cycle t)
+
+;;   ;; Optional face for line numbers
+;;   ;; Face name is `helm-swoop-line-number-face`
+;;   (setq helm-swoop-use-line-number-face t)
 ;; )
 
 
-;; ace-jump-mode
-(when (file-exists-p
-       (expand-file-name (concat user-emacs-directory "public_repos/ace-jump-mode")))
-  (autoload
-    'ace-jump-mode
-    "ace-jump-mode"
-    "Emacs quick move minor mode"
-    t)
-  ;; you can select the key you prefer to
-  (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 
-
-
-  ;; 
-  ;; enable a more powerful jump back function from ace jump mode
-  ;;
-  (autoload
-    'ace-jump-mode-pop-mark
-    "ace-jump-mode"
-    "Ace jump back:-)"
-    t)
-  (eval-after-load "ace-jump-mode"
-    '(ace-jump-mode-enable-mark-sync))
-  (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
-  )
-
-
-
-;; Create Header Guards with f12
-(global-set-key [f12] 
-  		'(lambda () 
-  		   (interactive)
-  		   (if (buffer-file-name)
-  		       (let*
-  			   ((fName (upcase (file-name-nondirectory (file-name-sans-extension buffer-file-name))))
-  			    (ifDef (concat "#ifndef " fName "_H" "\n#define " fName "_H" "\n"))
-  			    (begin (point-marker))
-  			    )
-  			 (progn
-  					; If less then 5 characters are in the buffer, insert the class definition
-  			   (if (< (- (point-max) (point-min)) 5 )
-  			       (progn
-  				 (insert "\nclass " (capitalize fName) "{\npublic:\n\nprivate:\n\n};\n")
-  				 (goto-char (point-min))
-  				 (next-line-nomark 3)
-  				 (setq begin (point-marker))
-  				 )
-  			     )
+;; ;; Create Header Guards with f12
+;; (global-set-key [f12] 
+;;   		'(lambda () 
+;;   		   (interactive)
+;;   		   (if (buffer-file-name)
+;;   		       (let*
+;;   			   ((fName (upcase (file-name-nondirectory (file-name-sans-extension buffer-file-name))))
+;;   			    (ifDef (concat "#ifndef " fName "_H" "\n#define " fName "_H" "\n"))
+;;   			    (begin (point-marker))
+;;   			    )
+;;   			 (progn
+;;   					; If less then 5 characters are in the buffer, insert the class definition
+;;   			   (if (< (- (point-max) (point-min)) 5 )
+;;   			       (progn
+;;   				 (insert "\nclass " (capitalize fName) "{\npublic:\n\nprivate:\n\n};\n")
+;;   				 (goto-char (point-min))
+;;   				 (next-line-nomark 3)
+;;   				 (setq begin (point-marker))
+;;   				 )
+;;   			     )
   			   
-  					;Insert the Header Guard
-  			   (goto-char (point-min))
-  			   (insert ifDef)
-  			   (goto-char (point-max))
-  			   (insert "\n#endif" " //" fName "_H")
-  			   (goto-char begin))
-  			 )
-                                        ;else
-  		     (message (concat "Buffer " (buffer-name) " must have a filename"))
-  		     )
-  		   )
-  		)
+;;   					;Insert the Header Guard
+;;   			   (goto-char (point-min))
+;;   			   (insert ifDef)
+;;   			   (goto-char (point-max))
+;;   			   (insert "\n#endif" " //" fName "_H")
+;;   			   (goto-char begin))
+;;   			 )
+;;                                         ;else
+;;   		     (message (concat "Buffer " (buffer-name) " must have a filename"))
+;;   		     )
+;;   		   )
+;;   		)
 

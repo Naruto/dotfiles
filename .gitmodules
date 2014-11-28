@@ -1,81 +1,9 @@
-[submodule ".emacs.d/public_repos/ag.el"]
-	path = .emacs.d/public_repos/ag.el
-	url = https://github.com/Wilfred/ag.el
-[submodule ".emacs.d/public_repos/egg"]
-	path = .emacs.d/public_repos/egg
-	url = https://github.com/bogolisk/egg.git
-[submodule ".emacs.d/public_repos/yasnippet"]
-	path = .emacs.d/public_repos/yasnippet
-	url = https://github.com/capitaomorte/yasnippet.git
-[submodule ".emacs.d/public_repos/auto-complete"]
-	path = .emacs.d/public_repos/auto-complete
-	url = https://github.com/auto-complete/auto-complete.git
-[submodule ".emacs.d/public_repos/helm"]
-	path = .emacs.d/public_repos/helm
-	url = https://github.com/emacs-helm/helm.git
 [submodule ".emacs.d/public_repos/helm-ag"]
 	path = .emacs.d/public_repos/helm-ag
 	url = https://github.com/syohex/emacs-helm-ag.git
-[submodule ".emacs.d/public_repos/autopair"]
-	path = .emacs.d/public_repos/autopair
-	url = https://github.com/capitaomorte/autopair.git
-[submodule ".emacs.d/public_repos/mark-multiple"]
-	path = .emacs.d/public_repos/mark-multiple
-	url = https://github.com/magnars/mark-multiple.el.git
-[submodule ".emacs.d/public_repos/expand-region"]
-	path = .emacs.d/public_repos/expand-region
-	url = https://github.com/magnars/expand-region.el.git
-[submodule ".emacs.d/public_repos/magit"]
-	path = .emacs.d/public_repos/magit
-	url = https://github.com/magit/magit.git
-[submodule ".emacs.d/public_repos/git-modes"]
-	path = .emacs.d/public_repos/git-modes
-	url = https://github.com/magit/git-modes.git
-[submodule ".emacs.d/public_repos/smartparens"]
-	path = .emacs.d/public_repos/smartparens
-	url = https://github.com/Fuco1/smartparens.git
-[submodule ".emacs.d/public_repos/dash.el"]
-	path = .emacs.d/public_repos/dash.el
-	url = https://github.com/magnars/dash.el.git
-[submodule ".emacs.d/public_repos/grizzl"]
-	path = .emacs.d/public_repos/grizzl
-	url = https://github.com/d11wtq/grizzl.git
-[submodule ".emacs.d/public_repos/projectile"]
-	path = .emacs.d/public_repos/projectile
-	url = https://github.com/bbatsov/projectile.git
-[submodule ".emacs.d/public_repos/s.el"]
-	path = .emacs.d/public_repos/s.el
-	url = https://github.com/magnars/s.el.git
 [submodule ".emacs.d/public_repos/pkg-info.el"]
 	path = .emacs.d/public_repos/pkg-info.el
 	url = https://github.com/lunaryorn/pkg-info.el.git
-[submodule ".emacs.d/public_repos/epl"]
-	path = .emacs.d/public_repos/epl
-	url = https://github.com/cask/epl.git
-[submodule ".emacs.d/public_repos/smex"]
-	path = .emacs.d/public_repos/smex
-	url = https://github.com/nonsequitur/smex.git
-[submodule ".emacs.d/public_repos/undo-tree"]
-	path = .emacs.d/public_repos/undo-tree
-	url = http://www.dr-qubit.org/git/undo-tree.git
-[submodule ".emacs.d/public_repos/glsl-mode"]
-	path = .emacs.d/public_repos/glsl-mode
-	url = https://github.com/jimhourihan/glsl-mode.git
-[submodule ".emacs.d/public_repos/company-mode"]
-	path = .emacs.d/public_repos/company-mode
-	url = https://github.com/company-mode/company-mode.git
-[submodule ".emacs.d/public_repos/popup-el"]
-	path = .emacs.d/public_repos/popup-el
-	url = https://github.com/auto-complete/popup-el.git
-[submodule ".emacs.d/public_repos/emacs-clang-complete-async"]
-	path = .emacs.d/public_repos/emacs-clang-complete-async
-	url = https://github.com/Golevka/emacs-clang-complete-async.git
-[submodule ".emacs.d/public_repos/fuzzy-el"]
-	path = .emacs.d/public_repos/fuzzy-el
-	url = https://github.com/auto-complete/fuzzy-el.git
-[submodule ".emacs.d/public_repos/auto-save-buffers-enhanced"]
-	path = .emacs.d/public_repos/auto-save-buffers-enhanced
-	url = https://github.com/kentaro/auto-save-buffers-enhanced.git
-[submodule ".emacs.d/public_repos/ace-jump-mode"]
-	path = .emacs.d/public_repos/ace-jump-mode
-	url = https://github.com/winterTTr/ace-jump-mode.git
+[submodule ".emacs.d/public_repos/quelpa"]
+	path = .emacs.d/public_repos/quelpa
+	url = https://github.com/quelpa/quelpa.git
