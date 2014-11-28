@@ -8,3 +8,5 @@
 .emacs.d/projectile.cache
 wget-log
 .emacs.d/elpa
+.emacs.d/quelpa
+
