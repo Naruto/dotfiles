@@ -463,41 +463,42 @@
 
 ;; emacs helm
 (when enable-quelpa
-  ;;  (quelpa 'helm)
-  ;; (require 'helm-config)
-  ;; (global-set-key (kbd "C-c h") 'helm-mini)
-  ;; (custom-set-variables '(helm-ff-auto-update-initial-value nil))
-  ;; ;; helm commands
-  ;; (define-key global-map (kbd "M-x")     'helm-M-x)
-  ;; (define-key global-map (kbd "C-x C-f") 'helm-find-files)
-  ;; (define-key global-map (kbd "C-x C-r") 'helm-recentf)
-  ;; (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
-  ;; (define-key global-map (kbd "C-c i")   'helm-imenu)
-  ;; (define-key global-map (kbd "C-x b")   'helm-buffers-list)
+   (quelpa 'helm)
+  (require 'helm-config)
+  (global-set-key (kbd "C-c h") 'helm-mini)
+  (custom-set-variables '(helm-ff-auto-update-initial-value nil))
+  ;; helm commands
+  (define-key global-map (kbd "M-x")     'helm-M-x)
+  (define-key global-map (kbd "C-x C-f") 'helm-find-files)
+  (define-key global-map (kbd "C-x C-r") 'helm-recentf)
+  (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
+  (define-key global-map (kbd "C-c i")   'helm-imenu)
+  (define-key global-map (kbd "C-x b")   'helm-buffers-list)
 
-  ;; ;; Emulate `kill-line' in helm minibuffer
-  ;; (setq helm-delete-minibuffer-contents-from-point t)
-  ;; (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
-  ;;   "Emulate `kill-line' in helm minibuffer"
-  ;;   (kill-new (buffer-substring (point) (field-end))))
-  ;; ;; ;; For find-file etc.
-  ;; ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-  ;; ;; ;; For helm-find-files etc.
-  ;; ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+  ;; Emulate `kill-line' in helm minibuffer
+  (setq helm-delete-minibuffer-contents-from-point t)
+  (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
+    "Emulate `kill-line' in helm minibuffer"
+    (kill-new (buffer-substring (point) (field-end))))
+  ;; ;; For find-file etc.
+  ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+  ;; ;; For helm-find-files etc.
+  ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
 
-  ;; (defadvice helm-ff-kill-or-find-buffer-fname (around execute-only-if-exist activate)
-  ;;   "Execute command only if CANDIDATE exists"
-  ;;   (when (file-exists-p candidate)
-  ;;     ad-do-it))
+  (defadvice helm-ff-kill-or-find-buffer-fname (around execute-only-if-exist activate)
+    "Execute command only if CANDIDATE exists"
+    (when (file-exists-p candidate)
+      ad-do-it))
 
-  ;; ;; helm-ag
-  ;; (require 'helm-ag)
-  ;; (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
-  ;; (setq helm-ag-command-option "--all-text")
-  ;; (setq helm-ag-thing-at-point 'symbol)
-  ;; (global-set-key (kbd "M-g .") 'helm-ag)
-  ;; (global-set-key (kbd "M-g ,") 'helm-ag-pop-stack)
-  ;; (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
+  ;; helm-ag
+  (quelpa 'helm-ag)
+  (require 'helm-ag)
+  (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+  (setq helm-ag-command-option "--all-text")
+  (setq helm-ag-thing-at-point 'symbol)
+  (global-set-key (kbd "M-g .") 'helm-ag)
+  (global-set-key (kbd "M-g ,") 'helm-ag-pop-stack)
+  (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
 )
 
 ;; ack-and-a-half
@@ -637,68 +638,79 @@
 )
 
 
-;; ;; ace-jump-mode
-;; (when (file-exists-p
-;;        (expand-file-name (concat user-emacs-directory "public_repos/ace-jump-mode")))
-;;   (autoload
-;;     'ace-jump-mode
-;;     "ace-jump-mode"
-;;     "Emacs quick move minor mode"
-;;     t)
-;;   ;; you can select the key you prefer to
-;;   (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
+;; ace-jump-mode
+(when enable-quelpa
+  (quelpa 'ace-jump-mode)
+  (autoload
+    'ace-jump-mode
+    "ace-jump-mode"
+    "Emacs quick move minor mode"
+    t)
+  ;; you can select the key you prefer to
+  (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 
-;;   ;; 
-;;   ;; enable a more powerful jump back function from ace jump mode
-;;   ;;
-;;   (autoload
-;;     'ace-jump-mode-pop-mark
-;;     "ace-jump-mode"
-;;     "Ace jump back:-)"
-;;     t)
-;;   (eval-after-load "ace-jump-mode"
-;;     '(ace-jump-mode-enable-mark-sync))
-;;   (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
-;;   )
+  ;; 
+  ;; enable a more powerful jump back function from ace jump mode
+  ;;
+  (autoload
+    'ace-jump-mode-pop-mark
+    "ace-jump-mode"
+    "Ace jump back:-)"
+    t)
+  (eval-after-load "ace-jump-mode"
+    '(ace-jump-mode-enable-mark-sync))
+  (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
+  )
 
-;; ;; helm-swoop
-;; (when (file-exists-p
-;;        (expand-file-name (concat user-emacs-directory "public_repos/helm-swoop")))
-;;   (require 'helm-swoop)
-;;   ;; Change the keybinds to whatever you like :)
-;;   (global-set-key (kbd "M-i") 'helm-swoop)
-;;   (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
-;;   (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
-;;   (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
+;; helm-swoop
+(when enable-quelpa
+  (quelpa 'helm-swoop)
+  (require 'helm-swoop)
+  ;; Change the keybinds to whatever you like :)
+  (global-set-key (kbd "M-i") 'helm-swoop)
+  (global-set-key (kbd "M-I") 'helm-swoop-back-to-last-point)
+  (global-set-key (kbd "C-c M-i") 'helm-multi-swoop)
+  (global-set-key (kbd "C-x M-i") 'helm-multi-swoop-all)
 
-;;   ;; When doing isearch, hand the word over to helm-swoop
-;;   (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-;;   ;; From helm-swoop to helm-multi-swoop-all
-;;   (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
-;;   ;; When doing evil-search, hand the word over to helm-swoop
-;;   ;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
+  ;; When doing isearch, hand the word over to helm-swoop
+  (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
+  ;; From helm-swoop to helm-multi-swoop-all
+  (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop)
+  ;; When doing evil-search, hand the word over to helm-swoop
+  ;; (define-key evil-motion-state-map (kbd "M-i") 'helm-swoop-from-evil-search)
 
-;;   ;; Save buffer when helm-multi-swoop-edit complete
-;;   (setq helm-multi-swoop-edit-save t)
+  ;; Save buffer when helm-multi-swoop-edit complete
+  (setq helm-multi-swoop-edit-save t)
 
-;;   ;; If this value is t, split window inside the current window
-;;   (setq helm-swoop-split-with-multiple-windows nil)
+  ;; If this value is t, split window inside the current window
+  (setq helm-swoop-split-with-multiple-windows nil)
 
-;;   ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
-;;   (setq helm-swoop-split-direction 'split-window-vertically)
+  ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+  (setq helm-swoop-split-direction 'split-window-vertically)
 
-;;   ;; If nil, you can slightly boost invoke speed in exchange for text color
-;;   (setq helm-swoop-speed-or-color nil)
+  ;; If nil, you can slightly boost invoke speed in exchange for text color
+  (setq helm-swoop-speed-or-color nil)
 
-;;   ;; ;; Go to the opposite side of line from the end or beginning of line
-;;   (setq helm-swoop-move-to-line-cycle t)
+  ;; ;; Go to the opposite side of line from the end or beginning of line
+  (setq helm-swoop-move-to-line-cycle t)
 
-;;   ;; Optional face for line numbers
-;;   ;; Face name is `helm-swoop-line-number-face`
-;;   (setq helm-swoop-use-line-number-face t)
-;; )
+  ;; Optional face for line numbers
+  ;; Face name is `helm-swoop-line-number-face`
+  (setq helm-swoop-use-line-number-face t)
+)
 
+;; ace-isearch
+(when enable-quelpa
+  (quelpa 'ace-isearch)
+  (global-ace-isearch-mode 1)
+  )
 
+;; helm-cmd-t
+(when enable-quelpa
+  (quelpa 'helm-cmd-t)
+  (require 'helm-C-x-b)
+  (global-set-key (kbd "C-x b") 'helm-C-x-b)
+  )
 
 ;; ;; Create Header Guards with f12
 ;; (global-set-key [f12] 
