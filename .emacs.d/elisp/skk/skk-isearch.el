@@ -5,9 +5,9 @@
 
 ;; Author: Enami Tsugutomo <enami@ba2.so-net.or.jp>
 ;; Maintainer: SKK Development Team <skk@ring.gr.jp>
-;; Version: $Id: skk-isearch.el,v 1.76 2012/12/03 10:36:39 skk-cvs Exp $
+;; Version: $Id: skk-isearch.el,v 1.80 2013/11/02 05:29:53 skk-cvs Exp $
 ;; Keywords: japanese, mule, input method
-;; Last Modified: $Date: 2012/12/03 10:36:39 $
+;; Last Modified: $Date: 2013/11/02 05:29:53 $
 
 ;; This file is part of Daredevil SKK.
 
@@ -366,7 +366,8 @@ Optional argument PREFIX is appended if given."
 
   (unless (eval-when-compile (featurep 'xemacs))
     ;; XEmacs にはないコマンド
-    (define-key map [?\C-x t] 'isearch-other-control-char)
+    (if (fboundp 'isearch-other-control-char)			;2013-10-08 Remove functions
+	(define-key map [?\C-x t] 'isearch-other-control-char)) ; GNU Emacs 24.4 から廃止
 
     (define-key map [?\C-0] 'skk-isearch-start-henkan)
     (define-key map [?\C-1] 'skk-isearch-start-henkan)
@@ -428,7 +429,10 @@ Optional argument PREFIX is appended if given."
 		;; setup last-command-event and this-command because
 		;; some command refers them.
 		(let* ((keys (read-key-sequence nil))
-		       (this-command (key-binding keys)))
+		       (this-command (key-binding keys))
+		       ;; 直後の command-execute() にて、skk-insert() 経由で
+		       ;; skk-dcomp-multiple-show() が実行されるとエラーとなってしまう
+		       skk-dcomp-multiple-activate)
 		  (setq last-command-event (aref keys (1- (length keys))))
 		  (command-execute this-command))
 	      ((quit error)
@@ -568,9 +572,12 @@ If the current mode is different from previous, remove it first."
     ;;     [cl-struct-isearch--state "t" "[aa] t" 92 92 t ..]
     ;;     [cl-struct-isearch--state "" "[か] " 78 t t ..]
     (let* ((cmd (nth 1 isearch-cmds))
-	   (oldmsg (if (stringp (aref cmd 0))
-		       (aref cmd 1)	;GNU Emacs 24.2 まで
-		     (aref cmd 2)))	;GNU Emacs 24.3 から
+	   (oldmsg (cond ((null cmd)
+			  "")
+			 ((stringp (aref cmd 0))
+			  (aref cmd 1))	  ; GNU Emacs 24.2 まで
+			 (t
+			  (aref cmd 2)))) ; GNU Emacs 24.3 から
 	   (prompt (skk-isearch-mode-string))
 	   newmsg)
       (unless (or (null cmd)
@@ -696,6 +703,7 @@ If the current mode is different from previous, remove it first."
 	    (skk-start-henkan 1 digit))))
       (skk-isearch-mode-message)
       (skk-isearch-wrapper-1))
+
      (t
       (cond
        ((eval-when-compile (featurep 'xemacs))
@@ -705,9 +713,12 @@ If the current mode is different from previous, remove it first."
 	;; XXX なぜ 2 回 unread する...?
 	(skk-unread-event event)
 	(skk-unread-event event))
+
        (t
 	(skk-unread-event event)
-	(isearch-other-control-char)))))))
+	(if (fboundp 'isearch-other-control-char) ; 2013-10-08 Remove functions.
+	    (isearch-other-control-char)))	  ; GNU Emacs 24.4 から廃止
+	)))))
 
 
 ;;
@@ -823,7 +834,8 @@ If the current mode is different from previous, remove it first."
     (add-hook 'before-init-hook skk-isearch-really-early-advice))))
 
 (put 'digit-argument 'isearch-command t)
-(put 'isearch-other-control-char 'isearch-command t)
+(if (fboundp 'isearch-other-control-char)		  ; 2013-10-08 Remove functions
+    (put 'isearch-other-control-char 'isearch-command t)) ; GNU Emacs 24.4 から廃止
 (put 'skk-isearch-delete-char 'isearch-command t)
 (put 'skk-isearch-exit 'isearch-command t)
 (put 'skk-isearch-keyboard-quit 'isearch-command t)

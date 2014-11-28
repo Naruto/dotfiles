@@ -539,7 +539,7 @@
 				      0)
 
 	    ;; 以下 left と top は、X Window System 下では画面全体の中での座標を
-	    ;; 指定する。 Mac OS X においても、Carbon Emacs 22.3 では同様だが
+	    ;; 指定する。 Apple OS X においても、Carbon Emacs 22.3 では同様だが
 	    ;; Cocoa Emacs 23.2 では Emacs フレーム内での座標を指定する必要がある。
 
 	    ;; x 座標 (左からの)
@@ -657,10 +657,10 @@ TEXT には `skk-tooltip-face' が適用される。"
 	  (setq fg (face-attribute 'tooltip :foreground))
 	  (setq bg (face-attribute 'tooltip :background))
 	  (when (stringp fg)
-	    (setq params (tooltip-set-param params 'foreground-color fg))
-	    (setq params (tooltip-set-param params 'border-color fg)))
+	    (setq params (skk-put-alist 'foreground-color fg params))
+	    (setq params (skk-put-alist 'border-color fg params)))
 	  (when (stringp bg)
-	    (setq params (tooltip-set-param params 'background-color bg))))
+	    (setq params (skk-put-alist 'background-color bg params))))
 	;;
 	(when (facep skk-tooltip-face)
 	  (setq text (propertize text 'face skk-tooltip-face)))

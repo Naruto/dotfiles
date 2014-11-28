@@ -5,10 +5,10 @@
 
 ;; Author: NAKAJIMA Mikio <minakaji@osaka.email.ne.jp>
 ;; Maintainer: SKK Development Team <skk@ring.gr.jp>
-;; Version: $Id: skk-annotation.el,v 1.236 2013/01/13 09:45:48 skk-cvs Exp $
+;; Version: $Id: skk-annotation.el,v 1.241 2014/10/13 05:15:04 skk-cvs Exp $
 ;; Keywords: japanese, mule, input method
 ;; Created: Oct. 27, 2000.
-;; Last Modified: $Date: 2013/01/13 09:45:48 $
+;; Last Modified: $Date: 2014/10/13 05:15:04 $
 
 ;; This file is part of Daredevil SKK.
 
@@ -115,7 +115,7 @@
 ;;
 ;; (setq skk-annotation-lookup-lookup t)
 ;;
-;; <Mac OS X 「辞書」サービスからのアノテーション>
+;; <Apple OS X 「辞書」サービスからのアノテーション>
 ;;
 ;; Mac の辞書アプリ (Dictionary.app) では標準で国語辞典など利用できます。
 ;; このうち優先順位の高い辞書からアノテーションを取得する機能が利用できま
@@ -198,6 +198,7 @@
   (autoload 'python-send-command "python")
   (autoload 'python-send-string "python")
   (autoload 'python-check-comint-prompt "python")
+  (autoload 'python-proc "python")
   (autoload 'html2text "html2text")
   (autoload 'html2text-delete-tags "html2text")
   (autoload 'url-hexify-string "url-util")
@@ -207,6 +208,8 @@
   (require 'compile)
   (require 'comint)
   (defvar python-buffer)
+  (defvar python-shell-prompt-regexp)
+  (defvar python-shell-buffer-name)
   (defvar mule-version)
   (defvar html2text-remove-tag-list)
   (defvar html2text-format-tag-list))
@@ -773,7 +776,7 @@ NO-PREVIOUS-ANNOTATION を指定 (\\[Universal-Argument] \\[skk-annotation-ad
 			  (setq exit t)
 			  (apply (car url) (cdr url)))
 			 (t
-			  (browse-url url))))
+			  (funcall skk-annotation-browser-function url))))
 		 (skk-message "注釈のソースをブラウズしています..."
 			      "Browsing originals for the current notes..."))
 		(t
@@ -913,7 +916,7 @@ NO-PREVIOUS-ANNOTATION を指定 (\\[Universal-Argument] \\[skk-annotation-ad
 (defun skk-annotation-lookup-region-or-at-point (&optional prefix-arg
 							   start end)
   "選択領域またはポイント位置の単語を辞書で調べる。
-辞書としては lookup.el、Mac OS X の辞書サービス、Wikipedia/Wikitionary などが
+辞書としては lookup.el、Apple OS X の辞書サービス、Wikipedia/Wikitionary などが
 利用される。
 
 領域が選択されていなければ単語の始めと終わりを推測して調べる。
@@ -952,7 +955,7 @@ NO-PREVIOUS-ANNOTATION を指定 (\\[Universal-Argument] \\[skk-annotation-ad
       (skk-annotation-show (or note "") word sources))))
 
 
-;;; Mac OS X 辞書サービス関連機能
+;;; Apple OS X 辞書サービス関連機能
 (defsubst skkannot-DictServ-command (word)
   (format skkannot-DictServ-cmd-format-str word "%" "%"))
 
@@ -974,13 +977,34 @@ NO-PREVIOUS-ANNOTATION を指定 (\\[Universal-Argument] \\[skk-annotation-ad
       ;; as to make sure we terminate the multiline instruction.
       (comint-send-string proc "\n"))))
 
+(eval-and-compile
+  (defsubst skkannot-emacs-24_3-or-later ()
+    (or (> emacs-major-version 24)
+	(and (= emacs-major-version 24)
+	     (>= emacs-minor-version 3)))))
+
+(defun skkannot-py-check-comint-prompt (&optional proc)
+  "Return non-nil if and only if there's a normal prompt in the inferior buffer.
+If there isn't, it's probably not appropriate to send input to return Eldoc
+information etc.  If PROC is non-nil, check the buffer for that process."
+  (cond
+   ((eval-when-compile (skkannot-emacs-24_3-or-later))
+    (with-current-buffer (process-buffer (or proc (python-proc)))
+      (save-excursion
+	(save-match-data
+	  (re-search-backward (concat python-shell-prompt-regexp " *\\=")
+			      nil t)))))
+   (t
+    (python-check-comint-prompt))))
+
 (declare-function compilation-forget-errors "compile")
 (defun skkannot-py-send-command (command)
   "Like `skkannot-py-send-string' but resets `compilation-shell-minor-mode'."
   (when (or (eval-when-compile (and (featurep 'emacs)
 				    (= emacs-major-version 22)))
-	    (python-check-comint-prompt (get-buffer-process
-					 skkannot-py-buffer)))
+	    (skkannot-py-check-comint-prompt (get-buffer-process
+					      skkannot-py-buffer))
+	    t)
     (with-current-buffer skkannot-py-buffer
       (goto-char (point-max))
       (compilation-forget-errors)
@@ -996,11 +1020,19 @@ NO-PREVIOUS-ANNOTATION を指定 (\\[Universal-Argument] \\[skk-annotation-ad
     skkannot-py-buffer)
    (t
     ;; python + readline で UTF-8 の入力をするために LANG の設定が必要。
-    (let ((env (getenv "LANG"))
-	  (orig-py-buffer (default-value 'python-buffer)))
+    (let* ((env (getenv "LANG"))
+	   python-buffer orig-py-buffer)
+      (unless (eval-when-compile (skkannot-emacs-24_3-or-later))
+	;; Emacs 24.2 or earlier
+	(setq orig-py-buffer (default-value 'python-buffer)))
       (unless (equal env "Ja_JP.UTF-8")
 	(setenv "LANG" "ja_JP.UTF-8"))
-      (run-python skk-annotation-python-program t t)
+      (save-window-excursion
+	(run-python skk-annotation-python-program t t))
+      (when (eval-when-compile (skkannot-emacs-24_3-or-later))
+	;; Emacs 24.3 or later
+	(setq python-buffer (get-buffer (format "*%s*" python-shell-buffer-name))
+	      orig-py-buffer (default-value 'python-buffer)))
       (setenv "LANG" env)
       (with-current-buffer python-buffer
 	(rename-buffer "  *skk python")
@@ -1742,16 +1774,18 @@ wgCategories.+\\(曖昧さ回避\\|[Dd]isambiguation\\).+$" nil t)))
   (goto-char (point-min))
   (when (re-search-forward "^Content-Encoding: gzip$" nil t)
     ;; html が gzip 圧縮で送られて来た場合
-    (let ((gzip (executable-find "gzip")))
-      (unless gzip
-	(error "この内容を表示するには %s が必要です" "gzip"))
-      (while (and (not (looking-at "^\n"))
-		  (not (eobp)))
-	(forward-line 1))
-      (forward-line 1)
-      (when (< (point) (point-max))
-	(let ((coding-system-for-write 'binary))
-	  (call-process-region (point) (point-max) gzip t t t "-cd")))))
+    (unless (fboundp 'url-handle-content-transfer-encoding)
+      ;; Emacs 24.3 or earlier
+      (let ((gzip (executable-find "gzip")))
+	(unless gzip
+	  (error "この内容を表示するには %s が必要です" "gzip"))
+	(while (and (not (looking-at "^\n"))
+		    (not (eobp)))
+	  (forward-line 1))
+	(forward-line 1)
+	(when (< (point) (point-max))
+	  (let ((coding-system-for-write 'binary))
+	    (call-process-region (point) (point-max) gzip t t t "-cd"))))))
   (goto-char (point-max))
   (search-backward "</html>" nil t))
 

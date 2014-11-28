@@ -4,9 +4,9 @@
 ;; Copyright (C) 1993-2000 Free Software Foundation, Inc.
 
 ;; Maintainer: SKK Development Team <skk@ring.gr.jp>
-;; Version: $Id: skk-macs.el,v 1.192 2013/01/13 09:45:48 skk-cvs Exp $
+;; Version: $Id: skk-macs.el,v 1.199 2013/03/28 11:55:19 skk-cvs Exp $
 ;; Keywords: japanese, mule, input method
-;; Last Modified: $Date: 2013/01/13 09:45:48 $
+;; Last Modified: $Date: 2013/03/28 11:55:19 $
 
 ;; This file is part of Daredevil SKK.
 
@@ -117,14 +117,12 @@ doesn't give arguments of `interactive'. See `interactive' for details."
  ARG は `message' 関数の第２引数以降の引数として渡される。"
   (append
    (if arg
-       (list 'message (list 'if
-			    'skk-japanese-message-and-error
-			    japanese
-			    english))
-     (list 'message "%s" (list 'if
-			       'skk-japanese-message-and-error
-			       japanese
-			       english)))
+       `(message (if skk-japanese-message-and-error
+		     ,japanese
+		   ,english))
+     `(message "%s" (if skk-japanese-message-and-error
+			,japanese
+		      ,english)))
    arg))
 
 (defmacro skk-error (japanese english &rest arg)
@@ -134,14 +132,12 @@ doesn't give arguments of `interactive'. See `interactive' for details."
  ARG は `error' 関数の第２引数以降の引数として渡される。"
   (append
    (if arg
-       (list 'error (list 'if
-			  'skk-japanese-message-and-error
-			  japanese
-			  english))
-     (list 'error "%s" (list 'if
-			     'skk-japanese-message-and-error
-			     japanese
-			     english)))
+       `(error (if skk-japanese-message-and-error
+		   ,japanese
+		 ,english))
+     `(error "%s" (if skk-japanese-message-and-error
+		      ,japanese
+		    ,english)))
    arg))
 
 (defmacro skk-yes-or-no-p (japanese english)
@@ -151,24 +147,24 @@ doesn't give arguments of `interactive'. See `interactive' for details."
 `yes-or-no-p' の引数 PROMPT が複雑に入れ込んでいる場合は `skk-yes-or-no-p' を
 使うよりもオリジナルの `yes-or-no-p' を使用した方がコードが複雑にならない場合
 がある。"
-  (list 'yes-or-no-p (list 'if 'skk-japanese-message-and-error
-			   japanese english)))
+  `(yes-or-no-p (if skk-japanese-message-and-error
+		    ,japanese ,english)))
 
 (defmacro skk-y-or-n-p (japanese english)
   "ユーザに \"y or n\" を質問し、答えが \"y\" だったら t を返す。
 `skk-japanese-message-and-error' が non-nil であれば JAPANESE を、 nil であれ
 ば ENGLISH を PROMPT として `y-or-n-p' を実行する。"
-  (list 'y-or-n-p (list 'if 'skk-japanese-message-and-error
-			japanese english)))
+  `(y-or-n-p (if skk-japanese-message-and-error
+		 ,japanese ,english)))
 
 (defmacro skk-set-marker (marker position &optional buffer)
   "マーカ MARKER を BUFFER の POSITION に移動する。
 BUFFER のディフォルト値はカレントバッファである。
 MARKER が nil だったら、新規マーカーを作って代入する。"
-  (list 'progn
-	(list 'if (list 'not marker)
-	      (list 'setq marker (list 'make-marker)))
-	(list 'set-marker marker position buffer)))
+  `(progn
+     (if (not ,marker)
+	 (setq ,marker (make-marker)))
+     (set-marker ,marker ,position ,buffer)))
 
 (defmacro skk-with-point-move (&rest form)
   "ポイントを移動するがフックを実行してほしくない場合に使う。"
@@ -269,6 +265,12 @@ MARKER が nil だったら、新規マーカーを作って代入する。"
 	 '(inactivate-input-method))
 	))
 
+(defmacro skk-facep (face)
+  (cond ((featurep 'xemacs)
+	 `(find-face ,face))
+	(t
+	 `(facep ,face))))
+
 
 ;;; functions.
 ;; version dependent
@@ -276,22 +278,53 @@ MARKER が nil だったら、新規マーカーを作って代入する。"
 
 (when (eval-when-compile (and (featurep 'emacs)
 			      (= emacs-major-version 22)))
-  (defalias 'characterp 'char-valid-p))
+  ;; GNU Emacs 22 まで
+  ;; . char-valid-p is a built-in function in `C source code'.
+  ;;     (char-valid-p OBJECT &optional GENERICP)
+  ;;   Return t if OBJECT is a valid normal character.
+  ;;   If optional arg GENERICP is non-nil, also return t if OBJECT is
+  ;;   a valid generic character.
+  (defalias 'characterp 'char-valid-p)
+
+  ;; GNU Emacs 23 から
+  ;; . char-valid-p is an alias for `characterp' in `mule.el'.
+  ;;     (char-valid-p OBJECT &optional IGNORE)
+  ;;   This function is obsolete since 23.1;
+  ;;   use `characterp' instead.
+
+  ;; . characterp is a built-in function in `C source code'.
+  ;;     (characterp OBJECT &optional IGNORE)
+  ;;   Return non-nil if OBJECT is a character.
+  )
 
 (when (eval-when-compile (featurep 'emacs))
+  ;; int-char() が出現するのは skk-compute-henkan-lists() のみ
+  ;; XEmacs では int-char() は標準？
   (defalias 'int-char 'identity))
 
-(when (eval-when-compile (featurep 'emacs))
-  (defun string-to-char-list (string)
-    "Return a list of which elements are characters in the STRING."
-    (mapcar #'identity string)))
+;;; string-to-char-list が出現するのは 9 行下の defalias のみ
+;;; よって string-to-int-list の定義を変更してしまう
+;; (when (eval-when-compile (featurep 'emacs))
+;;   (defun string-to-char-list (string)
+;;     "Return a list of which elements are characters in the STRING."
+;;     (mapcar #'identity string)))
 
-(when (eval-when-compile (featurep 'emacs))
-  (defalias 'string-to-int-list 'string-to-char-list))
+;;; string-to-int-list() の定義を macro へ変更
+;; (when (eval-when-compile (featurep 'emacs))
+;;   ;; (defalias 'string-to-int-list 'string-to-char-list))
+;;   (defun string-to-int-list (string)
+;;     "Return a list of which elements are characters in the STRING."
+;;     (mapcar #'identity string)))
+;;
+;; (when (eval-when-compile (featurep 'xemacs))
+;;   (defun string-to-int-list (string)
+;;     (mapcar #'char-int string)))
 
-(when (eval-when-compile (featurep 'xemacs))
-  (defun string-to-int-list (str)
-    (mapcar #'char-int str)))
+(defmacro string-to-int-list (string)
+  (cond ((featurep 'xemacs)
+	 `(mapcar #'char-int ,string))	; XEamcs
+	(t
+	 `(mapcar #'identity ,string)))) ; GNU Emacs
 
 (when (eval-when-compile (featurep 'emacs))
   (defun character-to-event (ch)
@@ -554,12 +587,11 @@ BUFFER defaults to the current buffer."
     (local-variable-p variable (or buffer (current-buffer))))))
 
 (defun skk-face-proportional-p (face)
-  (cond
-   ((eval-when-compile (featurep 'xemacs))
-    (face-proportional-p face))
-   (t
-    (or (face-equal face 'variable-pitch)
-	(eq (face-attribute face :inherit) 'variable-pitch)))))
+  (cond ((eval-when-compile (featurep 'xemacs))
+	 (face-proportional-p face))
+	(t
+	 (or (face-equal face 'variable-pitch)
+	     (eq (face-attribute face :inherit) 'variable-pitch)))))
 
 (defun skk-event-key (event)
   "イベント EVENT を発生した入力の情報を取得する。"
@@ -973,11 +1005,12 @@ BUFFER defaults to the current buffer."
 (defsubst skk-get-last-henkan-datum (key)
   (cdr (assq key skk-last-henkan-data)))
 
-(defsubst skk-put-last-henkan-datum (key val)
-  (let ((e (assq key skk-last-henkan-data)))
-    (if e
-	(setcdr e val)
-      (push (cons key val) skk-last-henkan-data))))
+;;; 2013-3-18 どこからも参照されておらず
+;; (defsubst skk-put-last-henkan-datum (key val)
+;;   (let ((e (assq key skk-last-henkan-data)))
+;;     (if e
+;; 	(setcdr e val)
+;;       (push (cons key val) skk-last-henkan-data))))
 
 (defun skk-put-last-henkan-data (alist)
   (let (e)
