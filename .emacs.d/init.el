@@ -74,7 +74,6 @@
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;; auto-install 
-(setq enable-quelpa nil)
 (when (require 'auto-install nil t)
   (setq auto-install-directory "~/.emacs.d/elisp/")
   (auto-install-update-emacswiki-package-name t)
@@ -82,6 +81,7 @@
   (auto-install-compatibility-setup))
 
 ;; package.el for ELPA
+(setq enable-quelpa nil)
 (when (>= emacs-major-version 23)
   (when (require 'package nil t)
     (package-initialize)
@@ -483,7 +483,7 @@
 
 
 ;;; gud-mode                  
-;; many widnows mode          
+;; many widnowsru mode          
 (setq gdb-many-windows t)     
 (setq gdb-use-separate-io-buffer t)
 
@@ -492,6 +492,28 @@
 (setq windmove-wrap-around t) 
 
                                         ; (require 'rust-mode)
+
+;;;; ruby
+(autoload 'ruby-mode "ruby-mode"
+  "Mode for editing ruby source files" t)
+(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Capfile$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Gemfile$" . ruby-mode))
+;; robe
+(when enable-quelpa
+  (quelpa 'robe)
+  (add-hook 'ruby-mode-hook 'robe-mode)
+  (autoload 'robe-mode "robe" "Code navigation, documentation lookup and completion for Ruby" t nil)
+  (autoload 'ac-robe-setup "ac-robe" "auto-complete robe" nil nil)
+  (add-hook 'robe-mode-hook 'ac-robe-setup)
+  )
+
+;;;; python
+;; elpy
+(when enable-quelpa
+  (quelpa 'elpy)
+  (elpy-enable)
+  )
 
 ;; markdown mode
 (when (require 'markdown-mode nil t)
@@ -613,6 +635,20 @@
 
   (quelpa 'magit)
   (require 'magit)
+  (defadvice magit-status (around magit-fullscreen activate)
+    (window-configuration-to-register :magit-fullscreen)
+    ad-do-it
+    (delete-other-windows))
+
+  (defun my/magit-quit-session ()
+    (interactive)
+    (kill-buffer)
+    (jump-to-register :magit-fullscreen))
+
+  (define-key magit-status-mode-map (kbd "q") 'my/magit-quit-session)
+
+  (defadvice git-commit-commit (after move-to-magit-buffer activate)
+    (delete-window))
   )
 
 ;; epl
@@ -830,3 +866,81 @@
   (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
   )
   
+
+;; helm-guide
+(when enable-quelpa
+  (quelpa 'guide-key)
+  (require 'guide-key)
+  (setq guide-key/guide-key-sequence
+        '("C-x r" "C-x 4"                 ;global
+          (org-mode "C-c C-x")
+          (outline-minor-mode "C-c @")))
+  (setq guide-key/highlight-command-regexp "rectangle\\|register\\|org-clock")
+  (setq guide-key/idle-delay 1.0)
+  (setq guide-key/popup-window-position 'bottom)
+  (setq guide-key/text-scale-amount -2)
+  (guide-key-mode 1)
+
+  (quelpa 'helm-descbinds)
+  (helm-descbinds-install) ;; for '[f1] b'
+  )
+
+;; yaml
+(when enable-quelpa
+  (quelpa 'yaml-mode)
+  (require 'yaml-mode)
+  (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
+  (define-key yaml-mode-map "\C-m" 'newline-and-indent)
+  )
+
+;; helm quelpa
+(when enable-quelpa
+  (defvar helm-source-quelpa
+    '((name . "quelpa installed packages")
+      (candidates . helm-quelpa-candidates)
+      (display-to-real . intern)
+      (action ("View README or source" . helm-quelpa-view-readme-or-src)
+              ("Magit log" . helm-quelpa-magit-log)
+              ("Open directory" . helm-quelpa-open-dired)
+              ("Find source" . helm-quelpa-find-src))))
+
+  (defun helm-quelpa-candidates ()
+    (mapcar 'car quelpa-cache))
+
+  (defun helm-quelpa-interactive ()
+    (list (completing-read "Package: " (helm-quelpa-candidates) nil t)))
+
+  (defun helm-quelpa-open-dired (package)
+    (interactive (helm-quelpa-interactive))
+    (dired (helm-quelpa-package-directory package)))
+  (defun helm-quelpa-package-directory (package)
+    (expand-file-name (symbol-name package) quelpa-build-dir))
+
+  (defun helm-quelpa-view-readme-or-src (package)
+    (interactive (helm-quelpa-interactive))
+    (cl-loop for file in (list "README.md" "README.org" (format "%s.el" package))
+             for path = (expand-file-name file (helm-quelpa-package-directory package))
+             when (file-exists-p path)
+             return (view-file path)))
+  (defun helm-quelpa-find-src (package)
+    (interactive (helm-quelpa-interactive))
+    (find-file (expand-file-name (format "%s.el" package)
+                                 (helm-quelpa-package-directory package))))
+
+  (defun helm-quelpa-magit-log (package)
+    (interactive (helm-quelpa-interactive))
+    (let ((default-directory (helm-quelpa-package-directory package)))
+      (magit-status (helm-quelpa-package-directory package))
+      (magit-log)))
+
+  (defun helm-quelpa ()
+    "Helm interface for installed quelpa packages.
+
+- View README
+- View git log
+- Open directory
+- Open source file
+"
+    (interactive)
+    (helm :sources 'helm-source-quelpa :buffer "*helm quelpa*"))
+  )

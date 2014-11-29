@@ -30,6 +30,9 @@ shall install
     $ pip install pylint
     $ gem install rubocop ruby-lint
     $ sudo apt-get install clang
+    $ pip install rope
+    $ pip install jedi
+    $ pip install flake8
 
 For chromium developer
 
