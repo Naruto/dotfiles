@@ -24,11 +24,6 @@
 (set-buffer-file-coding-system 'utf-8)
 (setq buffer-file-coding-system 'utf-8)
 
-;; theme
-(add-to-list 'custom-theme-load-path
-             (expand-file-name (concat user-emacs-directory "themes")))
-(load-theme 'zenburn t)
-
 (when (and (eq (window-system) 'x)
            (>= emacs-major-version 23))
 
@@ -108,6 +103,12 @@
       )
     ))
 
+;; theme
+(when enable-quelpa
+  (quelpa 'zenburn-theme)
+  (load-theme 'zenburn t)
+  )
+
 ;; dash
 (when enable-quelpa
   (quelpa 'dash)
@@ -118,6 +119,17 @@
   (quelpa 's)
   (require 's)
   )
+;; f
+(when enable-quelpa
+  (quelpa 'f)
+  (require 'f)
+  )
+;; ht
+(when enable-quelpa
+  (quelpa 'ht)
+  (require 'ht)
+  )
+
 
 ;; auto-save-buffers-enhanced
 (when enable-quelpa
@@ -579,13 +591,20 @@
 
 ;; git-modes
 (when enable-quelpa
-  (quelpa 'git)
-  (require 'git-commit-mode)
-  (require 'git-rebase-mode)
 )
 
 ;; magit
 (when enable-quelpa
+  (quelpa 'git-commit-mode)
+  (quelpa 'git-rebase-mode)
+  (quelpa 'gitconfig-mode)
+  (quelpa 'gitignore-mode)
+  (quelpa 'stgit)
+  (require 'git-commit-mode)
+  (require 'git-rebase-mode)
+  (require 'gitconfig-mode)
+  (require 'gitignore-mode)
+
   (quelpa 'magit)
   (require 'magit)
   )
@@ -771,3 +790,26 @@
 ;;   (add-hook 'after-init-hook #'global-flycheck-mode)
 ;;   )
 
+;; rainbow-delimiters
+(when enable-quelpa
+  (quelpa 'rainbow-delimiters)
+  
+  )
+
+;; anzu
+(when enable-quelpa
+  (quelpa 'anzu)
+  (global-anzu-mode +1)
+
+  (set-face-attribute 'anzu-mode-line nil
+                      :foreground "yellow" :weight 'bold)
+
+  (custom-set-variables
+   '(anzu-mode-lighter "")
+   '(anzu-deactivate-region t)
+   '(anzu-search-threshold 1000)
+   '(anzu-replace-to-string-separator " => "))
+
+  (global-set-key (kbd "M-%") 'anzu-query-replace)
+  (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+  )
