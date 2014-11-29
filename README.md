@@ -26,7 +26,10 @@ shall install
     $ sudo apt-get install silversearcher-ag
     $ sudo apt-get install ack-grep
     $ curl -fsSkL https://raw.github.com/cask/cask/master/go | python
-    $ sudo pip install percol
+    $ pip install percol
+    $ pip install pylint
+    $ gem install rubocop ruby-lint
+    $ sudo apt-get install clang
 
 For chromium developer
 

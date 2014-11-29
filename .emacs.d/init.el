@@ -22,7 +22,7 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-buffer-file-coding-system 'utf-8)
-(setq default-buffer-file-coding-system 'utf-8)
+(setq buffer-file-coding-system 'utf-8)
 
 ;; theme
 (add-to-list 'custom-theme-load-path
@@ -43,7 +43,7 @@
                                         ;(set-cursor-color "#202041");cursor
 
   ;; VL Gothic
-  (set-default-font "VL Gothic-8")
+  (set-frame-font "VL Gothic-8")
   (set-fontset-font (frame-parameter nil 'font)
 		    'japanese-jisx0208
 		    '("VL Gothic-8" . "unicode-bmp"))
@@ -558,22 +558,14 @@
                 auto-mode-alist))
 )
 
-;; mark-multiple
+;; multiple-cursors
 (when enable-quelpa
-  (quelpa 'mark-multiple)
-  (require 'inline-string-rectangle)
-  (global-set-key (kbd "C-x r t") 'inline-string-rectangle)
-
-  (require 'mark-more-like-this)
-  (global-set-key (kbd "C-<") 'mark-previous-like-this)
-  (global-set-key (kbd "C->") 'mark-next-like-this)
-  (global-set-key (kbd "C-M-m") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
-  (global-set-key (kbd "C-*") 'mark-all-like-this)
-
-  (add-hook 'sgml-mode-hook
-            (lambda ()
-              (require 'rename-sgml-tag)
-              (define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)))
+  (quelpa 'multiple-cursors)
+  (require 'multiple-cursors)
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
   )
 
 ;; expand-region
@@ -769,4 +761,13 @@
 ;;   		     )
 ;;   		   )
 ;;   		)
+
+;; ;; flycheck
+;; (when enable-quelpa
+;;   (quelpa 'flycheck)
+;;   (require 'flycheck)
+;;   (setq flycheck-clang-language-standard "c++11")
+;;   (setq flycheck-gcc-language-standard "c++11")
+;;   (add-hook 'after-init-hook #'global-flycheck-mode)
+;;   )
 
