@@ -30,7 +30,7 @@
 (load-theme 'zenburn t)
 
 (when (and (eq (window-system) 'x)
-	 (>= emacs-major-version 23))
+           (>= emacs-major-version 23))
 
   ;; disable toolbar
   (cond ((eq emacs-major-version 24) (tool-bar-mode 0))
@@ -38,9 +38,9 @@
 
   (require 'xclip)
 
-  ;(set-background-color "#efefdf");background
-  ;(set-foreground-color "#202041");foreground
-  ;(set-cursor-color "#202041");cursor
+                                        ;(set-background-color "#efefdf");background
+                                        ;(set-foreground-color "#202041");foreground
+                                        ;(set-cursor-color "#202041");cursor
 
   ;; VL Gothic
   (set-default-font "VL Gothic-8")
@@ -71,7 +71,6 @@
 (setq uniquify-ignore-buffers-re "*[^*]+*")
 (show-paren-mode 1)
 (setq show-paren-delay 0)
-;(iswitchb-mode)
 (require 'dired-x)
 (iimage-mode)
 
@@ -101,13 +100,13 @@
                  '("melpa" . "http://melpa.milkbox.net/packages/"))
 
     (when (require 'quelpa nil t)
-        (quelpa-self-upgrade)
+      (quelpa-self-upgrade)
       (with-temp-buffer
         (url-insert-file-contents "https://raw.github.com/quelpa/quelpa/master/bootstrap.el")
         (eval-buffer))
       (setq enable-quelpa t)
       )
-     ))
+    ))
 
 ;; dash
 (when enable-quelpa
@@ -130,7 +129,51 @@
   (auto-save-buffers-enhanced t)
   ;; toggle auto-save-buffers-enhanced
   (global-set-key "\C-xas" 'auto-save-buffers-enhanced-toggle-activity)
-)
+  )
+
+;; emacs helm
+(when enable-quelpa
+  (quelpa 'helm)
+  (require 'helm-config)
+  (global-set-key (kbd "C-c h") 'helm-mini)
+  (custom-set-variables '(helm-ff-auto-update-initial-value nil))
+  ;; helm commands
+  (define-key global-map (kbd "M-x")     'helm-M-x)
+  (define-key global-map (kbd "C-x C-f") 'helm-find-files)
+  (define-key global-map (kbd "C-x C-r") 'helm-recentf)
+  (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
+  (define-key global-map (kbd "C-c i")   'helm-imenu)
+  (define-key global-map (kbd "C-x b")   'helm-buffers-list)
+
+  ;; Emulate `kill-line' in helm minibuffer
+  (setq helm-delete-minibuffer-contents-from-point t)
+  (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
+    "Emulate `kill-line' in helm minibuffer"
+    (kill-new (buffer-substring (point) (field-end))))
+  ;; ;; For find-file etc.
+  ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+  ;; ;; For helm-find-files etc.
+  ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+
+  (defadvice helm-ff-kill-or-find-buffer-fname (around execute-only-if-exist activate)
+    "Execute command only if CANDIDATE exists"
+    (when (file-exists-p candidate)
+      ad-do-it))
+
+  ;; helm-ag
+  (quelpa 'helm-ag)
+  (require 'helm-ag)
+  (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
+  (setq helm-ag-command-option "--all-text")
+  (setq helm-ag-thing-at-point 'symbol)
+  (global-set-key (kbd "M-g .") 'helm-ag)
+  (global-set-key (kbd "M-g ,") 'helm-ag-pop-stack)
+  (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
+  (defun projectile-helm-ag ()
+    (interactive)
+    (helm-ag (projectile-project-root))
+    )
+  )
 
 ;; yasnippet
 (when enable-quelpa
@@ -154,7 +197,7 @@
     (interactive)
     (when (eq major-mode 'snippet-mode) (reload-snippets)))
   (add-hook 'after-save-hook 'snippet-mode-before-save)
-)
+  )
 
 ;; fuzzy
 (when enable-quelpa
@@ -180,6 +223,9 @@
   (quelpa 'auto-complete-clang-async)
   (require 'auto-complete-clang-async)
 
+  (quelpa 'auto-complete-c-headers)
+  (require 'auto-complete-c-headers)
+  
   ;; Select candidates with C-n/C-p only when completion menu is displayed:
   (setq ac-use-menu-map t)
   (define-key ac-menu-map "C-n" 'ac-next)
@@ -202,7 +248,8 @@
   
   (defun my-ac-cc-mode-setup ()
     (setq ac-sources  '(ac-source-clang-async
-                        ac-source-gtags))
+                        ac-source-gtags
+                        ac-source-c-headers))
     (setq ac-clang-complete-executable 
           (concat user-emacs-directory "bin/clang-complete"))
     (setq clang-completion-suppress-error 't)
@@ -234,8 +281,8 @@
     )
 
   (defun my-ac-config ()
-    ;(define-key ac-complete-mode-map "M-n" 'ac-next)
-    ;(define-key ac-complete-mode-map "M-p" 'ac-previous)
+                                        ;(define-key ac-complete-mode-map "M-n" 'ac-next)
+                                        ;(define-key ac-complete-mode-map "M-p" 'ac-previous)
     (setq ac-auto-start nil)
     (setq-default ac-sources
                   '(ac-source-abbrev
@@ -250,17 +297,25 @@
     (add-hook 'css-mode-hook 'ac-css-mode-setup)
     (add-hook 'auto-complete-mode-hook 'ac-common-setup)
     (add-hook 'c-mode-common-hook 'my-ac-cc-mode-setup)
+    (add-hook 'objc-mode-hook 'my-ac-cc-mode-setup)
     (global-auto-complete-mode t)
     (auto-complete-mode t)
     )
 
   (my-ac-config)
-)
 
-;; ;; Undohist
-;; (when enable-quelpa
-;;   (quelpa 'undohist)
-;;   (undohist-initialize))
+  ;; auto-complete-helm
+  (quelpa 'ac-helm)
+  (require 'ac-helm)
+  (global-set-key (kbd "C-:") 'ac-complete-with-helm)
+  (define-key ac-complete-mode-map (kbd "C-:") 'ac-complete-with-helm)
+  )
+
+;; Undohist
+(when enable-quelpa
+  (quelpa 'undohist)
+  (require 'undohist)
+  (undohist-initialize))
 
 ;; howm
 (setq howm-menu-lang 'ja)
@@ -271,22 +326,22 @@
   (setq howm-refresh-after-save nil)
   (setq howm-history-limit nil)
   (cond ((executable-find "ack")
-             (progn
-               (setq howm-view-use-grep t)
-               (setq howm-view-grep-command "ack")
-               (setq howm-view-grep-option "-Hnr")
-               (setq howm-view-grep-extended-option "")
-               (setq howm-view-grep-fixed-option "--literal")
-               (setq howm-view-grep-expr-option "--match")
-               (setq howm-view-grep-file-stdin-option nil)
-               ))
+         (progn
+           (setq howm-view-use-grep t)
+           (setq howm-view-grep-command "ack")
+           (setq howm-view-grep-option "-Hnr")
+           (setq howm-view-grep-extended-option "")
+           (setq howm-view-grep-fixed-option "--literal")
+           (setq howm-view-grep-expr-option "--match")
+           (setq howm-view-grep-file-stdin-option nil)
+           ))
         ((executable-find "grep")
          (progn
            (setq howm-view-use-grep t)
            (setq howm-view-grep-command "grep")
            (setq howm-view-fgrep-command "fgrep")
            )))
-)
+  )
 
 ;; cua-mode
 ;;(cua-mode t)
@@ -318,8 +373,8 @@
   (define-key global-map (kbd "C-x j") 'skk-mode)
   (setq skk-dcomp-activate t)
   (setq skk-large-jisyo "~/.emacs.d/share/skk/SKK-JISYO.L")
-  ;(setq skk-server-host "HOST")
-  ;(setq skk-server-portnum PORTNUM)
+                                        ;(setq skk-server-host "HOST")
+                                        ;(setq skk-server-portnum PORTNUM)
   )
 
 ;; cc-mode
@@ -365,7 +420,7 @@
   (add-hook 'c++-mode-hook 'google-make-newline-indent)
 
   ;; switch source file and header file
-  ;(global-set-key (kbd "C-x C-o") 'ff-find-other-file)
+                                        ;(global-set-key (kbd "C-x C-o") 'ff-find-other-file)
   (define-key c-mode-base-map (kbd "C-x C-o") 'ff-find-other-file)
   (defcustom cc-search-directories
     '("." "/usr/include" "/usr/local/include/*")
@@ -375,26 +430,39 @@
   )
 
 ;; gtags
-(autoload 'gtags-mode "gtags" "" t)
-(setq gtags-mode-hook
-  '(lambda ()
-        (define-key gtags-mode-map "\eh" 'gtags-display-browser)
-        (define-key gtags-mode-map "\C-]" 'gtags-find-tag-from-here)
-        (define-key gtags-mode-map "\C-t" 'gtags-pop-stack)
-        (define-key gtags-mode-map "\el" 'gtags-find-file)
-;;        (define-key gtags-mode-map "\eg" 'gtags-find-with-grep)
-;;        (define-key gtags-mode-map "\eI" 'gtags-find-with-idutils)
-        (define-key gtags-mode-map "\es" 'gtags-find-symbol)
-        (define-key gtags-mode-map "\er" 'gtags-find-rtag)
-        (define-key gtags-mode-map "\et" 'gtags-find-tag)
-;        (define-key gtags-mode-map "\ev" 'gtags-visit-rootdir)
-        ))
-(add-hook 'c-mode-common-hook
-          '(lambda ()
-             (progn
-               (gtags-mode 1)
-                                        ;(c-toggle-hungry-state 1)
-               )))
+;; (autoload 'gtags-mode "gtags" "" t)
+;; (setq gtags-mode-hook
+;;       '(lambda ()
+;;          (define-key gtags-mode-map "\eh" 'gtags-display-browser)
+;;          (define-key gtags-mode-map "\C-]" 'gtags-find-tag-from-here)
+;;          (define-key gtags-mode-map "\C-t" 'gtags-pop-stack)
+;;          (define-key gtags-mode-map "\el" 'gtags-find-file)
+;;          ;;        (define-key gtags-mode-map "\eg" 'gtags-find-with-grep)
+;;          ;;        (define-key gtags-mode-map "\eI" 'gtags-find-with-idutils)
+;;          (define-key gtags-mode-map "\es" 'gtags-find-symbol)
+;;          (define-key gtags-mode-map "\er" 'gtags-find-rtag)
+;;          (define-key gtags-mode-map "\et" 'gtags-find-tag)
+;;                                         ;        (define-key gtags-mode-map "\ev" 'gtags-visit-rootdir)
+;;          ))
+;; (add-hook 'c-mode-common-hook
+;;           '(lambda ()
+;;              (progn
+;;                (gtags-mode 1)
+;;                                         ;(c-toggle-hungry-state 1)
+;;                )))
+
+(when enable-quelpa
+  (quelpa 'helm-gtags)
+  (require 'helm-gtags)
+  (add-hook 'c-mode-common-hook 'helm-gtags-mode)
+  (add-hook 'helm-gtags-mode-hook
+            '(lambda ()
+               (local-set-key (kbd "M-t") 'helm-gtags-find-tag)
+               (local-set-key (kbd "M-r") 'helm-gtags-find-rtag)
+               (local-set-key (kbd "M-s") 'helm-gtags-find-symbol)
+               (local-set-key (kbd "C-t") 'helm-gtags-pop-stack)))
+  )
+
 
 ;;; gud-mode                  
 ;; many widnows mode          
@@ -461,46 +529,6 @@
   (migemo-init)
 )
 
-;; emacs helm
-(when enable-quelpa
-   (quelpa 'helm)
-  (require 'helm-config)
-  (global-set-key (kbd "C-c h") 'helm-mini)
-  (custom-set-variables '(helm-ff-auto-update-initial-value nil))
-  ;; helm commands
-  (define-key global-map (kbd "M-x")     'helm-M-x)
-  (define-key global-map (kbd "C-x C-f") 'helm-find-files)
-  (define-key global-map (kbd "C-x C-r") 'helm-recentf)
-  (define-key global-map (kbd "M-y")     'helm-show-kill-ring)
-  (define-key global-map (kbd "C-c i")   'helm-imenu)
-  (define-key global-map (kbd "C-x b")   'helm-buffers-list)
-
-  ;; Emulate `kill-line' in helm minibuffer
-  (setq helm-delete-minibuffer-contents-from-point t)
-  (defadvice helm-delete-minibuffer-contents (before helm-emulate-kill-line activate)
-    "Emulate `kill-line' in helm minibuffer"
-    (kill-new (buffer-substring (point) (field-end))))
-  ;; ;; For find-file etc.
-  ;; (define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-  ;; ;; For helm-find-files etc.
-  ;; (define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
-
-  (defadvice helm-ff-kill-or-find-buffer-fname (around execute-only-if-exist activate)
-    "Execute command only if CANDIDATE exists"
-    (when (file-exists-p candidate)
-      ad-do-it))
-
-  ;; helm-ag
-  (quelpa 'helm-ag)
-  (require 'helm-ag)
-  (setq helm-ag-base-command "ag --nocolor --nogroup --ignore-case")
-  (setq helm-ag-command-option "--all-text")
-  (setq helm-ag-thing-at-point 'symbol)
-  (global-set-key (kbd "M-g .") 'helm-ag)
-  (global-set-key (kbd "M-g ,") 'helm-ag-pop-stack)
-  (global-set-key (kbd "C-M-s") 'helm-ag-this-file)
-)
-
 ;; ack-and-a-half
 (when enable-quelpa
   (quelpa 'ack-and-a-half)
@@ -530,12 +558,6 @@
                 auto-mode-alist))
 )
 
-;;; cask
-;(when (file-exists-p "~/.cask/cask.el")
-;  (require 'cask "~/.cask/cask.el")
-;  (cask-initialize)
-;)
-
 ;; mark-multiple
 (when enable-quelpa
   (quelpa 'mark-multiple)
@@ -555,13 +577,13 @@
   )
 
 ;; expand-region
-;(when (file-exists-p
-;       (expand-file-name (concat user-emacs-directory "public_repos/expand-region")))
-;  (require 'expand-region)
-;  (global-set-key (kbd "C-@") 'er/expand-region)
-;  (global-set-key (kbd "C-M-@") 'er/contract-region)
-;  (transient-mark-mode t)
-;  )
+(when enable-quelpa
+  (quelpa 'expand-region)
+  (require 'expand-region)
+  (global-set-key (kbd "C-=") 'er/expand-region)
+  (global-set-key (kbd "C-M-=") 'er/contract-region)
+                                        ;(transient-mark-mode t)
+  )
 
 ;; git-modes
 (when enable-quelpa
@@ -607,16 +629,18 @@
       (ag/search search-regexp root-dir)))
 
   (setq projectile-show-paths-function 'projectile-hashify-with-relative-paths)
-  (global-set-key '[f1] 'helm-projectile)
-  (global-set-key '[f2] 'projectile-ag)
-                                        ; (global-set-key "\C-xb" 'helm-mini)
+
+  (quelpa 'helm-projectile) ; C-x p h
+  (require 'helm-projectile)
+  (global-set-key '[f2] 'projectile-helm-ag)
+  (global-set-key '[f3] 'projectile-ag)
 )
 
 ;; grizzl
 (when enable-quelpa
   (quelpa 'grizzl)
   (require 'grizzl)
-  ; (setq projectile-completion-system 'grizzl)
+  ;(setq projectile-completion-system 'grizzl)
 )
 
 ;; undo-tree
