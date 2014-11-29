@@ -129,6 +129,12 @@
   (quelpa 'ht)
   (require 'ht)
   )
+;; async
+(when enable-quelpa
+  (quelpa 'async)
+  (require 'dired-aux)
+  (require 'dired-async)
+  )
 
 
 ;; auto-save-buffers-enhanced
@@ -813,3 +819,14 @@
   (global-set-key (kbd "M-%") 'anzu-query-replace)
   (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
   )
+
+;; diff-hl
+(when enable-quelpa
+  (quelpa 'diff-hl)
+  (global-diff-hl-mode)
+  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (unless (window-system) (diff-hl-margin-mode))
+  (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+  (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
+  )
+  
