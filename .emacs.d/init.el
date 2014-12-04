@@ -724,20 +724,6 @@
     "ace-jump-mode"
     "Emacs quick move minor mode"
     t)
-  ;; you can select the key you prefer to
-  (define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
-
-  ;; 
-  ;; enable a more powerful jump back function from ace jump mode
-  ;;
-  (autoload
-    'ace-jump-mode-pop-mark
-    "ace-jump-mode"
-    "Ace jump back:-)"
-    t)
-  (eval-after-load "ace-jump-mode"
-    '(ace-jump-mode-enable-mark-sync))
-  (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark)
   )
 
 ;; helm-swoop
@@ -857,16 +843,20 @@
   (global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
   )
 
-;; diff-hl
-(when enable-quelpa
-  (quelpa 'diff-hl)
-  (global-diff-hl-mode)
-  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
-  (unless (window-system) (diff-hl-margin-mode))
-  (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
-  (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
-  )
-  
+;; ;; diff-hl
+;; (when enable-quelpa
+;;   (quelpa 'diff-hl)
+;;   (global-diff-hl-mode)
+;;   (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+;;   (unless (window-system) (diff-hl-margin-mode))
+;;   (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+;;   (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
+;;   )
+;;;; git-gutter
+;; (when enable-quelpa
+;;   (quelpa 'git-gutter)
+;;   (global-git-gutter-mode t)
+;;   )
 
 ;; helm-guide
 (when enable-quelpa
