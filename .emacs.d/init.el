@@ -24,6 +24,7 @@
 (set-buffer-file-coding-system 'utf-8)
 (setq buffer-file-coding-system 'utf-8)
 
+(setq load-prefer-newer t)
 (when (and (eq (window-system) 'x)
            (>= emacs-major-version 23))
 
