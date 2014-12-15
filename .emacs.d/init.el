@@ -378,10 +378,12 @@
 ;; elscren
 (when enable-quelpa
   (quelpa 'elscreen)
+  (quelpa 'elscreen-persist)
   (require 'elscreen nil t)
   (require 'elscreen-howm nil t)
   (require 'elscreen-gf nil t)
   (elscreen-start)
+  (elscreen-persist-mode 1)
   (setq elscreen-tab-display-kill-screen nil)
   (setq elscreen-tab-display-control nil)
   )
