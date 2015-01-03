@@ -448,6 +448,13 @@
     "*See the description of the `ff-search-directories' variable."
     :type '(repeat directory)
     :group 'ff)
+
+  ;; c-sharp(C#)
+  (when enable-quelpa
+    (quelpa 'csharp-mode)
+    (quelpa 'omnisharp)
+    (add-hook 'csharp-mode-hook 'omnisharp-mode)
+    )
   )
 
 ;; gtags
