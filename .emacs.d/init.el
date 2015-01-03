@@ -944,3 +944,16 @@
     (interactive)
     (helm :sources 'helm-source-quelpa :buffer "*helm quelpa*"))
   )
+
+;; multiterm
+(when enable-quelpa
+  (quelpa 'multi-term)
+  (require 'multi-term)
+  )
+
+;; switch-window
+(when enable-quelpa
+  (quelpa 'switch-window)
+  (setq switch-window-shortcut-style 'qwerty)
+  (global-set-key (kbd "C-x o") 'switch-window)
+  )
