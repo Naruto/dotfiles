@@ -954,6 +954,22 @@
 ;; switch-window
 (when enable-quelpa
   (quelpa 'switch-window)
-  (setq switch-window-shortcut-style 'qwerty)
+  ;(setq switch-window-shortcut-style 'qwerty)
   (global-set-key (kbd "C-x o") 'switch-window)
+  )
+
+;; groovy
+(when enable-quelpa
+  (quelpa 'groovy-mode)
+  (autoload 'groovy-mode "groovy-mode" "Major mode for editing Groovy code." t)
+  (add-to-list 'auto-mode-alist '("\\.groovy$" . groovy-mode))
+  (add-to-list 'auto-mode-alist '("\\.gradle$" . groovy-mode))
+  (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode))
+  )
+
+;; gradle
+(when enable-quelpa
+  (quelpa 'gradle-mode)
+  (require 'gradle-mode)
+  (add-to-list 'auto-mode-alist '("\\.gradle$" . gradle-mode))
   )
