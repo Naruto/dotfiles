@@ -19,6 +19,8 @@ must install
 
 shall install
 
+    $ sudo add-apt-repository ppa:webupd8team/java
+    $ sudo apt-get update
     $ sudo apt-get -y install global id-utils gdb  # for c developer
     $ sudo apt-get -y install cmigemo migemo-el    # incremental japanese search
     $ sudo apt-get -y install xclip                # seemless copy&paste between emacs and another X applications.
@@ -33,6 +35,7 @@ shall install
     $ pip install rope
     $ pip install jedi
     $ pip install flake8
+    $ sudo apt-get install oracle-java8-installer
 
 For chromium developer
 
@@ -46,6 +49,15 @@ For mobile platform(ex: Android, Tizen) developer.
     $ mkdir -p ~/bin
     $ curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
     $ chmod a+x ~/bin/repo
+
+For Android Application developer
+
+    $ sudo apt-get install libc6-i386 lib32stdc++6 lib32z1 
+    $ sudo apt-get install ant
+    download android studio from http://developer.android.com/sdk/index.html
+    $ unzip android-studio-ide-XXX.XXXXXXXX-linux.zip
+    $ mkdir -p /opt/android/
+    $ mv android-studio /opt/android
 
 # Get and Set up dotfiles
 

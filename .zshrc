@@ -101,7 +101,6 @@ export LC_ALL="ja_JP.UTF-8"
 export EDITOR="emacs"
 export PAGER="less"
 export MANPATH="/usr/local/man:/usr/local/share/man:/usr/share/man:$MANPATH"
-export GREP_OPTIONS='-n --color=always'
 
 export PATH="/usr/local/bin:$PATH"
 export PATH=~/bin:$PATH
@@ -128,14 +127,23 @@ case ${OSTYPE} in
         export GOOS=linux
 
         # Java
-        export PATH=/opt/java/bin:$PATH
-        export JAVA_HOME=/opt/java
-        export JAVA_FONTS=/usr/share/fonts/TTF
+        export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
 
         # android
-        export PATH=$PATH:/opt/android/android-ndk
-        export PATH=$PATH:/opt/android/adt-bundle-linux-x86_64/sdk/platform-tools
-        export PATH=$PATH:/opt/android/adt-bundle-linux-x86_64/sdk/tools
+        export ANDROID_NDK=/opt/android/android-ndk
+        export ANDROID_SDK=/opt/android/sdk/
+        export STUDIO_HOME=/opt/android/android-studio
+        export ANDROID_NDK_ROOT=${ANDROID_NDK}
+        export NDK_ROOT=${ANDROID_NDK}
+        export ANDROID_SDK_ROOT=${ANDROID_SDK}
+        export ANDROID_HOME=${ANDROID_SDK}
+        export GRADLE_HOME=${STUDIO_HOME}/gradle/gradle-2.2.1
+        export PATH=${ANDROID_NDK}:$PATH
+        export PATH=$PATH:${ANDROID_SDK}/platform-tool
+        export PATH=$PATH:${ANDROID_SDK}/tools
+        export PATH=$PATH:${ANDROID_SDK}/build-tools/21.1.2
+        export PATH=${STUDIO_HOME}/bin:${PATH}
+        export PATH=${GRADLE_HOME}/bin:${PATH}
         ;;
 
     darwin*)
