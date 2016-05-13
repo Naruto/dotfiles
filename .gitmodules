@@ -1,6 +1,0 @@
-[submodule ".emacs.d/public_repos/pkg-info.el"]
-	path = .emacs.d/public_repos/pkg-info.el
-	url = https://github.com/lunaryorn/pkg-info.el.git
-[submodule ".emacs.d/public_repos/quelpa"]
-	path = .emacs.d/public_repos/quelpa
-	url = https://github.com/quelpa/quelpa.git
