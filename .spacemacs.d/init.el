@@ -55,14 +55,13 @@ values."
    (
     ddskk
     auto-save-buffers-enhanced
-    elscreen
     google-c-style
     fuzzy
     popup
     undohist
-    cmake
+    cmake-mode
     multiple-cursors
-    yaml
+    yaml-mode
     )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '
@@ -274,6 +273,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (set-keyboard-coding-system 'utf-8)
   (set-buffer-file-coding-system 'utf-8)
   (setq buffer-file-coding-system 'utf-8)
+
   )
 
 
@@ -385,8 +385,6 @@ you should place your code here."
     (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
     (define-key yaml-mode-map "\C-m" 'newline-and-indent)
     )
-
-
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
