@@ -39,10 +39,13 @@ values."
      ;; version-control
      python
      c-c++
+     csharp
+     robe
      latex
      html
      markdown
      gtags
+     shell
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -54,9 +57,20 @@ values."
     auto-save-buffers-enhanced
     elscreen
     google-c-style
+    fuzzy
+    popup
+    undohist
+    cmake
+    multiple-cursors
+    yaml
     )
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '
+   (
+    evil
+    org
+    cscope
+    )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -96,7 +110,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -109,13 +123,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light
-                         solarized-light
-                         solarized-dark
-                         leuven
-                         monokai
-                         zenburn)
+   dotspacemacs-themes '(zenburn)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -255,7 +263,19 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
 
+  ;; user info
+  (setq user-full-name "Naruto TAKAHASHI")
+  (setq user-mail-address "tnaruto@gmail.com")
+
+  ;; char code
+  (set-language-environment "Japanese")
+  (prefer-coding-system 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (set-buffer-file-coding-system 'utf-8)
+  (setq buffer-file-coding-system 'utf-8)
   )
+
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -264,8 +284,6 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
-  (setq user-full-name "Naruto TAKAHASHI")
-  (setq user-mail-address "tnaruto@gmail.com")
 
   ;; auto-save-buffer enhanced
   (setq make-backup-files nil)
@@ -283,7 +301,6 @@ you should place your code here."
     (setq default-input-method "japanese-skk")
     (setq skk-dcomp-activate t)
     (setq skk-large-jisyo "~/.spacemacs.d/share/SKK-JISYO.L")
-    (require 'skk-study)
     )
 
   ;; efl-c-style
@@ -318,13 +335,15 @@ you should place your code here."
                                    c-lineup-arglist-tabs-only))))
 
   ;; set google code style at c++-mode
-  (require 'google-c-style)
-  (add-hook 'c++-mode-hook 'google-set-c-style)
-  (add-hook 'c++-mode-hook 'google-make-newline-indent)
+  (when (require 'google-c-style nil t)
+    (add-hook 'c++-mode-hook 'google-set-c-style)
+    (add-hook 'c++-mode-hook 'google-make-newline-indent)
+    )
 
   ;; switch source file and header file
-  ;; (global-set-key (kbd "C-x C-o") 'ff-find-other-file)
-  (define-key c-mode-base-map (kbd "C-x C-o") 'ff-find-other-file)
+  (add-hook 'c-initialization-hook (lambda ()
+                                     (define-key c-mode-base-map
+                                       (kbd "C-x C-o") 'ff-find-other-file)))
   (defcustom cc-search-directories
     '("." "/usr/include" "/usr/local/include/*")
     "*See the description of the `ff-search-directories' variable."
@@ -339,6 +358,35 @@ you should place your code here."
                (local-set-key (kbd "M-r") 'helm-gtags-find-rtag)
                (local-set-key (kbd "M-s") 'helm-gtags-find-symbol)
                (local-set-key (kbd "C-t") 'helm-gtags-pop-stack)))
+
+  ;; undohist
+  (when (require 'undohist nil t)
+    (undohist-initialize)
+    )
+
+  ;; cmake
+  (when (require 'cmake-mode nil t)
+    (setq auto-mode-alist
+          (append '(("CMakeLists\\.txt\\'" . cmake-mode)
+                    ("\\.cmake\\'" . cmake-mode))
+                  auto-mode-alist))
+    )
+
+  ;; multiple-cursors
+  (when (require 'multiple-cursors nil t)
+    (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+    (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+    (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+    (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+    )
+
+  ;; yaml
+  (when (require 'yaml-mode nil t)
+    (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
+    (define-key yaml-mode-map "\C-m" 'newline-and-indent)
+    )
+
+
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
