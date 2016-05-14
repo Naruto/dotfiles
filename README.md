@@ -2,9 +2,10 @@
 
 This is naruto's dotfiles.
 
-    .emacs.d/  - emacs dotfiles
-    .tmux.conf - tmux dotfile
-    .zshrc     - zsh dotfile
+    .emacs.d/     - emacs dotfiles
+    .spacemacs.d/ - spacemacs dotfiles
+    .tmux.conf    - tmux dotfile
+    .zshrc        - zsh dotfile
 
 # Prepare
 
@@ -61,13 +62,16 @@ For Android Application developer
 
 # Get and Set up dotfiles
 
-    $ git clone https://github.com/Naruto/dotfiles.git
-    $ DOTFILES_PATH=$(pwd)/dotfiles
+    $ mkdir -p ~/projects
+    $ git clone https://github.com/Naruto/dotfiles.git ~/projects/dotfiles
+    $ DOTFILES_PATH=~/projects/dotfiles
+    $ pushd ${DOTFILES_PATH}
+    $ git submodule init
+    $ git submodule update --recursive
     $ ln -sfn ${DOTFILES_PATH}/.emacs.d ~/
+    $ ln -sfn ${DOTFILES_PATH}/.spacemacs.d ~/
     $ ln -sfn ${DOTFILES_PATH}/.tmux.conf ~/
     $ ln -sfn ${DOTFILES_PATH}/.zshrc ~/
     $ ln -sfn ${DOTFILES_PATH}/.percol.d ~/
-    $ cd ${DOTFILES_PATH}
-    $ git submodule init
-    $ git submodule update --recursive
-    
+    $ popd
+
