@@ -57,7 +57,7 @@ values."
     ddskk
     auto-save-buffers-enhanced
     google-c-style
-    fuzzy
+    ;; fuzzy
     popup
     undohist
     cmake-mode
