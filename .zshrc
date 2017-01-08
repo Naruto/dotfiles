@@ -99,7 +99,7 @@ alias ag='ag --pager "less -R"'
 export LANG="ja_JP.UTF-8"
 export LC_ALL="ja_JP.UTF-8"
 export EDITOR="emacs"
-export PAGER="less"
+export PAGER="lv"
 export MANPATH="/usr/local/man:/usr/local/share/man:/usr/share/man:$MANPATH"
 
 export PATH="/usr/local/bin:$PATH"
@@ -147,6 +147,7 @@ case ${OSTYPE} in
         ;;
 
     darwin*)
+        alias ls="ls -F"
         ;;
 esac
 
@@ -207,4 +208,49 @@ export GTAGSLABEL=pygments
 
 # zsh suggestion
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# peco
+function peco-history-selection() {
+    BUFFER=`history -n 1 | tail -r  | awk '!a[$0]++' | peco`
+    CURSOR=$#BUFFER
+    zle reset-prompt
+}
+
+zle -N peco-history-selection
+bindkey '^R' peco-history-selection
+
+## powered_cd
+function chpwd() {
+  powered_cd_add_log
+}
+
+function powered_cd_add_log() {
+  local i=0
+  cat ~/.powered_cd.log | while read line; do
+    (( i++ ))
+    if [ i = 30 ]; then
+      sed -i -e "30,30d" ~/.powered_cd.log
+    elif [ "$line" = "$PWD" ]; then
+      sed -i -e "${i},${i}d" ~/.powered_cd.log 
+    fi
+  done
+  echo "$PWD" >> ~/.powered_cd.log
+}
+
+function powered_cd() {
+  if [ $# = 0 ]; then
+    cd $(gtac ~/.powered_cd.log | peco)
+  elif [ $# = 1 ]; then
+    cd $1
+  else
+    echo "powered_cd: too many arguments"
+  fi
+}
+
+_powered_cd() {
+  _files -/
+}
+
+compdef _powered_cd powered_cd
+alias c="powered_cd"
 
