@@ -72,6 +72,7 @@ For Android Application developer
     $ ln -sfn ${DOTFILES_PATH}/.spacemacs.d ~/
     $ ln -sfn ${DOTFILES_PATH}/.tmux.conf ~/
     $ ln -sfn ${DOTFILES_PATH}/.zshrc ~/
+    $ ln -sfn ${DOTFILES_PATH}/.zsh ~/
     $ ln -sfn ${DOTFILES_PATH}/.percol.d ~/
     $ popd
 
