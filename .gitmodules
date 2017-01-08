@@ -1,3 +1,6 @@
 [submodule "spacemacs"]
 	path = .emacs.d
 	url = git@github.com:syl20bnr/spacemacs.git
+[submodule ".zsh/zsh-autosuggestions"]
+	path = .zsh/zsh-autosuggestions
+	url = git@github.com:zsh-users/zsh-autosuggestions.git

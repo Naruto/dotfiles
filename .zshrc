@@ -204,3 +204,7 @@ fi
 # gnu global uses pygments
 export GTAGSCONF=/usr/local/share/gtags/gtags.conf
 export GTAGSLABEL=pygments
+
+# zsh suggestion
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
