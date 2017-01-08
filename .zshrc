@@ -99,7 +99,7 @@ alias ag='ag --pager "less -R"'
 export LANG="ja_JP.UTF-8"
 export LC_ALL="ja_JP.UTF-8"
 export EDITOR="emacs"
-export PAGER="less"
+export PAGER="lv"
 export MANPATH="/usr/local/man:/usr/local/share/man:/usr/share/man:$MANPATH"
 
 export PATH="/usr/local/bin:$PATH"
@@ -147,6 +147,7 @@ case ${OSTYPE} in
         ;;
 
     darwin*)
+        alias ls="ls -F"
         ;;
 esac
 
