@@ -74,5 +74,6 @@ For Android Application developer
     $ ln -sfn ${DOTFILES_PATH}/.zshrc ~/
     $ ln -sfn ${DOTFILES_PATH}/.zsh ~/
     $ ln -sfn ${DOTFILES_PATH}/.percol.d ~/
+    $ ln -sfn ${DOTFILES_PATH}/.peco ~/
     $ popd
 
