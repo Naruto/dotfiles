@@ -164,6 +164,10 @@ case ${OSTYPE} in
         ;;
 esac
 
+# go
+export GOPATH=$HOME/go
+export PATH="$GOPATH/bin:$PATH"
+
 # npm command completion script
 COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
 COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
