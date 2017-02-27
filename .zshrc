@@ -224,7 +224,10 @@ export GTAGSLABEL=pygments
 
 # peco
 function peco-history-selection() {
-    BUFFER=`history -n 1 | tail -r  | awk '!a[$0]++' | peco`
+    local tac
+    exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
+
+    BUFFER=`history -n 1 | tac  | awk '!a[$0]++' | peco`
     CURSOR=$#BUFFER
     zle reset-prompt
 }
@@ -262,8 +265,10 @@ function powered_cd_add_log() {
 }
 
 function powered_cd() {
+  local tac
+  exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
   if [ $# = 0 ]; then
-    cd $(gtac ~/.powered_cd.log | peco)
+    cd $(tac ~/.powered_cd.log | peco)
   elif [ $# = 1 ]; then
     cd $1
   else
