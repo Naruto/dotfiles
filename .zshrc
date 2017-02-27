@@ -10,6 +10,16 @@ function history-all { history -E 1}
 
 setopt share_history
 
+
+case ${OSTYPE} in
+    darwin*)
+    if [ -f $(brew --prefix)/etc/autojump.sh ]; then
+        source $(brew --prefix)/etc/autojump.sh
+    fi
+    fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+ 
+    ;;
+esac
 autoload -U compinit
 compinit
 # complete with color
@@ -88,6 +98,9 @@ setopt list_packed
 setopt noautoremoveslash
 # no beep sound when complete list displayed
 setopt nolistbeep
+# AUTO_CD
+#setopt AUTO_CD
+#cdpath=(.. ~ ~/projects)
 # Setting Prompt
 export PROMPT='[$HOST %c]%(!.#.%%) '
 
@@ -207,7 +220,7 @@ export GTAGSCONF=/usr/local/share/gtags/gtags.conf
 export GTAGSLABEL=pygments
 
 # zsh suggestion
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+#source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # peco
 function peco-history-selection() {
@@ -218,6 +231,17 @@ function peco-history-selection() {
 
 zle -N peco-history-selection
 bindkey '^R' peco-history-selection
+
+function peco-src () {
+  local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
+  if [ -n "$selected_dir" ]; then
+    BUFFER="cd ${selected_dir}"
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N peco-src
+bindkey '^]' peco-src
 
 ## powered_cd
 function chpwd() {
