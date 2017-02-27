@@ -164,6 +164,10 @@ case ${OSTYPE} in
         ;;
 esac
 
+# go
+export GOPATH=$HOME/go
+export PATH="$GOPATH/bin:$PATH"
+
 # npm command completion script
 COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
 COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
@@ -283,3 +287,5 @@ _powered_cd() {
 compdef _powered_cd powered_cd
 alias c="powered_cd"
 
+export PATH="$HOME/.anyenv/bin:$PATH"
+eval "$(anyenv init -)"
