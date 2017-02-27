@@ -287,3 +287,5 @@ _powered_cd() {
 compdef _powered_cd powered_cd
 alias c="powered_cd"
 
+export PATH="$HOME/.anyenv/bin:$PATH"
+eval "$(anyenv init -)"
