@@ -63,6 +63,9 @@ values."
     cmake-mode
     multiple-cursors
     yaml-mode
+    go-mode
+    go-autocomplete
+    go-eldoc
     )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '
@@ -386,7 +389,22 @@ you should place your code here."
     (add-to-list 'auto-mode-alist '("\\.ya?ml$" . yaml-mode))
     (define-key yaml-mode-map "\C-m" 'newline-and-indent)
     )
-  )
 
+  ;; go
+  (with-eval-after-load 'go-mode
+    ;; auto-complete
+    (require 'go-autocomplete)
+
+    ;; company-mode
+    (add-to-list 'company-backends 'company-go)
+
+    ;; eldoc
+    (add-hook 'go-mode-hook 'go-eldoc-setup)
+
+    ;; key bindings
+    (define-key go-mode-map (kbd "M-.") 'godef-jump)
+    (define-key go-mode-map (kbd "M-,") 'pop-tag-mark))
+
+  )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
