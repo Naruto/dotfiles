@@ -20,6 +20,7 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     octave
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -70,7 +71,6 @@ values."
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '
    (
-    evil
     org
     cscope
     )
