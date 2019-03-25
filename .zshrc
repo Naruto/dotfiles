@@ -16,12 +16,13 @@ case ${OSTYPE} in
     if [ -f $(brew --prefix)/etc/autojump.sh ]; then
         source $(brew --prefix)/etc/autojump.sh
     fi
+    fpath=($(brew --prefix)/share/zsh-completions $fpath)
     fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
  
     ;;
 esac
 autoload -U compinit
-compinit
+compinit -u
 # complete with color
 zstyle ':completion:*' list-colors di=34 fi=0
 
@@ -108,6 +109,7 @@ export PROMPT='[$HOST %c]%(!.#.%%) '
 alias rm="rm -i"
 alias less="less -R"
 alias ag='ag --pager "less -R"'
+alias rg="rg --pretty"
 
 export LANG="ja_JP.UTF-8"
 export LC_ALL="ja_JP.UTF-8"
@@ -160,13 +162,19 @@ case ${OSTYPE} in
         ;;
 
     darwin*)
-        alias ls="ls -F"
+        #alias ls="ls -F"
+        alias ls="exa -F"
         ;;
 esac
 
+# ruby
+eval "$(rbenv init -)"
+
 # go
 export GOPATH=$HOME/go
-export PATH="$GOPATH/bin:$PATH"
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
 
 # npm command completion script
 COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
@@ -209,7 +217,7 @@ function exists { which $1 &> /dev/null }
 if exists percol; then
     function percol_select_history() {
         local tac
-        exists gtac && tac="gtac" || exists tac && tac="tac" ||  tac="tail -r"
+        exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
         BUFFER=$(history -n 1 | eval $tac | percol --query "$LBUFFER")
         CURSOR=$#BUFFER         # move cursor
         zle -R -c               # refresh
@@ -229,9 +237,9 @@ export GTAGSLABEL=pygments
 # peco
 function peco-history-selection() {
     local tac
-    exists gtac && tac="gtac" || exists tac && tac="tac" ||  tac="tail -r"
+    exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
 
-    BUFFER=$(history -n 1 | eval $tac | awk '!a[$0]++' | peco)
+    BUFFER=`history -n 1 | gtac  | awk '!a[$0]++' | peco`
     CURSOR=$#BUFFER
     zle reset-prompt
 }
@@ -287,5 +295,97 @@ _powered_cd() {
 compdef _powered_cd powered_cd
 alias c="powered_cd"
 
-export PATH="$HOME/.anyenv/bin:$PATH"
-eval "$(anyenv init -)"
+# export PATH="$HOME/.anyenv/bin:$PATH"
+# eval "$(anyenv init -)"
+
+# fastlane
+. ~/.fastlane/completions/completion.sh
+
+# less
+LESSPIPE=`which src-hilite-lesspipe.sh`
+export LESSOPEN="| ${LESSPIPE} %s"
+export LESS=' -R -X -F '
+
+# android ndk
+export PATH=/opt/ndk/android-ndk:$PATH
+
+# android sdk
+export PATH=${HOME}/Library/Android/android/platform-tools:$PATH
+export PATH=${HOME}/Library/Android/android/tools:$PATH
+
+
+# added by travis gem
+[ -f /Users/naruto.takahashi/.travis/travis.sh ] && source /Users/naruto.takahashi/.travis/travis.sh
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/naruto.takahashi/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/naruto.takahashi/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/naruto.takahashi/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/naruto.takahashi/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+# ccache
+export USE_CCACHE=1
+export NDK_CCACHE=ccache
+export CCACHE_CPP2=yes
+export CCACHE_COMPILERCHECK=content
+
+###-begin-npm-completion-###
+#
+# npm command completion script
+#
+# Installation: npm completion >> ~/.bashrc  (or ~/.zshrc)
+# Or, maybe: npm completion > /usr/local/etc/bash_completion.d/npm
+#
+
+if type complete &>/dev/null; then
+  _npm_completion () {
+    local words cword
+    if type _get_comp_words_by_ref &>/dev/null; then
+      _get_comp_words_by_ref -n = -n @ -n : -w words -i cword
+    else
+      cword="$COMP_CWORD"
+      words=("${COMP_WORDS[@]}")
+    fi
+
+    local si="$IFS"
+    IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           npm completion -- "${words[@]}" \
+                           2>/dev/null)) || return $?
+    IFS="$si"
+    if type __ltrim_colon_completions &>/dev/null; then
+      __ltrim_colon_completions "${words[cword]}"
+    fi
+  }
+  complete -o default -F _npm_completion npm
+elif type compdef &>/dev/null; then
+  _npm_completion() {
+    local si=$IFS
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                 COMP_LINE=$BUFFER \
+                 COMP_POINT=0 \
+                 npm completion -- "${words[@]}" \
+                 2>/dev/null)
+    IFS=$si
+  }
+  compdef _npm_completion npm
+elif type compctl &>/dev/null; then
+  _npm_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       npm completion -- "${words[@]}" \
+                       2>/dev/null)) || return $?
+    IFS="$si"
+  }
+  compctl -K _npm_completion npm
+fi
+###-end-npm-completion-###
