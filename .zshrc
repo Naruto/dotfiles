@@ -167,8 +167,10 @@ case ${OSTYPE} in
         ;;
 esac
 
-# ruby
-eval "$(rbenv init -)"
+# rbenv
+if type "rbenv" > /dev/null 2>&1; then
+    eval "$(rbenv init -)"
+fi
 
 # go
 export GOPATH=$HOME/go
@@ -299,7 +301,7 @@ alias c="powered_cd"
 # eval "$(anyenv init -)"
 
 # fastlane
-. ~/.fastlane/completions/completion.sh
+[ -f ~/.fastlane/completions/completion.sh ] && source ~/.fastlane/completions/completion.sh
 
 # less
 LESSPIPE=`which src-hilite-lesspipe.sh`
