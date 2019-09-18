@@ -25,7 +25,7 @@ brew install git emacs tmux zsh exa
 ```
 
 ```sh
-brew install cmake ghq hub lv mono peco rg ag tree gradle
+brew install cmake ghq hub lv mono peco rg ag tree gradle coreutils
 ```
 
 
