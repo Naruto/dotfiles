@@ -10,6 +10,8 @@ function history-all { history -E 1}
 
 setopt share_history
 
+export PATH="/usr/local/bin:$PATH"
+export PATH="/usr/local/sbin:$PATH"
 
 case ${OSTYPE} in
     darwin*)
@@ -110,6 +112,7 @@ alias rm="rm -i"
 alias less="less -R"
 alias ag='ag --pager "less -R"'
 alias rg="rg --pretty"
+function git(){hub "$@"} # zsh
 
 export LANG="ja_JP.UTF-8"
 export LC_ALL="ja_JP.UTF-8"
@@ -118,7 +121,8 @@ export PAGER="lv"
 export MANPATH="/usr/local/man:/usr/local/share/man:/usr/share/man:$MANPATH"
 
 export PATH="/usr/local/bin:$PATH"
-export PATH=~/bin:$PATH
+export PATH="/usr/local/sbin:$PATH"
+export PATH="~/bin:$PATH"
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 
@@ -132,7 +136,7 @@ export PATH="${DEPOT_TOOLS_PATH}:$PATH"
 case ${OSTYPE} in
     linux*)
         alias ls="ls -F --show-control-char --color=always"
-	alias open=xdg-open
+	      alias open=xdg-open
 
         # for E
         export E_PREFIX='/usr/local'
@@ -162,12 +166,28 @@ case ${OSTYPE} in
         ;;
 
     darwin*)
-        #alias ls="ls -F"
         alias ls="exa -F"
+
+        # Android
+        export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+        export GRADLE_HOME=/usr/local/opt/gradle
+        export ANDROID_NDK=/opt/ndk/android-ndk
+        export PATH=${ANDROID_NDK}:$PATH
+        export ANDROID_SDK=${HOME}/Library/Android/sdk
+        export ANDROID_NDK_ROOT=${ANDROID_NDK}
+        export NDK_ROOT=${ANDROID_NDK}
+        export ANDROID_SDK_ROOT=${ANDROID_SDK}
+        export ANDROID_HOME=${ANDROID_SDK}
+        export ANDROID_NDK_HOME=${ANDROID_NDK}
+        export GRADLE_HOME=/usr/local/opt/gradle
+        export ANT_ROOT=/usr/local/opt/ant/bin
+        export PATH=${ANDROID_SDK}/platform-tools:$PATH
+        export PATH=${ANDROID_SDK}/tools:$PATH
         ;;
 esac
 
 # ruby
+export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
 # go
@@ -175,41 +195,6 @@ export GOPATH=$HOME/go
 export GOROOT=/usr/local/opt/go/libexec
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:$GOROOT/bin
-
-# npm command completion script
-COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
-COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}
-export COMP_WORDBREAKS
-
-if complete &>/dev/null; then
-    _npm_completion () {
-        local si="$IFS"
-        IFS=$'\n' COMPREPLY=($(COMP_CWORD="$COMP_CWORD" \
-            COMP_LINE="$COMP_LINE" \
-            COMP_POINT="$COMP_POINT" \
-            npm completion -- "${COMP_WORDS[@]}" \
-            2>/dev/null)) || return $?
-        IFS="$si"
-    }
-    complete -F _npm_completion npm
-elif compctl &>/dev/null; then
-    _npm_completion () {
-        local cword line point words si
-        read -Ac words
-        read -cn cword
-        let cword-=1
-        read -l line
-        read -ln point
-        si="$IFS"
-        IFS=$'\n' reply=($(COMP_CWORD="$cword" \
-            COMP_LINE="$line" \
-            COMP_POINT="$point" \
-            npm completion -- "${words[@]}" \
-            2>/dev/null)) || return $?
-        IFS="$si"
-    }
-    compctl -K _npm_completion npm
-fi
 
 # percol
 function exists { which $1 &> /dev/null }
@@ -232,7 +217,7 @@ export GTAGSCONF=/usr/local/share/gtags/gtags.conf
 export GTAGSLABEL=pygments
 
 # zsh suggestion
-#source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [ -f '~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh' ]; then source '~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh'; fi
 
 # peco
 function peco-history-selection() {
@@ -295,11 +280,41 @@ _powered_cd() {
 compdef _powered_cd powered_cd
 alias c="powered_cd"
 
+# cdr
+if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
+  autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
+  add-zsh-hook chpwd chpwd_recent_dirs
+  zstyle ':completion:*' recent-dirs-insert both
+  zstyle ':chpwd:*' recent-dirs-default true
+  zstyle ':chpwd:*' recent-dirs-max 1000
+  zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
+  
+  # ### search a destination from cdr list
+  function peco-get-destination-from-cdr() {
+    cdr -l | \
+    sed -e 's/^[[:digit:]]*[[:blank:]]*//' | \
+    peco --query "$LBUFFER"
+  }
+
+  ### search a destination from cdr list and cd the destination
+  function peco-cdr() {
+    local destination="$(peco-get-destination-from-cdr)"
+    if [ -n "$destination" ]; then
+      BUFFER="cd $destination"
+      zle accept-line
+    else
+      zle reset-prompt
+    fi
+  }
+  zle -N peco-cdr
+  bindkey '^x' peco-cdr
+fi
+
 # export PATH="$HOME/.anyenv/bin:$PATH"
 # eval "$(anyenv init -)"
 
 # fastlane
-. ~/.fastlane/completions/completion.sh
+if [ -f '~/.fastlane/completions/completion.sh' ]; then  source ~/.fastlane/completions/completion.sh; fi
 
 # less
 LESSPIPE=`which src-hilite-lesspipe.sh`
@@ -313,21 +328,12 @@ export PATH=/opt/ndk/android-ndk:$PATH
 export PATH=${HOME}/Library/Android/android/platform-tools:$PATH
 export PATH=${HOME}/Library/Android/android/tools:$PATH
 
-
-# added by travis gem
-[ -f /Users/naruto.takahashi/.travis/travis.sh ] && source /Users/naruto.takahashi/.travis/travis.sh
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/naruto.takahashi/Downloads/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/naruto.takahashi/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/naruto.takahashi/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/naruto.takahashi/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
-
 # ccache
 export USE_CCACHE=1
-export NDK_CCACHE=ccache
+export NDK_CCACHE=/usr/local/bin/ccache
 export CCACHE_CPP2=yes
 export CCACHE_COMPILERCHECK=content
+
 
 ###-begin-npm-completion-###
 #
@@ -389,3 +395,5 @@ elif type compctl &>/dev/null; then
   compctl -K _npm_completion npm
 fi
 ###-end-npm-completion-###
+
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
