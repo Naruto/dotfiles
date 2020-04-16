@@ -21,11 +21,11 @@ install applications
 ## macOS
 
 ```sh
-brew install git emacs tmux zsh
+brew install git emacs tmux zsh exa
 ```
 
 ```sh
-brew install cmake ghq hub lv mercurial mono peco rg ag tree ant gradle
+brew install cmake ghq hub lv mono peco rg ag tree gradle coreutils
 ```
 
 
