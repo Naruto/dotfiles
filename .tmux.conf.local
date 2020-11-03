@@ -320,11 +320,17 @@ set -g history-limit 10000
 
 # force Vi mode
 #   really you should export VISUAL or EDITOR environment variable, see manual
-#set -g status-keys vi
-set -g mode-keys vi
+setw -g status-keys vi
+setw -g mode-keys vi
+
+unbind C-h
+unbind C-l
+bind -r n previous-window # select previous window
+bind -r p next-window     # select next window
 
 # replace C-b by C-l instead of using both prefixes
 set -gu prefix2
+unbind C-a
 unbind C-b
 set -g prefix C-l
 bind C-l send-prefix

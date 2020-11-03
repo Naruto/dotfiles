@@ -112,6 +112,7 @@ alias rm="rm -i"
 alias less="less -R"
 alias ag='ag --pager "less -R"'
 alias rg="rg --pretty"
+alias lg='lazygit'
 if ! type "gh" > /dev/null; then
     eval "$(gh completion -s zsh)"
 fi
