@@ -201,22 +201,6 @@ export GOROOT=/usr/local/opt/go/libexec
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:$GOROOT/bin
 
-# percol
-function exists { which $1 &> /dev/null }
-
-if exists percol; then
-    function percol_select_history() {
-        local tac
-        exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
-        BUFFER=$(history -n 1 | eval $tac | percol --query "$LBUFFER")
-        CURSOR=$#BUFFER         # move cursor
-        zle -R -c               # refresh
-    }
-
-    zle -N percol_select_history
-    bindkey '^R' percol_select_history
-fi
-
 # gnu global uses pygments
 export GTAGSCONF=/usr/local/share/gtags/gtags.conf
 export GTAGSLABEL=pygments
@@ -226,14 +210,10 @@ if [ -f '~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh' ]; then source '~/.
 
 # peco
 function peco-history-selection() {
-    local tac
-    exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
-
-    BUFFER=`history -n 1 | gtac  | awk '!a[$0]++' | peco`
+    BUFFER=$(history -n -r 1 | peco --query "$LBUFFER")
     CURSOR=$#BUFFER
     zle reset-prompt
 }
-
 zle -N peco-history-selection
 bindkey '^R' peco-history-selection
 
@@ -247,43 +227,6 @@ function peco-src () {
 }
 zle -N peco-src
 bindkey '^]' peco-src
-
-## powered_cd
-function chpwd() {
-  powered_cd_add_log
-}
-
-function powered_cd_add_log() {
-  local i=0
-  cat ~/.powered_cd.log | while read line; do
-    (( i++ ))
-    if [ i = 30 ]; then
-      sed -i -e "30,30d" ~/.powered_cd.log
-    elif [ "$line" = "$PWD" ]; then
-      sed -i -e "${i},${i}d" ~/.powered_cd.log 
-    fi
-  done
-  echo "$PWD" >> ~/.powered_cd.log
-}
-
-function powered_cd() {
-  local tac
-  exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
-  if [ $# = 0 ]; then
-    cd $(tac ~/.powered_cd.log | peco)
-  elif [ $# = 1 ]; then
-    cd $1
-  else
-    echo "powered_cd: too many arguments"
-  fi
-}
-
-_powered_cd() {
-  _files -/
-}
-
-compdef _powered_cd powered_cd
-alias c="powered_cd"
 
 # cdr
 if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
@@ -312,7 +255,7 @@ if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]
     fi
   }
   zle -N peco-cdr
-  bindkey '^x' peco-cdr
+  bindkey '^u' peco-cdr
 fi
 
 # eval "$(anyenv init -)"
@@ -345,6 +288,25 @@ export USE_CCACHE=1
 export NDK_CCACHE=/usr/local/bin/ccache
 export CCACHE_CPP2=yes
 export CCACHE_COMPILERCHECK=content
+
+# ranger
+function ranger() {
+    if [ -z "$RANGER_LEVEL" ]; then
+        /usr/local/bin/ranger $@
+    else
+        exit
+    fi
+}
+function ranger-cd {
+    tempfile="$(mktemp -t tmp.XXXXXX)"
+    ranger --choosedir="$tempfile" "${@:-$(pwd)}"
+    test -f "$tempfile" &&
+    if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
+        cd -- "$(cat "$tempfile")"
+    fi  
+    rm -f -- "$tempfile"
+}
+bindkey -s '^O' 'ranger-cd\n'
 
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 
