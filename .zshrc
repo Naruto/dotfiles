@@ -10,19 +10,6 @@ function history-all { history -E 1}
 
 setopt share_history
 
-export PATH="/usr/local/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
-
-case ${OSTYPE} in
-    darwin*)
-    if [ -f $(brew --prefix)/etc/autojump.sh ]; then
-        source $(brew --prefix)/etc/autojump.sh
-    fi
-    fpath=($(brew --prefix)/share/zsh-completions $fpath)
-    fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
- 
-    ;;
-esac
 autoload -U compinit
 compinit -u
 # complete with color
@@ -101,11 +88,18 @@ setopt list_packed
 setopt noautoremoveslash
 # no beep sound when complete list displayed
 setopt nolistbeep
-# AUTO_CD
-#setopt AUTO_CD
-#cdpath=(.. ~ ~/projects)
+
 # Setting Prompt
-export PROMPT='[$HOST %c]%(!.#.%%) '
+#if type "starship" > /dev/null; then
+#  eval "$(starship init zsh)"
+#else
+  export PROMPT='[$HOST %c]%(!.#.%%) '
+#fi
+
+# gh command
+if type "gh" > /dev/null; then
+  eval "$(gh completion -s zsh)"
+fi
 
 # Setting alias
 alias rm="rm -i"
@@ -113,8 +107,13 @@ alias less="less -R"
 alias ag='ag --pager "less -R"'
 alias rg="rg --pretty"
 alias lg='lazygit'
-if ! type "gh" > /dev/null; then
-    eval "$(gh completion -s zsh)"
+if type "exa" > /dev/null; then
+  alias ls="exa -F"
+else
+  alias ls="ls -F --show-control-char --color=always"
+fi
+if type "bat" > /dev/null; then
+  alias cat="bat"
 fi
 
 export LANG="ja_JP.UTF-8"
@@ -169,8 +168,6 @@ case ${OSTYPE} in
         ;;
 
     darwin*)
-        alias ls="exa -F"
-
         # Android
         export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
         export GRADLE_HOME=/usr/local/opt/gradle
@@ -258,6 +255,52 @@ if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]
   bindkey '^u' peco-cdr
 fi
 
+# fzf
+export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
+export FZF_DEFAULT_OPTS='--layout=reverse --border'
+fh() {
+  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed -E 's/ *[0-9]*\*? *//' | sed -E 's/\\/\\\\/g')
+}
+zle -N fh
+bindkey '^R' fh
+
+fzf-add() {
+  local selected
+  selected="$(git status -s | fzf | cut -c3-)"
+  if [ -n "$selected" ]; then
+    echo $selected
+    git add $selected
+  fi
+}
+alias fa="fzf-add"
+
+# fco - checkout git branch/tag
+fco() {
+  local tags branches target
+  branches=$(
+    git --no-pager branch --all \
+      --format="%(if)%(HEAD)%(then)%(else)%(if:equals=HEAD)%(refname:strip=3)%(then)%(else)%1B[0;34;1mbranch%09%1B[m%(refname:short)%(end)%(end)" \
+    | sed '/^$/d') || return
+  tags=$(
+    git --no-pager tag | awk '{print "\x1b[35;1mtag\x1b[m\t" $1}') || return
+  target=$(
+    (echo "$branches"; echo "$tags") |
+    fzf --no-hscroll --no-multi -n 2 \
+        --ansi) || return
+  git checkout $(awk '{print $2}' <<<"$target" )
+}
+# fshow - git commit browser
+fshow() {
+  git log --graph --color=always \
+      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
+  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+      --bind "ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                {}
+FZF-EOF"
+}
+
 # eval "$(anyenv init -)"
 # anyenv
 export PATH="$HOME/.anyenv/bin:$PATH"
@@ -292,7 +335,7 @@ export CCACHE_COMPILERCHECK=content
 # ranger
 function ranger() {
     if [ -z "$RANGER_LEVEL" ]; then
-        /usr/local/bin/ranger $@
+        /usr/local/bin/ranger "$@"
     else
         exit
     fi
@@ -309,4 +352,3 @@ function ranger-cd {
 bindkey -s '^O' 'ranger-cd\n'
 
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
-

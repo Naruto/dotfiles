@@ -21,13 +21,12 @@ install applications
 ## macOS
 
 ```bash
-brew install git emacs tmux zsh exa
+brew install git emacs tmux zsh exa bat less
 ```
 
 ```bash
-brew install cmake ghq hub lv mono peco rg ag tree gradle coreutils
+brew install cmake ghq gh mono peco fzf git-delta rg tree gradle coreutils ranger lazygit
 ```
-
 
 ## Ubuntu
 
