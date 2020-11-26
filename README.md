@@ -5,8 +5,6 @@ This is naruto's dotfiles.
 ```
 .
 |-- .emacs.d     - emacs dotfiles
-|-- .peco
-|-- .percol.d
 |-- .spacemacs.d - spacemacs dotfiles
 |-- .tmux.conf   - tmux dotfile
 |-- .zsh         - add zsh auto suggestions files  
@@ -25,7 +23,7 @@ brew install git emacs tmux zsh exa bat less
 ```
 
 ```bash
-brew install cmake ghq gh mono peco fzf git-delta rg tree gradle coreutils ranger lazygit
+brew install cmake ghq gh mono fzf git-delta rg tree gradle coreutils ranger lazygit
 ```
 
 ## Ubuntu
@@ -49,7 +47,6 @@ sudo apt-get -y install lv                   # high convenience pager
 sudo apt-get install silversearcher-ag
 sudo apt-get install ack-grep
 curl -fsSkL https://raw.github.com/cask/cask/master/go | python
-pip install percol
 pip install pylint
 gem install rubocop ruby-lint
 sudo apt-get install clang
@@ -103,8 +100,6 @@ ln -sfn ${DOTFILES_PATH}/.spacemacs.d ~/
 ln -sfn ${DOTFILES_PATH}/.tmux.conf ~/
 ln -sfn ${DOTFILES_PATH}/.zshrc ~/
 ln -sfn ${DOTFILES_PATH}/.zsh ~/
-ln -sfn ${DOTFILES_PATH}/.percol.d ~/
-ln -sfn ${DOTFILES_PATH}/.peco ~/
 ln -sfn ${DOTFILES_PATH}/.tmux/.tmux.conf ~/
 ln -sfn ${DOTFILES_PATH}/.tmux.conf.local ~/
 popd

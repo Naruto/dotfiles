@@ -205,26 +205,6 @@ export GTAGSLABEL=pygments
 # zsh suggestion
 if [ -f '~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh' ]; then source '~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh'; fi
 
-# peco
-function peco-history-selection() {
-    BUFFER=$(history -n -r 1 | peco --query "$LBUFFER")
-    CURSOR=$#BUFFER
-    zle reset-prompt
-}
-zle -N peco-history-selection
-bindkey '^R' peco-history-selection
-
-function peco-src () {
-  local selected_dir=$(ghq list -p | peco --query "$LBUFFER")
-  if [ -n "$selected_dir" ]; then
-    BUFFER="cd ${selected_dir}"
-    zle accept-line
-  fi
-  zle clear-screen
-}
-zle -N peco-src
-bindkey '^]' peco-src
-
 # cdr
 if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
   autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
@@ -233,44 +213,47 @@ if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]
   zstyle ':chpwd:*' recent-dirs-default true
   zstyle ':chpwd:*' recent-dirs-max 1000
   zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
-  
-  # ### search a destination from cdr list
-  function peco-get-destination-from-cdr() {
-    cdr -l | \
-    sed -e 's/^[[:digit:]]*[[:blank:]]*//' | \
-    peco --query "$LBUFFER"
-  }
-
-  ### search a destination from cdr list and cd the destination
-  function peco-cdr() {
-    local destination="$(peco-get-destination-from-cdr)"
-    if [ -n "$destination" ]; then
-      BUFFER="cd $destination"
-      zle accept-line
-    else
-      zle reset-prompt
-    fi
-  }
-  zle -N peco-cdr
-  bindkey '^u' peco-cdr
 fi
 
 # fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
-export FZF_DEFAULT_OPTS='--layout=reverse --border'
-fh() {
-  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed -E 's/ *[0-9]*\*? *//' | sed -E 's/\\/\\\\/g')
+export FZF_DEFAULT_OPTS='--layout=reverse --border --bind ctrl-v:page-down,alt-v:page-up,ctrl-k:kill-line'
+
+function ghq-fzf() {
+  local target_dir=$(ghq list -p | fzf --query="$LBUFFER")
+
+  if [ -n "$target_dir" ]; then
+    BUFFER="cd ${target_dir}"
+    zle accept-line
+  fi
+
+  zle reset-prompt
 }
-zle -N fh
-bindkey '^R' fh
+zle -N ghq-fzf
+bindkey "^]" ghq-fzf
+
+if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
+  function fzf-cdr () {
+    local selected_dir=$(cdr -l | awk '{ print $2 }' | fzf --query "$LBUFFER")
+    if [ -n "$selected_dir" ]; then
+      BUFFER="cd ${selected_dir}"
+      zle accept-line
+    fi
+    zle clear-screen
+  }
+  zle -N fzf-cdr
+  bindkey "^u" fzf-cdr
+fi
 
 fzf-add() {
-  local selected
-  selected="$(git status -s | fzf | cut -c3-)"
-  if [ -n "$selected" ]; then
-    echo $selected
-    git add $selected
-  fi
+    local selected
+    selected=$(git status -s | fzf -m --ansi --preview="echo {} | awk '{print \$2}' | xargs git diff --color" | awk '{print $2}')
+    if [[ -n "$selected" ]]; then
+        selected=$(tr '\n' ' ' <<< "$selected")
+        git add $selected
+        echo "Completed: git add $selected"
+    fi
 }
 alias fa="fzf-add"
 
@@ -300,6 +283,13 @@ fshow() {
                 {}
 FZF-EOF"
 }
+
+# git-fuzzy
+GIT_FUZZY_PATH=$(dirname $(readlink ${(%):-%N}))/git-fuzzy
+export PATH=${GIT_FUZZY_PATH}/bin:$PATH
+if type "delta" > /dev/null; then
+  export GF_PREFERRED_PAGER="delta --theme=gruvbox --highlight-removed -w __WIDTH__"
+fi
 
 # eval "$(anyenv init -)"
 # anyenv
@@ -351,4 +341,7 @@ function ranger-cd {
 }
 bindkey -s '^O' 'ranger-cd\n'
 
+
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

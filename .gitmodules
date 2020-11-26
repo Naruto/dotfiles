@@ -7,3 +7,6 @@
 [submodule ".tmux"]
 	path = .tmux
 	url = git@github.com:gpakosz/.tmux.git
+[submodule "git-fuzzy"]
+	path = git-fuzzy
+	url = git@github.com:bigH/git-fuzzy.git
