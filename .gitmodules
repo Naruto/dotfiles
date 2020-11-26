@@ -10,3 +10,6 @@
 [submodule "git-fuzzy"]
 	path = git-fuzzy
 	url = git@github.com:bigH/git-fuzzy.git
+[submodule "forgit"]
+	path = forgit
+	url = git@github.com:wfxr/forgit.git

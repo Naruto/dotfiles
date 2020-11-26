@@ -20,10 +20,8 @@ install applications
 
 ```bash
 brew install git emacs tmux zsh exa bat less
-```
-
-```bash
-brew install cmake ghq gh mono fzf git-delta rg tree gradle coreutils ranger lazygit
+brew install cmake ghq gh mono fzf git-delta rg tree gradle coreutils ranger nnn lazygit
+$(brew --prefix)/opt/fzf/install # fzf setup
 ```
 
 ## Ubuntu

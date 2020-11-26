@@ -113,7 +113,7 @@ else
   alias ls="ls -F --show-control-char --color=always"
 fi
 if type "bat" > /dev/null; then
-  alias cat="bat"
+  alias cat="bat --paging=never"
 fi
 
 export LANG="ja_JP.UTF-8"
@@ -218,8 +218,9 @@ fi
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
-export FZF_DEFAULT_OPTS='--layout=reverse --border --bind ctrl-v:page-down,alt-v:page-up,ctrl-k:kill-line'
+export FZF_DEFAULT_OPTS='--layout=reverse --ansi --border --bind ctrl-v:page-down,alt-v:page-up,ctrl-k:kill-line'
 
+## ghq and fzf
 function ghq-fzf() {
   local target_dir=$(ghq list -p | fzf --query="$LBUFFER")
 
@@ -233,6 +234,7 @@ function ghq-fzf() {
 zle -N ghq-fzf
 bindkey "^]" ghq-fzf
 
+## cdr and fzf
 if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
   function fzf-cdr () {
     local selected_dir=$(cdr -l | awk '{ print $2 }' | fzf --query "$LBUFFER")
@@ -246,43 +248,30 @@ if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]
   bindkey "^u" fzf-cdr
 fi
 
-fzf-add() {
-    local selected
-    selected=$(git status -s | fzf -m --ansi --preview="echo {} | awk '{print \$2}' | xargs git diff --color" | awk '{print $2}')
-    if [[ -n "$selected" ]]; then
-        selected=$(tr '\n' ' ' <<< "$selected")
-        git add $selected
-        echo "Completed: git add $selected"
-    fi
-}
-alias fa="fzf-add"
+## git co branch and fzf
+_fzf_complete_git() {
+  ARGS="$@"
+  local branches
 
-# fco - checkout git branch/tag
-fco() {
-  local tags branches target
-  branches=$(
-    git --no-pager branch --all \
-      --format="%(if)%(HEAD)%(then)%(else)%(if:equals=HEAD)%(refname:strip=3)%(then)%(else)%1B[0;34;1mbranch%09%1B[m%(refname:short)%(end)%(end)" \
-    | sed '/^$/d') || return
-  tags=$(
-    git --no-pager tag | awk '{print "\x1b[35;1mtag\x1b[m\t" $1}') || return
-  target=$(
-    (echo "$branches"; echo "$tags") |
-    fzf --no-hscroll --no-multi -n 2 \
-        --ansi) || return
-  git checkout $(awk '{print $2}' <<<"$target" )
+  if [[ $ARGS == 'git co'* ]]; then
+    branches=$(git branch -vv --all)
+    _fzf_complete --reverse --multi -- "$@" < <(
+      echo $branches
+    )
+  else
+    eval "zle ${fzf_default_completion:-expand-or-complete}"
+  fi
 }
-# fshow - git commit browser
-fshow() {
-  git log --graph --color=always \
-      --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" "$@" |
-  fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
-      --bind "ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-                {}
-FZF-EOF"
+_fzf_complete_git_post() {
+    awk '{print $1}'
 }
+
+# forgit
+if type "fzf" > /dev/null; then
+  FORGIT_PATH=$(dirname $(readlink ${(%):-%N}))/forgit
+  FORGIT_PATH_ZSH="${FORGIT_PATH}/forgit.plugin.zsh"
+  [ -f "${FORGIT_PATH_ZSH}" ] && source "${FORGIT_PATH_ZSH}"
+fi
 
 # git-fuzzy
 GIT_FUZZY_PATH=$(dirname $(readlink ${(%):-%N}))/git-fuzzy
@@ -323,25 +312,53 @@ export CCACHE_CPP2=yes
 export CCACHE_COMPILERCHECK=content
 
 # ranger
-function ranger() {
-    if [ -z "$RANGER_LEVEL" ]; then
-        /usr/local/bin/ranger "$@"
-    else
-        exit
+# function ranger() {
+#     if [ -z "$RANGER_LEVEL" ]; then
+#         /usr/local/bin/ranger "$@"
+#     else
+#         exit
+#     fi
+# }
+# function ranger-cd {
+#     tempfile="$(mktemp -t tmp.XXXXXX)"
+#     ranger --choosedir="$tempfile" "${@:-$(pwd)}"
+#     test -f "$tempfile" &&
+#     if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
+#         cd -- "$(cat "$tempfile")"
+#     fi  
+#     rm -f -- "$tempfile"
+# }
+# bindkey -s '^O' 'ranger-cd\n'
+
+# nnn
+export NNN_PLUG="d:-_git diff;l:-_git log;s:-_git status"
+function n()
+{
+    # Block nesting of nnn in subshells
+    if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then
+        echo "nnn is already running"
+        return
+    fi
+
+    # The default behaviour is to cd on quit (nnn checks if NNN_TMPFILE is set)
+    # To cd on quit only on ^G, remove the "export" as in:
+    #     NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+    # NOTE: NNN_TMPFILE is fixed, should not be modified
+    export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+
+    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
+    # stty start undef
+    # stty stop undef
+    # stty lwrap undef
+    # stty lnext undef
+
+    nnn -de "$@"
+
+    if [ -f "$NNN_TMPFILE" ]; then
+            . "$NNN_TMPFILE"
+            rm -f "$NNN_TMPFILE" > /dev/null
     fi
 }
-function ranger-cd {
-    tempfile="$(mktemp -t tmp.XXXXXX)"
-    ranger --choosedir="$tempfile" "${@:-$(pwd)}"
-    test -f "$tempfile" &&
-    if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
-        cd -- "$(cat "$tempfile")"
-    fi  
-    rm -f -- "$tempfile"
-}
-bindkey -s '^O' 'ranger-cd\n'
-
+bindkey -s '^O' 'n\n'
 
 export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
