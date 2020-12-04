@@ -10,8 +10,14 @@ function history-all { history -E 1}
 
 setopt share_history
 
-autoload -U compinit
-compinit -u
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+  autoload -Uz compinit
+  compinit
+else
+  autoload -U compinit
+  compinit -u
+fi
 # complete with color
 zstyle ':completion:*' list-colors di=34 fi=0
 
