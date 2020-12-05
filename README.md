@@ -94,7 +94,6 @@ DOTFILES_PATH=~/projects/dotfiles
 pushd ${DOTFILES_PATH}
 git submodule update --init --recursive
 ln -sfn ${DOTFILES_PATH}/.emacs.d ~/
-ln -sfn ${DOTFILES_PATH}/.spacemacs.d ~/
 ln -sfn ${DOTFILES_PATH}/.tmux.conf ~/
 ln -sfn ${DOTFILES_PATH}/.zshrc ~/
 ln -sfn ${DOTFILES_PATH}/.zsh ~/
