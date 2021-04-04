@@ -9,6 +9,7 @@ setopt extended_history
 function history-all { history -E 1}
 
 setopt share_history
+FPATH=$HOME/.zfunc:$FPATH
 
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
