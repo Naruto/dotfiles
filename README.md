@@ -21,8 +21,10 @@ install applications
 ```bash
 brew install git emacs tmux zsh exa bat less
 brew install cmake ghq gh mono fzf git-delta rg tree gradle coreutils nnn lazygit
-brew install starship zoxide
+brew install starship zoxide rustup-init
+brew install reattach-to-user-namespace
 $(brew --prefix)/opt/fzf/install # fzf setup
+rustup-init # rust setup
 ```
 
 # Get and Set up dotfiles
@@ -32,10 +34,10 @@ mkdir -p ~/projects
 git clone https://github.com/Naruto/dotfiles.git ~/projects/dotfiles
 DOTFILES_PATH=~/projects/dotfiles
 pushd ${DOTFILES_PATH}
-git submodule update --init --recursive
 ln -sfn ${DOTFILES_PATH}/.emacs.d ~/
 ln -sfn ${DOTFILES_PATH}/.zshrc ~/
 ln -sfn ${DOTFILES_PATH}/.zsh ~/
+ln -sfn ${DOTFILES_PATH}/.tmux ~/
 ln -sfn ${DOTFILES_PATH}/.tmux/.tmux.conf ~/
 ln -sfn ${DOTFILES_PATH}/.tmux.conf.local ~/
 ln -sfn ${DOTFILES_PATH}/.starship ~/
