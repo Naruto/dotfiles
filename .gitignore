@@ -9,4 +9,4 @@
 wget-log
 .emacs.d/elpa
 .emacs.d/quelpa
-
+.starship/cache/

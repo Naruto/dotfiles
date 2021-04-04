@@ -96,11 +96,13 @@ setopt noautoremoveslash
 setopt nolistbeep
 
 # Setting Prompt
-#if type "starship" > /dev/null; then
-#  eval "$(starship init zsh)"
-#else
+if type "starship" > /dev/null; then
+  export STARSHIP_CONFIG=~/.starship/config.toml
+  export STARSHIP_CACHE=~/.starship/cache
+  eval "$(starship init zsh)"
+else
   export PROMPT='[$HOST %c]%(!.#.%%) '
-#fi
+fi
 
 # gh command
 if type "gh" > /dev/null; then
@@ -120,6 +122,9 @@ else
 fi
 if type "bat" > /dev/null; then
   alias cat="bat --paging=never"
+fi
+if type "zoxide" > /dev/null 2>&1; then
+    eval "$(zoxide init zsh)"
 fi
 
 export LANG="ja_JP.UTF-8"
@@ -204,12 +209,17 @@ export GOROOT=/usr/local/opt/go/libexec
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:$GOROOT/bin
 
+# rust
+export PATH=$HOME/.cargo/bin:$PATH
+
 # gnu global uses pygments
 export GTAGSCONF=/usr/local/share/gtags/gtags.conf
 export GTAGSLABEL=pygments
 
 # zsh suggestion
-if [ -f '~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh' ]; then source '~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh'; fi
+if [ -f "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+    . "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh";
+fi
 
 # cdr
 if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
@@ -316,28 +326,6 @@ export USE_CCACHE=1
 export NDK_CCACHE=/usr/local/bin/ccache
 export CCACHE_CPP2=yes
 export CCACHE_COMPILERCHECK=content
-
-# rust
-export PATH=$HOME/.cargo/bin:$PATH
-
-# ranger
-# function ranger() {
-#     if [ -z "$RANGER_LEVEL" ]; then
-#         /usr/local/bin/ranger "$@"
-#     else
-#         exit
-#     fi
-# }
-# function ranger-cd {
-#     tempfile="$(mktemp -t tmp.XXXXXX)"
-#     ranger --choosedir="$tempfile" "${@:-$(pwd)}"
-#     test -f "$tempfile" &&
-#     if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
-#         cd -- "$(cat "$tempfile")"
-#     fi  
-#     rm -f -- "$tempfile"
-# }
-# bindkey -s '^O' 'ranger-cd\n'
 
 # nnn
 export NNN_PLUG="d:-_git diff;l:-_git log;s:-_git status"
