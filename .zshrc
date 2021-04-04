@@ -328,7 +328,7 @@ export CCACHE_CPP2=yes
 export CCACHE_COMPILERCHECK=content
 
 # nnn
-export NNN_PLUG="d:-_git diff;l:-_git log;s:-_git status"
+export NNN_PLUG="d:-_git diff;l:-_git log;s:-_git status;j:autojump"
 function n()
 {
     # Block nesting of nnn in subshells
