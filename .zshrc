@@ -317,6 +317,9 @@ export NDK_CCACHE=/usr/local/bin/ccache
 export CCACHE_CPP2=yes
 export CCACHE_COMPILERCHECK=content
 
+# rust
+export PATH=$HOME/.cargo/bin:$PATH
+
 # ranger
 # function ranger() {
 #     if [ -z "$RANGER_LEVEL" ]; then
