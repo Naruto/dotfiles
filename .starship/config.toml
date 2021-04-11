@@ -24,3 +24,5 @@ disabled = true
 [git_status]
 disabled = true
 
+[cmd_duration]
+disabled = true
