@@ -98,8 +98,8 @@ setopt nolistbeep
 
 # Setting Prompt
 if type "starship" > /dev/null; then
-  export STARSHIP_CONFIG=~/.starship/config.toml
-  export STARSHIP_CACHE=~/.starship/cache
+  export STARSHIP_CONFIG=${HOME}/.starship/config.toml
+  export STARSHIP_CACHE=${HOME}/.starship/cache
   eval "$(starship init zsh)"
 else
   export PROMPT='[$HOST %c]%(!.#.%%) '
@@ -118,14 +118,18 @@ alias rg="rg --pretty"
 alias lg='lazygit'
 if type "exa" > /dev/null; then
   alias ls="exa -F"
+  alias tree="exa -T"
+
+  alias l='exa -lbF --git'                                                # list, size, type, git
+  alias ll='exa -lbGF --git'                                             # long list
+  alias llm='exa -lbGd --git --sort=modified'                            # long list, modified date sort
+  alias la='exa -lbhHigUmuSa --time-style=long-iso --git --color-scale'  # all list
+  alias lx='exa -lbhHigUmuSa@ --time-style=long-iso --git --color-scale' # all + extended list
 else
   alias ls="ls -F --show-control-char --color=always"
 fi
 if type "bat" > /dev/null; then
   alias cat="bat --paging=never"
-fi
-if type "zoxide" > /dev/null 2>&1; then
-    eval "$(zoxide init zsh)"
 fi
 
 export LANG="ja_JP.UTF-8"
@@ -136,7 +140,7 @@ export MANPATH="/usr/local/man:/usr/local/share/man:/usr/share/man:$MANPATH"
 
 export PATH="/usr/local/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
-export PATH="~/bin:$PATH"
+export PATH="${HOME}/bin:$PATH"
 export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 
@@ -222,18 +226,8 @@ if [ -f "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
     . "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh";
 fi
 
-# cdr
-if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
-  autoload -Uz chpwd_recent_dirs cdr add-zsh-hook
-  add-zsh-hook chpwd chpwd_recent_dirs
-  zstyle ':completion:*' recent-dirs-insert both
-  zstyle ':chpwd:*' recent-dirs-default true
-  zstyle ':chpwd:*' recent-dirs-max 1000
-  zstyle ':chpwd:*' recent-dirs-file "$HOME/.cache/chpwd-recent-dirs"
-fi
-
 # fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f ${HOME}/.fzf.zsh ] && source ${HOME}/.fzf.zsh
 export FZF_DEFAULT_COMMAND='fd -HL --exclude ".git"'
 export FZF_DEFAULT_OPTS='--layout=reverse --ansi --border --bind ctrl-v:page-down,alt-v:page-up,ctrl-k:kill-line'
 
@@ -250,20 +244,6 @@ function ghq-fzf() {
 }
 zle -N ghq-fzf
 bindkey "^]" ghq-fzf
-
-## cdr and fzf
-if [[ -n $(echo ${^fpath}/chpwd_recent_dirs(N)) && -n $(echo ${^fpath}/cdr(N)) ]]; then
-  function fzf-cdr () {
-    local selected_dir=$(cdr -l | awk '{ print $2 }' | fzf --query "$LBUFFER")
-    if [ -n "$selected_dir" ]; then
-      BUFFER="cd ${selected_dir}"
-      zle accept-line
-    fi
-    zle clear-screen
-  }
-  zle -N fzf-cdr
-  bindkey "^u" fzf-cdr
-fi
 
 ## git co branch and fzf
 _fzf_complete_git() {
@@ -297,6 +277,18 @@ if type "delta" > /dev/null; then
   export GF_PREFERRED_PAGER="delta --theme=gruvbox --highlight-removed -w __WIDTH__"
 fi
 
+# zoxide
+if type "zoxide" > /dev/null 2>&1; then    
+    eval "$(zoxide init zsh)"
+
+    function zoxide-fzf() {
+      BUFFER="zi"
+      zle accept-line
+      zle reset-prompt
+    }
+    zle -N zoxide-fzf ; bindkey '^u' zoxide-fzf
+fi
+
 # eval "$(anyenv init -)"
 # anyenv
 export PATH="$HOME/.anyenv/bin:$PATH"
@@ -304,16 +296,8 @@ if type "anyenv" > /dev/null 2>&1; then
     eval "$(anyenv init -)"
 fi
 
-
 # fastlane
-[ -f ~/.fastlane/completions/completion.sh ] && source ~/.fastlane/completions/completion.sh
-
-# less
-if type "src-hilite-lesspipe.sh" > /dev/null 2>&1; then
-    LESSPIPE=`which src-hilite-lesspipe.sh`
-    export LESSOPEN="| ${LESSPIPE} %s"
-    export LESS=' -R -X -F '
-fi
+[ -f ${HOME}/.fastlane/completions/completion.sh ] && source ${HOME}/.fastlane/completions/completion.sh
 
 # android ndk
 export PATH=/opt/ndk/android-ndk:$PATH
@@ -362,7 +346,7 @@ bindkey -s '^O' 'n\n'
 # lazygit
 function lg()
 {
-    export LAZYGIT_NEW_DIR_FILE=~/.lazygit/newdir
+    export LAZYGIT_NEW_DIR_FILE=${HOME}/.lazygit/newdir
 
     lazygit "$@"
 

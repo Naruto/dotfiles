@@ -19,8 +19,8 @@ install applications
 ## macOS
 
 ```bash
-brew install git emacs tmux zsh exa bat less
-brew install cmake ghq gh mono fzf git-delta rg tree gradle coreutils nnn lazygit
+brew install git emacs tmux zsh exa bat less mono coreutils
+brew install cmake ghq gh fzf git-delta rg gradle nnn lazygit
 brew install starship zoxide rustup-init
 brew install reattach-to-user-namespace
 $(brew --prefix)/opt/fzf/install # fzf setup
