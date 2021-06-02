@@ -286,7 +286,8 @@ if type "zoxide" > /dev/null 2>&1; then
       zle accept-line
       zle reset-prompt
     }
-    zle -N zoxide-fzf ; bindkey '^u' zoxide-fzf
+    zle -N zoxide-fzf
+    bindkey '^U' zoxide-fzf
 fi
 
 # eval "$(anyenv init -)"
@@ -341,7 +342,14 @@ function n()
             rm -f "$NNN_TMPFILE" > /dev/null
     fi
 }
-bindkey -s '^O' 'n\n'
+function n_() {
+    BUFFER="n"
+    zle accept-line
+
+    zle reset-prompt
+ }
+ zle -N n_
+bindkey '^O' n_
 
 # lazygit
 function lg()
