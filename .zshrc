@@ -335,7 +335,7 @@ function n()
     # stty lwrap undef
     # stty lnext undef
 
-    nnn -de "$@"
+    nnn -deH "$@"
 
     if [ -f "$NNN_TMPFILE" ]; then
             . "$NNN_TMPFILE"
