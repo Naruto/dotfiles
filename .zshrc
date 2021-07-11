@@ -226,6 +226,11 @@ if [ -f "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
     . "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh";
 fi
 
+# zsh syntax highlighting
+if [ -f "$HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+    . "$HOME/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
 # fzf
 [ -f ${HOME}/.fzf.zsh ] && source ${HOME}/.fzf.zsh
 export FZF_DEFAULT_COMMAND='fd -HL --exclude ".git"'

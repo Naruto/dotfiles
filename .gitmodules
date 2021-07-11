@@ -10,3 +10,6 @@
 [submodule "forgit"]
 	path = forgit
 	url = git@github.com:wfxr/forgit.git
+[submodule ".zsh/zsh-syntax-highlighting"]
+	path = .zsh/zsh-syntax-highlighting
+	url = git@github.com:zsh-users/zsh-syntax-highlighting.git
