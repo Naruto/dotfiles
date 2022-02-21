@@ -262,6 +262,10 @@ export PATH=${GIT_FUZZY_PATH}/bin:$PATH
 if type "delta" > /dev/null; then
   export GF_PREFERRED_PAGER="delta --theme=gruvbox --highlight-removed -w __WIDTH__"
 fi
+if type "bat" > /dev/null; then
+  export GF_BAT_STYLE=changes
+  export GF_BAT_THEME=zenburn
+fi
 
 # zoxide
 if type "zoxide" > /dev/null 2>&1; then    
