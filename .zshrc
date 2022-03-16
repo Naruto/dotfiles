@@ -333,3 +333,8 @@ function lg()
             rm -f $LAZYGIT_NEW_DIR_FILE > /dev/null
     fi
 }
+
+# 1password
+if type "op" > /dev/null; then
+    eval "$(op completion zsh)"; compdef _op op
+fi
