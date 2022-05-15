@@ -2,16 +2,6 @@
 
 This is naruto's dotfiles.
 
-```
-.
-|-- .emacs.d     - emacs dotfiles
-|-- .starship    - starship
-|-- .tmux        - tmux dotfile
-|-- .zsh         - add zsh auto suggestions files  
-|-- .zshrc       - zsh dotfile
-`-- README.md    - this file
-```
-
 # Prepare
 
 install applications
@@ -39,8 +29,14 @@ ln -sfn ${DOTFILES_PATH}/.emacs.d ~/
 ln -sfn ${DOTFILES_PATH}/.zshrc ~/
 ln -sfn ${DOTFILES_PATH}/.zsh ~/
 ln -sfn ${DOTFILES_PATH}/.tmux ~/
-ln -sfn ${DOTFILES_PATH}/.tmux/.tmux.conf ~/
 ln -sfn ${DOTFILES_PATH}/.tmux.conf.local ~/
 ln -sfn ${DOTFILES_PATH}/.starship ~/
 popd
+```
+
+add below section to `~/.gitconfig` file
+
+```init
+[include]
+    path = ~/projects/dotfiles/.gitconfig
 ```
