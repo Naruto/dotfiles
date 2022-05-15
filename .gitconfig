@@ -2,6 +2,9 @@
     defaultBranch = master
 [core]
     pager = delta
+[user]
+    name = Naruto TAKAHASHI
+    email = tnaruto@gmail.com
 [alias]
     co = checkout
     ci = commit
@@ -12,7 +15,14 @@
     diffFilter = delta --color-only
 [color]
     ui = auto
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
 [delta]
+    navigate = true
+    light = false
     features = line-numbers decorations
     whitespace-error-style = 22 reverse
     relative-paths = true
@@ -27,8 +37,3 @@
     hunk-header-file-style = red
     hunk-header-line-number-style = "#067a00"
     hunk-header-style = file line-number syntax
-[filter "lfs"]
-    clean = git-lfs clean -- %f
-    smudge = git-lfs smudge -- %f
-    process = git-lfs filter-process
-    required = true
