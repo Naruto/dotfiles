@@ -318,6 +318,27 @@
     (define-key counsel-gtags-mode-map (kbd "M-,") 'counsel-gtags-go-backward))
   )
 
+(leaf projectile :ensure t
+  :require projectile
+  :config
+  (projectile-mode +1)
+  (with-eval-after-load 'projectile
+    ;; Recommended keymap prefix on macOS
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    )
+  )
+
+(leaf counsel-projectile :ensure t
+  :after ivy counsel projectile
+  :config
+  :require counsel-projectile
+  :config
+  (setq projectile-completion-system 'ivy)
+  (setq counsel-projectile-sort-files t)
+  (setq counsel-projectile-sort-projects t)
+  (counsel-projectile-mode 1)
+  )
+
 (provide 'init)
 
 (custom-set-variables
