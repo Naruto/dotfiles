@@ -181,6 +181,10 @@ case ${OSTYPE} in
     export ANT_ROOT=${LOCAL_PREFIX}/opt/ant/bin
     export PATH=${ANDROID_SDK}/platform-tools:$PATH
     export PATH=${ANDROID_SDK}/tools:$PATH
+    if [ -d ${ANDROID_SDK}/build-tools ]; then
+      latest=$(/bin/ls ${ANDROID_SDK}/build-tools | sort -r | head -n 1)
+      export PATH=$PATH:${ANDROID_SDK}/build-tools/${latest}
+    fi
     ;;
 esac
 
