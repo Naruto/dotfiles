@@ -4,7 +4,7 @@ This is naruto's dotfiles.
 
 # Prepare
 
-install applications
+Install commands.
 
 ## macOS
 
@@ -34,7 +34,7 @@ ln -sfn ${DOTFILES_PATH}/.starship ~/
 popd
 ```
 
-add below section to `~/.gitconfig` file
+Add the below section to `~/.gitconfig` file
 
 ```init
 [include]
