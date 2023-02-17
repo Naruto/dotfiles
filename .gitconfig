@@ -2,9 +2,6 @@
     defaultBranch = master
 [core]
     pager = delta
-[user]
-    name = Naruto TAKAHASHI
-    email = tnaruto@gmail.com
 [alias]
     co = checkout
     ci = commit
