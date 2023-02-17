@@ -255,8 +255,8 @@ _fzf_complete_git_post() {
 
 # forgit
 if type "fzf" > /dev/null; then
-  FORGIT_PATH=$(dirname $(readlink ${(%):-%N}))/forgit
-  FORGIT_PATH_ZSH="${FORGIT_PATH}/forgit.plugin.zsh"
+  export FORGIT_PATH=$(dirname $(readlink ${(%):-%N}))/forgit
+  export FORGIT_PATH_ZSH="${FORGIT_PATH}/forgit.plugin.zsh"
   [ -f "${FORGIT_PATH_ZSH}" ] && source "${FORGIT_PATH_ZSH}"
 fi
 
