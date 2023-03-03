@@ -168,8 +168,11 @@ case ${OSTYPE} in
      export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
      ;;
   darwin*)
+    # Jetbrains Toolbox
+    export PATH=~/Library/Application\ Support/JetBrains/Toolbox/scripts:$PATH
+
     # Android
-    export JAVA_HOME=`/usr/libexec/java_home -v 11`
+    export JAVA_HOME=`/usr/libexec/java_home -v 17`
     export GRADLE_HOME=${LOCAL_PREFIX}/opt/gradle
     export ANDROID_NDK=/opt/ndk/android-ndk
     export PATH=${ANDROID_NDK}:$PATH
@@ -343,3 +346,8 @@ function lg()
 if type "op" > /dev/null; then
     eval "$(op completion zsh)"; compdef _op op
 fi
+
+
+# Google Cloud SDK
+if [ -f "${HOME}/google-cloud-sdk/path.zsh.inc" ]; then . "${HOME}/google-cloud-sdk/path.zsh.inc"; fi
+if [ -f "${HOME}/google-cloud-sdk/completion.zsh.inc" ]; then . "${HOME}/google-cloud-sdk/completion.zsh.inc"; fi
