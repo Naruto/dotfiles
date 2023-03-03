@@ -15,7 +15,7 @@ function history-all { history -E 1}
 setopt share_history
 FPATH=$HOME/.zfunc:$FPATH
 
-[ -n "${HOMEBREW_PREFIX+1}" ] && FPATH=${HOMEBREW_PREFIX}/share/zsh/site-functions:$FPATH
+[ -n "${HOMEBREW_PREFIX+1}" ] && FPATH=${HOMEBREW_PREFIX}/share/zsh-completions:$FPATH
 autoload -Uz compinit
 compinit -u
 
