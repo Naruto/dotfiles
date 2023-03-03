@@ -89,6 +89,7 @@ setopt autopushd
 setopt noautoremoveslash
 # no beep sound when complete list displayed
 setopt nolistbeep
+unset zle_bracketed_paste
 
 export LANG="ja_JP.UTF-8"
 export LC_ALL="ja_JP.UTF-8"
