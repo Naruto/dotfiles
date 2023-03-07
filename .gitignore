@@ -12,6 +12,8 @@ wget-log
 .emacs.d/elpa
 .emacs.d/quelpa
 .starship/cache/
+.config/lazygit/state.yml
+
 ### https://raw.github.com/github/gitignore/218a941be92679ce67d0484547e3e142b2f5f6f0/Global/macOS.gitignore
 
 # General
@@ -20,7 +22,7 @@ wget-log
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
 
 # Thumbnails
 ._*

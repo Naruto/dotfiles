@@ -22,6 +22,7 @@ rustup-init # rust setup
 
 ```bash
 mkdir -p ~/projects
+mkdir -p ~/.config
 git clone https://github.com/Naruto/dotfiles.git ~/projects/dotfiles
 DOTFILES_PATH=~/projects/dotfiles
 pushd ${DOTFILES_PATH}
@@ -31,6 +32,7 @@ ln -sfn ${DOTFILES_PATH}/.zsh ~/
 ln -sfn ${DOTFILES_PATH}/.tmux ~/
 ln -sfn ${DOTFILES_PATH}/.tmux.conf.local ~/
 ln -sfn ${DOTFILES_PATH}/.starship ~/
+ln -sfn ${DOTFILES_PATH}/.config/lazygit ~/.config/
 popd
 ```
 

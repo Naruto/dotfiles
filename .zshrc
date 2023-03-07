@@ -166,6 +166,8 @@ case ${OSTYPE} in
      export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
      ;;
   darwin*)
+    export XDG_CONFIG_HOME="${HOME}/.config"
+
     # Jetbrains Toolbox
     export PATH=~/Library/Application\ Support/JetBrains/Toolbox/scripts:${PATH}
 
