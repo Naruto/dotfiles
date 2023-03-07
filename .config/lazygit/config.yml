@@ -1,3 +1,6 @@
 git:
   autoFetch: false
+  paging:
+    colorArg: always
+    pager: delta --paging=never
 
