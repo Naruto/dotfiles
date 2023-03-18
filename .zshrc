@@ -197,7 +197,9 @@ export USE_CCACHE=1
 export NDK_CCACHE=${LOCAL_PREFIX}/bin/ccache
 export CCACHE_CPP2=yes
 export CCACHE_COMPILERCHECK=content
-
+# sccache
+export SCCACHE_CACHE_SIZE=100G
+export SCCACHE_DIR=~/.sccache
 
 # rbenv
 export PATH="${HOME}/.rbenv/bin:${PATH}"
