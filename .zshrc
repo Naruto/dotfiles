@@ -219,8 +219,8 @@ export PATH=${HOME}/.cargo/bin:${PATH}
 # zsh suggestion
 [ -f "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && . "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
-# zsh syntax highlighting
-[ -f "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && . "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+# fast syntax highlighting
+[ -f "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ] && . "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 
 # fzf
 [ -f ${HOME}/.fzf.zsh ] && . ${HOME}/.fzf.zsh
