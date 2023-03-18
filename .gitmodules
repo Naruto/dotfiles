@@ -1,12 +1,6 @@
 [submodule ".tmux"]
 	path = .tmux
 	url = git@github.com:gpakosz/.tmux.git
-[submodule "git-fuzzy"]
-	path = git-fuzzy
-	url = git@github.com:bigH/git-fuzzy.git
-[submodule "forgit"]
-	path = forgit
-	url = git@github.com:wfxr/forgit.git
 [submodule ".zsh/zsh-autosuggestions"]
 	path = .zsh/zsh-autosuggestions
 	url = git@github.com:zsh-users/zsh-autosuggestions.git
