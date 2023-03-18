@@ -129,7 +129,6 @@ alias rm="rm -i"
 alias less="less -R"
 alias ag='ag --pager "less -R"'
 alias rg="rg --pretty"
-alias lg='lazygit'
 if type "exa" > /dev/null; then
   alias ls="exa -F"
   alias tree="exa -T"
@@ -321,8 +320,8 @@ function lg()
     lazygit "$@"
 
     if [ -f $LAZYGIT_NEW_DIR_FILE ]; then
-            cd "$(cat $LAZYGIT_NEW_DIR_FILE)"
-            rm -f $LAZYGIT_NEW_DIR_FILE > /dev/null
+            cd "$(/bin/cat $LAZYGIT_NEW_DIR_FILE)"
+            /bin/rm -f $LAZYGIT_NEW_DIR_FILE > /dev/null
     fi
 }
 
