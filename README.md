@@ -11,7 +11,7 @@ Install commands.
 ```bash
 brew install git emacs tmux zsh exa bat less mono coreutils
 brew install cmake ghq gh fzf git-delta rg fd gradle nnn lazygit
-brew install starship zoxide rustup-init mdcat htop
+brew install starship zoxide mcfly rustup-init mdcat htop
 brew install reattach-to-user-namespace
 brew install mas
 $(brew --prefix)/opt/fzf/install # fzf setup
