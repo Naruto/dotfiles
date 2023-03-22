@@ -1,3 +1,5 @@
+gui:
+  language: 'en'
 git:
   autoFetch: false
   paging:
