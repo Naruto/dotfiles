@@ -143,7 +143,7 @@ else
 fi
 if type "bat" > /dev/null; then
   export BAT_PAGER="less -RF"
-  alias cat="bat --paging=never --style=plain"
+  alias cat='bat -pp --theme="Nord"'
   # export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 if type htop > /dev/null; then

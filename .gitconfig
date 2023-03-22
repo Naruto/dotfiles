@@ -24,6 +24,7 @@
     whitespace-error-style = 22 reverse
     relative-paths = true
     hyperlinks = true
+    syntax-theme = Nord
 [merge]
     conflictstyle = diff3
 [diff]    
