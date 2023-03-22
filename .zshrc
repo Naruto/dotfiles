@@ -1,6 +1,6 @@
 # homebrew
-[ -f "/usr/local/bin/brew" ] && eval $(/usr/local/bin/brew shellenv)
-[ -f "/opt/homebrew/bin/brew" ] && eval $(/opt/homebrew/bin/brew shellenv)
+[[ -f "/usr/local/bin/brew" ]] && eval $(/usr/local/bin/brew shellenv)
+[[ -f "/opt/homebrew/bin/brew" ]] && eval $(/opt/homebrew/bin/brew shellenv)
 
 # Emacs Keybind
 bindkey -e
@@ -13,7 +13,7 @@ function history-all { history -E 1}
 
 FPATH=${HOME}/.zfunc:$FPATH
 
-[ -n "${HOMEBREW_PREFIX+1}" ] && [ -d "${HOMEBREW_PREFIX}/share/zsh-completions" ] && FPATH=${HOMEBREW_PREFIX}/share/zsh-completions:$FPATH
+[[ -v HOMEBREW_PREFIX && -d "${HOMEBREW_PREFIX}/share/zsh-completions" ]] && FPATH=${HOMEBREW_PREFIX}/share/zsh-completions:$FPATH
 autoload -Uz compinit
 compinit -u
 
@@ -92,7 +92,7 @@ unset zle_bracketed_paste
 # export LANG="ja_JP.UTF-8"
 # export LC_ALL="ja_JP.UTF-8"
 
-if [ -n "${HOMEBREW_PREFIX+1}" ] ; then
+if [[ -v HOMEBREW_PREFIX ]] ; then
   export LOCAL_PREFIX=${HOMEBREW_PREFIX}
 else 
   export LOCAL_PREFIX="/usr/local"
@@ -184,7 +184,7 @@ case ${OSTYPE} in
     export ANT_ROOT=${LOCAL_PREFIX}/opt/ant/bin
     export PATH=${ANDROID_SDK}/platform-tools:${PATH}
     export PATH=${ANDROID_SDK}/tools:${PATH}
-    if [ -d ${ANDROID_SDK}/build-tools ]; then
+    if [[ -d ${ANDROID_SDK}/build-tools ]]; then
       latest=$(/bin/ls ${ANDROID_SDK}/build-tools | sort -r | head -n 1)
       export PATH=${PATH}:${ANDROID_SDK}/build-tools/${latest}
     fi
@@ -216,13 +216,13 @@ export PATH=${PATH}:${GOROOT}/bin
 export PATH=${HOME}/.cargo/bin:${PATH}
 
 # zsh suggestion
-[ -f "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && . "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
+[[ -f "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 # fast syntax highlighting
-[ -f "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ] && . "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+[[ -f "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]] && source "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 
 # fzf
-[ -f ${HOME}/.fzf.zsh ] && . ${HOME}/.fzf.zsh
+[[ -f ${HOME}/.fzf.zsh ]] && source ${HOME}/.fzf.zsh
 export FZF_DEFAULT_COMMAND='fd -HL --exclude ".git"'
 export FZF_DEFAULT_OPTS='--layout=reverse --ansi --border --bind ctrl-v:page-down,alt-v:page-up,ctrl-k:kill-line'
 
@@ -230,7 +230,7 @@ export FZF_DEFAULT_OPTS='--layout=reverse --ansi --border --bind ctrl-v:page-dow
 function ghq-fzf() {
   local target_dir=$(ghq list -p | fzf --query="$LBUFFER")
 
-  if [ -n "$target_dir" ]; then
+  if [[ -n "$target_dir" ]]; then
     BUFFER="cd ${target_dir}"
     zle accept-line
   fi
@@ -280,14 +280,14 @@ if type "mcfly" > /dev/null 2>&1; then
 fi
 
 # fastlane
-[ -f ${HOME}/.fastlane/completions/completion.sh ] && . ${HOME}/.fastlane/completions/completion.sh
+[[ -f ${HOME}/.fastlane/completions/completion.sh ]] && source ${HOME}/.fastlane/completions/completion.sh
 
 # nnn
 export NNN_PLUG="d:-_git diff;l:-_git log;s:-_git status;j:autojump"
 function n()
 {
     # Block nesting of nnn in subshells
-    if [ -n $NNNLVL ] && [ "${NNNLVL:-0}" -ge 1 ]; then
+    if (( NNNLVL >= 1)); then
         echo "nnn is already running"
         return
     fi
@@ -306,8 +306,8 @@ function n()
 
     nnn -deH "$@"
 
-    if [ -f "$NNN_TMPFILE" ]; then
-            . "$NNN_TMPFILE"
+    if [[ -f $NNN_TMPFILE ]]; then
+            source "$NNN_TMPFILE"
             rm -f "$NNN_TMPFILE" > /dev/null
     fi
 }
@@ -316,8 +316,8 @@ function n_() {
     zle accept-line
 
     zle reset-prompt
- }
- zle -N n_
+}
+zle -N n_
 bindkey '^O' n_
 
 # lazygit
@@ -327,7 +327,7 @@ function lg()
 
     lazygit "$@"
 
-    if [ -f $LAZYGIT_NEW_DIR_FILE ]; then
+    if [[ -f $LAZYGIT_NEW_DIR_FILE ]]; then
             cd "$(/bin/cat $LAZYGIT_NEW_DIR_FILE)"
             /bin/rm -f $LAZYGIT_NEW_DIR_FILE > /dev/null
     fi
@@ -340,5 +340,5 @@ fi
 
 
 # Google Cloud SDK
-if [ -f "${HOME}/google-cloud-sdk/path.zsh.inc" ]; then . "${HOME}/google-cloud-sdk/path.zsh.inc"; fi
-if [ -f "${HOME}/google-cloud-sdk/completion.zsh.inc" ]; then . "${HOME}/google-cloud-sdk/completion.zsh.inc"; fi
+if [[ -f "${HOME}/google-cloud-sdk/path.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/path.zsh.inc"; fi
+if [[ -f "${HOME}/google-cloud-sdk/completion.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/completion.zsh.inc"; fi
