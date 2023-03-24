@@ -243,16 +243,18 @@ bindkey "^]" ghq-fzf
 ## git co branch and fzf
 _fzf_complete_git() {
   ARGS="$@"
-  local branches
+  local items
 
   if [[ $ARGS == 'git co'* ]]; then
-    branches=$(git branch -vv --all)
-    _fzf_complete --reverse --multi -- "$@" < <(
-      echo $branches
-    )
+    items=$(git branch -vv --all)
+  elif [[ $ARGS == 'git add'* ]]; then
+    items=$(git status --short | awk '{print $2}')
   else
     eval "zle ${fzf_default_completion:-expand-or-complete}"
+    return
   fi
+
+  _fzf_complete --reverse --multi -- "$@" < <(echo $items)
 }
 _fzf_complete_git_post() {
     awk '{print $1}'
