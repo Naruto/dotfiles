@@ -278,7 +278,8 @@ if type "mcfly" > /dev/null 2>&1; then
     eval "$(mcfly init zsh)"
     export MCFLY_FUZZY=2
     export MCFLY_RESULTS=50
-
+    export MCFLY_RESULTS_SORT=LAST_RUN
+    export MCFLY_PROMPT="➜"
 fi
 
 # fastlane
