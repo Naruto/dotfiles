@@ -199,6 +199,7 @@ export CCACHE_COMPILERCHECK=content
 # sccache
 export SCCACHE_CACHE_SIZE=100G
 export SCCACHE_DIR=~/.sccache
+export SCCACHE_CACHE_MULTIARCH="1"
 
 # rbenv
 export PATH="${HOME}/.rbenv/bin:${PATH}"
