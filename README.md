@@ -9,14 +9,33 @@ Install commands.
 ## macOS
 
 ```bash
-brew install git emacs tmux zsh exa bat less mono coreutils
+brew install git emacs tmux zsh exa bat less
 brew install cmake ghq gh fzf git-delta rg fd gradle nnn lazygit
 brew install starship zoxide mcfly rustup-init mdcat htop
+brew install choose sd
 brew install reattach-to-user-namespace
-brew install mas
 $(brew --prefix)/opt/fzf/install # fzf setup
 rustup-init # rust setup
 ```
+
+## Windows
+
+```
+winget install gsudo
+gsudo winget install Nushell.Nushell
+```
+
+```
+Install-Module -Name PSReadLine -AllowPrerelease
+mkdir -p (Get-Item $Profile.CurrentUserCurrentHost).DirectoryName
+cp ./Microsoft.PowerShell_profile.ps1 (Get-Item $Profile.CurrentUserCurrentHost).DirectoryName
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+```
+New-Item -ItemType SymbolicLink -Path "$HOME\projects\dotfiles\.starship" -Target "$HOME\"
+```
+
 
 # Get and Set up dotfiles
 
