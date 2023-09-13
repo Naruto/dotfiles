@@ -129,15 +129,15 @@ alias rm="rm -i"
 alias less="less -R"
 alias ag='ag --pager "less -R"'
 alias rg="rg --pretty"
-if type "exa" > /dev/null; then
-  alias ls="exa -F"
-  alias tree="exa -T"
+if type "eza" > /dev/null; then
+  alias ls="eza -F"
+  alias tree="eza -T"
 
-  alias l='exa -lbF --git'                                                # list, size, type, git
-  alias ll='exa -lbGF --git'                                             # long list
-  alias llm='exa -lbGd --git --sort=modified'                            # long list, modified date sort
-  alias la='exa -lbhHigUmuSa --time-style=long-iso --git --color-scale'  # all list
-  alias lx='exa -lbhHigUmuSa@ --time-style=long-iso --git --color-scale' # all + extended list
+  alias l='eza -lbF --git'                                                # list, size, type, git
+  alias ll='eza -lbGF --git'                                             # long list
+  alias llm='eza -lbGd --git --sort=modified'                            # long list, modified date sort
+  alias la='eza -lbhHigUmuSa --time-style=long-iso --git --color-scale'  # all list
+  alias lx='eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale' # all + extended list
 else
   alias ls="ls -F --show-control-char --color=always"
 fi

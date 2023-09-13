@@ -9,7 +9,7 @@ Install commands.
 ## macOS
 
 ```bash
-brew install git emacs tmux zsh exa bat less
+brew install git emacs tmux zsh eza bat less
 brew install cmake ghq gh fzf git-delta rg fd gradle nnn lazygit
 brew install starship zoxide mcfly rustup-init mdcat htop
 brew install choose sd
