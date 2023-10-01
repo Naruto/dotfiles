@@ -1,5 +1,7 @@
 .*~
 *~
+.emacs.d/history
+.emacs.d/places
 .emacs.d/projects
 .emacs.d/recentf
 .emacs.d/ac-comphist.dat
