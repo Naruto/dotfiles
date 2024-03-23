@@ -1,5 +1,6 @@
 gui:
   language: 'en'
+  filterMode: 'fuzzy'
 git:
   autoFetch: false
   paging:
