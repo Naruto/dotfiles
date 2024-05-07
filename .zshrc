@@ -348,7 +348,7 @@ if [[ -f "${HOME}/google-cloud-sdk/path.zsh.inc" ]]; then source "${HOME}/google
 if [[ -f "${HOME}/google-cloud-sdk/completion.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/completion.zsh.inc"; fi
 
 if type "moar" > /dev/null 2>&1; then
-  export MOAR='--statusbar=bold --no-linenumbers'
+  export MOAR='--colors auto -mousemode auto -no-linenumbers -no-statusbar'
   export PAGER='moar'
   export BAT_PAGER='moar'
 fi
