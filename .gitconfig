@@ -4,10 +4,7 @@
     pager = delta
 [alias]
     co = checkout
-    ci = commit
     st = status
-    br = branch
-    sm = submodule
 [interactive]
     diffFilter = delta --color-only
 [color]
@@ -29,3 +26,4 @@
     conflictstyle = diff3
 [diff]    
     colorMoved = default
+
