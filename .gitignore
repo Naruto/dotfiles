@@ -15,6 +15,8 @@ wget-log
 .emacs.d/quelpa
 .starship/cache/
 .config/lazygit/state.yml
+.config/yazi/package.toml
+.config/yazi/plugins
 
 ### https://raw.github.com/github/gitignore/218a941be92679ce67d0484547e3e142b2f5f6f0/Global/macOS.gitignore
 
