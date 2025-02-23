@@ -10,9 +10,9 @@ Install commands.
 
 ```bash
 brew install git emacs tmux zsh eza bat less
-brew install cmake ghq gh fzf git-delta rg fd gradle nnn lazygit
+brew install cmake ghq gh fzf git-delta rg fd gradle yazi lazygit
 brew install starship zoxide mcfly rustup-init mdcat htop
-brew install choose sd
+brew install sd
 brew install reattach-to-user-namespace
 $(brew --prefix)/opt/fzf/install # fzf setup
 rustup-init # rust setup
@@ -52,6 +52,7 @@ ln -sfn ${DOTFILES_PATH}/.tmux ~/
 ln -sfn ${DOTFILES_PATH}/.tmux.conf.local ~/
 ln -sfn ${DOTFILES_PATH}/.starship ~/
 ln -sfn ${DOTFILES_PATH}/.config/lazygit ~/.config/
+ln -sfn ${DOTFILES_PATH}/.config/yazi ~/.config/
 popd
 ```
 

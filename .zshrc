@@ -286,43 +286,23 @@ fi
 # fastlane
 [[ -f ${HOME}/.fastlane/completions/completion.sh ]] && source ${HOME}/.fastlane/completions/completion.sh
 
-# nnn
-export NNN_PLUG="d:-_git diff;l:-_git log;s:-_git status;j:autojump"
-function n()
-{
-    # Block nesting of nnn in subshells
-    if (( NNNLVL >= 1)); then
-        echo "nnn is already running"
-        return
-    fi
-
-    # The default behaviour is to cd on quit (nnn checks if NNN_TMPFILE is set)
-    # To cd on quit only on ^G, remove the "export" as in:
-    #     NNN_TMPFILE="${XDG_CONFIG_HOME:-${HOME}/.config}/nnn/.lastd"
-    # NOTE: NNN_TMPFILE is fixed, should not be modified
-    export NNN_TMPFILE="${XDG_CONFIG_HOME:-${HOME}/.config}/nnn/.lastd"
-
-    # Unmask ^Q (, ^V etc.) (if required, see `stty -a`) to Quit nnn
-    # stty start undef
-    # stty stop undef
-    # stty lwrap undef
-    # stty lnext undef
-
-    nnn -deH "$@"
-
-    if [[ -f $NNN_TMPFILE ]]; then
-            source "$NNN_TMPFILE"
-            rm -f "$NNN_TMPFILE" > /dev/null
-    fi
+# yazi
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	/bin/rm -f -- "$tmp"
 }
-function n_() {
-    BUFFER="n"
+function y_() {
+    BUFFER="y"
     zle accept-line
 
     zle reset-prompt
 }
-zle -N n_
-bindkey '^O' n_
+zle -N y_
+bindkey '^O' y_
 
 # lazygit
 function lg()
