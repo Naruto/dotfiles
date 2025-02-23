@@ -241,37 +241,17 @@ function ghq-fzf() {
 zle -N ghq-fzf
 bindkey "^]" ghq-fzf
 
-## git co branch and fzf
-_fzf_complete_git() {
-  ARGS="$@"
-  local items
-
-  if [[ $ARGS == 'git co'* ]]; then
-    items=$(git branch -vv --all)
-  elif [[ $ARGS == 'git add'* ]]; then
-    items=$(git status --short | awk '{print $2}')
-  else
-    eval "zle ${fzf_default_completion:-expand-or-complete}"
-    return
-  fi
-
-  _fzf_complete --reverse --multi -- "$@" < <(echo $items)
-}
-_fzf_complete_git_post() {
-    awk '{print $1}'
-}
-
 # zoxide
 if type "zoxide" > /dev/null 2>&1; then    
     eval "$(zoxide init zsh)"
 
-    function zoxide-fzf() {
+    function zi_() {
       BUFFER="zi"
       zle accept-line
       zle reset-prompt
     }
-    zle -N zoxide-fzf
-    bindkey '^U' zoxide-fzf
+    zle -N zi_
+    bindkey '^U' zi_
 fi
 
 # mcfly
