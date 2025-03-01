@@ -6,7 +6,7 @@
 bindkey -e
 
 # History
-HISTFILE=${HOME}/.zsh-history
+HISTFILE=${HOME}/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=1000000
 function history-all { history -E 1}
