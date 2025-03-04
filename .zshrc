@@ -257,7 +257,7 @@ fi
 # mcfly
 if type "mcfly" > /dev/null 2>&1; then   
     eval "$(mcfly init zsh)"
-    export MCFLY_FUZZY=2
+    export MCFLY_FUZZY=1
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT=LAST_RUN
     export MCFLY_PROMPT="➜"
@@ -308,7 +308,7 @@ if [[ -f "${HOME}/google-cloud-sdk/path.zsh.inc" ]]; then source "${HOME}/google
 if [[ -f "${HOME}/google-cloud-sdk/completion.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/completion.zsh.inc"; fi
 
 if type "moar" > /dev/null 2>&1; then
-  export MOAR='-wrap --colors auto -mousemode auto -no-linenumbers -no-statusbar -no-clear-on-exit'
+  export MOAR='-wrap --colors auto -mousemode auto -no-linenumbers -no-statusbar -no-clear-on-exit -style nord'
   export PAGER='moar'
   export BAT_PAGER='moar'
 fi
