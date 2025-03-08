@@ -12,7 +12,7 @@ Install commands.
 brew install git emacs tmux zsh eza bat less
 brew install cmake ghq gh fzf git-delta rg fd gradle yazi lazygit
 brew install starship zoxide mcfly rustup-init mdcat htop
-brew install sd
+brew install sd hexyl
 brew install reattach-to-user-namespace
 $(brew --prefix)/opt/fzf/install # fzf setup
 rustup-init # rust setup
