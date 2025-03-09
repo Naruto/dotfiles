@@ -5,6 +5,7 @@
 [alias]
     co = checkout
     st = status
+    ci = commit
 [interactive]
     diffFilter = delta --color-only
 [color]

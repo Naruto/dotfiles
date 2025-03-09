@@ -67,5 +67,8 @@ Execute the below commands in zsh shell.
 
 ```bash
 abbr import-aliases
+abbr g co=checkout
+abbr g st=status
+abbr g ci=commit
 ya pack -a yazi-rs/plugins:toggle-pane
 ```
