@@ -7,3 +7,6 @@
 [submodule ".zsh/fast-syntax-highlighting"]
 	path = .zsh/fast-syntax-highlighting
 	url = git@github.com:zdharma-continuum/fast-syntax-highlighting.git
+[submodule ".zsh/zsh-abbr"]
+	path = .zsh/zsh-abbr
+	url = git@github.com:olets/zsh-abbr.git
