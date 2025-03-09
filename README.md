@@ -13,7 +13,6 @@ brew install git emacs tmux zsh eza bat less moar
 brew install cmake ghq gh fzf git-delta rg fd gradle yazi lazygit
 brew install starship zoxide mcfly rustup-init mdcat htop
 brew install sd hexyl
-brew install reattach-to-user-namespace
 $(brew --prefix)/opt/fzf/install # setup fzf
 rustup-init # setup rust
 # setup yazi
