@@ -127,8 +127,6 @@ fi
 # Setting alias
 alias rm="rm -i"
 alias less="less -R"
-alias ag='ag --pager "less -R"'
-alias rg="rg --pretty"
 if type "eza" > /dev/null; then
   alias ls="eza -F"
   alias tree="eza -T"
@@ -141,10 +139,15 @@ if type "eza" > /dev/null; then
 else
   alias ls="ls -F --show-control-char --color=always"
 fi
+if type "rg" > /dev/null; then
+  alias rg="rg -p"
+fi
+if type "ag" > /dev/null; then
+  alias ag='ag --pager less'
+fi
 if type "bat" > /dev/null; then
-  export BAT_PAGER="less -RF"
-  alias cat='bat -pp --theme="Nord"'
-  # export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+  export BAT_PAGER="less -R"
+  alias cat='bat'
 fi
 if type htop > /dev/null; then
   alias top="htop"

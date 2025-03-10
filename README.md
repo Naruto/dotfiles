@@ -53,6 +53,7 @@ ln -sfn ${DOTFILES_PATH}/.tmux.conf.local ~/
 ln -sfn ${DOTFILES_PATH}/.starship ~/
 ln -sfn ${DOTFILES_PATH}/.config/lazygit ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/yazi ~/.config/
+ln -sfn ${DOTFILES_PATH}/.config/bat ~/.config/
 popd
 ```
 
@@ -69,9 +70,10 @@ Execute the below commands in zsh shell.
 abbr import-aliases
 abbr g co=checkout
 abbr g st=status
-abbr g cm="commit -m"
-abbr g d=diff
+abbr g di=diff
 abbr g dt="difftool -y"
+abbr g cm="commit -m"
+abbr g br=branch
 abbr g sm=submodule
 ya pack -a yazi-rs/plugins:toggle-pane
 ```

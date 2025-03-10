@@ -5,9 +5,10 @@
 [alias]
     co = checkout
     st = status
-    d = diff
+    di = diff
     dt = difftool -y
     cm = commit -m
+    br = branch
     sm = submodule
 [help]
     autocorrect = 20
