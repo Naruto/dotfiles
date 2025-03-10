@@ -69,6 +69,9 @@ Execute the below commands in zsh shell.
 abbr import-aliases
 abbr g co=checkout
 abbr g st=status
-abbr g ci=commit
+abbr g cm="commit -m"
+abbr g d=diff
+abbr g dt="difftool -y"
+abbr g sm=submodule
 ya pack -a yazi-rs/plugins:toggle-pane
 ```
