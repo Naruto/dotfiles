@@ -263,14 +263,14 @@ if type "zoxide" > /dev/null 2>&1; then
     bindkey '^U' zi_
 fi
 
-# mcfly
-if type "mcfly" > /dev/null 2>&1; then   
-    eval "$(mcfly init zsh)"
-    export MCFLY_FUZZY=1
-    export MCFLY_RESULTS=50
-    export MCFLY_RESULTS_SORT=LAST_RUN
-    export MCFLY_PROMPT="➜"
-fi
+# # mcfly
+# if type "mcfly" > /dev/null 2>&1; then   
+#     eval "$(mcfly init zsh)"
+#     export MCFLY_FUZZY=1
+#     export MCFLY_RESULTS=50
+#     export MCFLY_RESULTS_SORT=LAST_RUN
+#     export MCFLY_PROMPT="➜"
+# fi
 
 # fastlane
 [[ -f ${HOME}/.fastlane/completions/completion.sh ]] && source ${HOME}/.fastlane/completions/completion.sh
