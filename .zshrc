@@ -223,7 +223,7 @@ export PATH=${PATH}:${GOROOT}/bin
 export PATH=${HOME}/.cargo/bin:${PATH}
 
 # zsh abbr
-[[ -f "${HOME}/.zsh/zsh-abbr/zsh-abbr.zsh" ]] && source "${HOME}/.zsh/zsh-abbr/zsh-abbr.zsh"
+[[ -f "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh" ]] && source "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh"
 
 # zsh suggestion
 [[ -f "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -321,4 +321,3 @@ if type "moar" > /dev/null 2>&1; then
   export PAGER='moar'
   export BAT_PAGER='moar'
 fi
-

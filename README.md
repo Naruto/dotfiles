@@ -44,7 +44,6 @@ mkdir -p ~/projects
 mkdir -p ~/.config
 git clone --recursive https://github.com/Naruto/dotfiles.git ~/projects/dotfiles
 DOTFILES_PATH=~/projects/dotfiles
-pushd ${DOTFILES_PATH}
 ln -sfn ${DOTFILES_PATH}/.emacs.d ~/
 ln -sfn ${DOTFILES_PATH}/.zshrc ~/
 ln -sfn ${DOTFILES_PATH}/.zsh ~/
@@ -54,7 +53,7 @@ ln -sfn ${DOTFILES_PATH}/.starship ~/
 ln -sfn ${DOTFILES_PATH}/.config/lazygit ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/yazi ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/bat ~/.config/
-popd
+ln -sfn ${DOTFILES_PATH}/.config/zsh-abbr ~/.config/
 ```
 
 Prepend the below section to `~/.gitconfig` file
@@ -67,13 +66,5 @@ Prepend the below section to `~/.gitconfig` file
 Execute the below commands in zsh shell.
 
 ```bash
-abbr import-aliases
-abbr g co=checkout
-abbr g st=status
-abbr g di=diff
-abbr g dt="difftool -y"
-abbr g cm="commit -m"
-abbr g br=branch
-abbr g sm=submodule
 ya pack -a yazi-rs/plugins:toggle-pane
 ```
