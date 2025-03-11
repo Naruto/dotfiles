@@ -15,7 +15,10 @@ FPATH=${HOME}/.zfunc:$FPATH
 
 [[ -v HOMEBREW_PREFIX && -d "${HOMEBREW_PREFIX}/share/zsh-completions" ]] && FPATH=${HOMEBREW_PREFIX}/share/zsh-completions:$FPATH
 autoload -Uz compinit
-compinit -u
+for dump in ~/.zcompdump(N.mh+24); do
+  compinit
+done
+compinit -C
 
 autoload -U colors
 colors
