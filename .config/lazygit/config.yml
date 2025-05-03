@@ -3,6 +3,7 @@ gui:
   filterMode: 'fuzzy'
 git:
   autoFetch: false
+  autoForwardBranches: none
   paging:
     colorArg: always
     pager: delta --dark --paging=never
