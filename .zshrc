@@ -152,8 +152,8 @@ if type "bat" > /dev/null; then
   export BAT_PAGER="less -R"
   alias cat='bat'
 fi
-if type htop > /dev/null; then
-  alias top="htop"
+if type glances > /dev/null; then
+  alias top="glances"
 fi
 
 if type "code" > /dev/null; then

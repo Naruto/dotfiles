@@ -13,28 +13,10 @@ Install commands that are necessary to setup the dotfiles.
 ```bash
 brew install git emacs tmux zsh eza bat less moar
 brew install cmake ghq gh fzf git-delta rg fd gradle yazi lazygit
-brew install starship zoxide mcfly rustup-init mdcat htop
+brew install starship zoxide mcfly rustup-init mdcat glances
 brew install sd hexyl
 $(brew --prefix)/opt/fzf/install
 rustup-init
-```
-
-## Windows
-
-```cmd
-winget install gsudo
-gsudo winget install Nushell.Nushell
-```
-
-```powershell
-Install-Module -Name PSReadLine -AllowPrerelease
-mkdir -p (Get-Item $Profile.CurrentUserCurrentHost).DirectoryName
-cp ./Microsoft.PowerShell_profile.ps1 (Get-Item $Profile.CurrentUserCurrentHost).DirectoryName
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
-```powershell
-New-Item -ItemType SymbolicLink -Path "$HOME\projects\dotfiles\.starship" -Target "$HOME\"
 ```
 
 # Clone the repository and Setup dotfiles
