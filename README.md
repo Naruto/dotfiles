@@ -49,5 +49,6 @@ Prepend the below section to `~/.gitconfig` file
 Execute the below commands in zsh shell.
 
 ```bash
-ya pack -a yazi-rs/plugins:toggle-pane
+ya pkg add yazi-rs/plugins:toggle-pane
 ```
+
