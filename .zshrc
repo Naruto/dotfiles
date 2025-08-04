@@ -132,7 +132,6 @@ alias rm="rm -i"
 alias less="less -R"
 if type "eza" > /dev/null; then
   alias ls="eza -F"
-  alias tree="eza -T"
 
   alias l='eza -lbF --git'                                                # list, size, type, git
   alias ll='eza -lbGF --git'                                             # long list
@@ -152,8 +151,8 @@ if type "bat" > /dev/null; then
   export BAT_PAGER="less -R"
   alias cat='bat'
 fi
-if type glances > /dev/null; then
-  alias top="glances"
+if type lstr > /dev/null; then
+  alias tree='lstr'
 fi
 
 if type "code" > /dev/null; then

@@ -11,9 +11,9 @@ Install commands that are necessary to setup the dotfiles.
 ## macOS
 
 ```bash
-brew install git emacs tmux zsh eza bat less moar
+brew install git emacs tmux zsh eza bat less moar lstr
 brew install cmake ghq gh fzf git-delta rg fd gradle yazi lazygit
-brew install starship zoxide mcfly rustup-init mdcat glances
+brew install starship zoxide mcfly rustup-init mdcat
 brew install sd hexyl
 $(brew --prefix)/opt/fzf/install
 rustup-init
