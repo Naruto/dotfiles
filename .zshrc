@@ -315,8 +315,8 @@ fi
 if [[ -f "${HOME}/google-cloud-sdk/path.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/path.zsh.inc"; fi
 if [[ -f "${HOME}/google-cloud-sdk/completion.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/completion.zsh.inc"; fi
 
-if type "moar" > /dev/null 2>&1; then
-  export MOAR='-wrap --colors auto -mousemode auto -no-linenumbers -no-statusbar -no-clear-on-exit -style nord'
-  export PAGER='moar'
-  export BAT_PAGER='moar'
+if type "moor" > /dev/null 2>&1; then
+  export MOOR='-wrap --colors auto -mousemode auto -no-linenumbers -no-statusbar -no-clear-on-exit -style nord'
+  export PAGER='moor'
+  export BAT_PAGER='moor'
 fi
