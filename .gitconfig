@@ -1,5 +1,5 @@
 [init]
-    defaultBranch = master
+    defaultBranch = main
 [core]
     pager = delta
 [alias]
