@@ -32,7 +32,7 @@
     hyperlinks = true
     syntax-theme = Nord
 [merge]
-    conflictstyle = diff3
+    conflictstyle = zdiff3
 [diff]    
     colorMoved = default
 
