@@ -3,7 +3,7 @@
 # This template file has been automatically created at the following
 # path since Ghostty couldn't find any existing config files on your system:
 #
-#   /Users/narutotakahashi/Library/Application Support/com.mitchellh.ghostty/config
+#   ~/Library/Application Support/com.mitchellh.ghostty/config
 #
 # The template does not set any default options, since Ghostty ships
 # with sensible defaults for all options. Users should only need to set
@@ -66,4 +66,7 @@ shell-integration = zsh
 keybind = ctrl+m=text:\x0D
 keybind = ctrl+i=text:\x09
 keybind = ctrl+[=text:\x1B
+
+window-height = 28
+window-width = 82
 
