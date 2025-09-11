@@ -13,7 +13,7 @@ Install commands that are necessary to setup the dotfiles.
 ```bash
 brew install git emacs tmux zsh eza bat less moor lstr
 brew install cmake ghq gh fzf git-delta rg fd gradle yazi lazygit
-brew install starship zoxide mcfly rustup-init mdcat
+brew install starship zoxide mcfly rustup-init mdcat bottom
 brew install sd hexyl
 $(brew --prefix)/opt/fzf/install
 rustup-init

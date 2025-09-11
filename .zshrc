@@ -147,21 +147,28 @@ fi
 if type "ag" > /dev/null; then
   alias ag='ag --pager less'
 fi
-if type "bat" > /dev/null; then
-  export BAT_PAGER="less -R"
-  alias cat='bat'
-fi
 if type lstr > /dev/null; then
   alias tree='lstr'
 fi
-
 if type "code" > /dev/null; then
   export EDITOR="code -w"
 else
   export EDITOR="emacs"
 fi
-export PAGER="less"
-
+if type "bat" > /dev/null; then
+  alias cat='bat'
+fi
+if type "moor" > /dev/null 2>&1; then
+  export MOOR='-wrap --colors auto -mousemode auto -no-linenumbers -no-statusbar -no-clear-on-exit -style nord'
+  export PAGER='moor'
+  export BAT_PAGER='moor'
+else
+  export PAGER="less"
+  export BAT_PAGER="less -R"
+fi
+if type "btm" > /dev/null; then
+  alias top="btm"
+fi
 
 case ${OSTYPE} in
   linux*)
@@ -315,8 +322,3 @@ fi
 if [[ -f "${HOME}/google-cloud-sdk/path.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/path.zsh.inc"; fi
 if [[ -f "${HOME}/google-cloud-sdk/completion.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/completion.zsh.inc"; fi
 
-if type "moor" > /dev/null 2>&1; then
-  export MOOR='-wrap --colors auto -mousemode auto -no-linenumbers -no-statusbar -no-clear-on-exit -style nord'
-  export PAGER='moor'
-  export BAT_PAGER='moor'
-fi
