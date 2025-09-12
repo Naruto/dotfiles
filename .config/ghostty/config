@@ -53,6 +53,8 @@ alpha-blending = native
 adjust-cell-width = -1
 adjust-cell-height = 2
 
+macos-titlebar-proxy-icon = hidden
+
 theme = Snazzy Soft
 
 shell-integration-features = no-cursor
