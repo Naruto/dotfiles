@@ -1,7 +1,5 @@
 # git
 abbr -g "g"="git"
-abbr -g "gb"="git branch"
-abbr -g "gc"="git commit"
 abbr -g "gcm"="git commit -m"
 abbr -g "gco"="git checkout"
 abbr -g "gdc"="git diff --cached"
