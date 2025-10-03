@@ -180,7 +180,7 @@ case ${OSTYPE} in
     export XDG_CONFIG_HOME="${HOME}/.config"
 
     # Jetbrains Toolbox
-    export PATH=~/Library/Application\ Support/JetBrains/Toolbox/scripts:${PATH}
+    export PATH=${PATH}:~/Library/Application\ Support/JetBrains/Toolbox/scripts
 
     # Android
     export JAVA_HOME=`/usr/libexec/java_home -v 17`
