@@ -238,9 +238,11 @@ export PATH=${HOME}/.cargo/bin:${PATH}
 [[ -f "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]] && source "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 
 # fzf
-[[ -f ${HOME}/.fzf.zsh ]] && source ${HOME}/.fzf.zsh
-export FZF_DEFAULT_COMMAND='fd -HL --exclude ".git"'
-export FZF_DEFAULT_OPTS='--layout=reverse --ansi --border --bind ctrl-v:page-down,alt-v:page-up,ctrl-k:kill-line'
+if type "fzf" > /dev/null 2>&1; then
+  source <(fzf --zsh)
+  export FZF_DEFAULT_COMMAND='fd -HL --exclude ".git"'
+  export FZF_DEFAULT_OPTS='--layout=reverse --ansi --border --bind ctrl-v:page-down,alt-v:page-up,ctrl-k:kill-line'
+fi
 
 ## ghq and fzf
 function ghq-fzf() {
