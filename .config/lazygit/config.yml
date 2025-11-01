@@ -4,7 +4,6 @@ gui:
 git:
   autoFetch: false
   autoForwardBranches: none
-  paging:
-    colorArg: always
-    pager: delta --dark --paging=never
-
+  pagers:
+    - colorArg: always
+      pager: delta --dark --paging=never
