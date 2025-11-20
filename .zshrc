@@ -113,6 +113,9 @@ export PATH="${HOME}/bin:${PATH}"
 # cask
 export PATH="${HOME}/.cask/bin:${PATH}"
 
+# Added by Antigravity
+export PATH="~/.antigravity/antigravity/bin:$PATH"
+
 # Setting Prompt
 if type "starship" > /dev/null; then
   export STARSHIP_CONFIG=${HOME}/.starship/config.toml
@@ -150,7 +153,9 @@ fi
 if type lstr > /dev/null; then
   alias tree='lstr'
 fi
-if type "code" > /dev/null; then
+if type "agy" > /dev/null; then
+  export EDITOR="agy -w"
+elif type "code" > /dev/null; then
   export EDITOR="code -w"
 else
   export EDITOR="emacs"
