@@ -114,7 +114,7 @@ export PATH="${HOME}/bin:${PATH}"
 export PATH="${HOME}/.cask/bin:${PATH}"
 
 # Added by Antigravity
-export PATH="~/.antigravity/antigravity/bin:$PATH"
+export PATH="${HOME}/.antigravity/antigravity/bin:$PATH"
 
 # Setting Prompt
 if type "starship" > /dev/null; then
