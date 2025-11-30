@@ -11,9 +11,9 @@ HISTSIZE=1000000
 SAVEHIST=1000000
 function history-all { history -E 1}
 
-FPATH=${HOME}/.zfunc:$FPATH
+fpath=(${HOME}/.zfunc $fpath)
 
-[[ -v HOMEBREW_PREFIX && -d "${HOMEBREW_PREFIX}/share/zsh-completions" ]] && FPATH=${HOMEBREW_PREFIX}/share/zsh-completions:$FPATH
+[[ -v HOMEBREW_PREFIX && -d "${HOMEBREW_PREFIX}/share/zsh-completions" ]] && fpath=(${HOMEBREW_PREFIX}/share/zsh-completions $fpath)
 autoload -Uz compinit
 for dump in ~/.zcompdump(N.mh+24); do
   compinit

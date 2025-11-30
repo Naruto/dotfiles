@@ -28,6 +28,7 @@ DOTFILES_PATH=~/projects/dotfiles
 ln -sfn ${DOTFILES_PATH}/.emacs.d ~/
 ln -sfn ${DOTFILES_PATH}/.zshrc ~/
 ln -sfn ${DOTFILES_PATH}/.zsh ~/
+ln -sfn ${DOTFILES_PATH}/.zfunc ~/
 ln -sfn ${DOTFILES_PATH}/.tmux ~/
 ln -sfn ${DOTFILES_PATH}/.tmux/.tmux.conf ~/
 ln -sfn ${DOTFILES_PATH}/.tmux.conf.local ~/
