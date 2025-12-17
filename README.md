@@ -2,7 +2,7 @@
 
 This is naruto's dotfiles.
 
-The dotfiles aim to provide easily and smoothly operating and recognizable syntax eye-candy in zsh of a terminal.
+These dotfiles provide a smooth experience and eye-catching syntax highlighting for Zsh.
 
 # Prepare
 
