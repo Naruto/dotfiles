@@ -37,6 +37,7 @@ ln -sfn ${DOTFILES_PATH}/.config/lazygit ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/yazi ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/bat ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/zsh-abbr ~/.config/
+ln -sfn ${DOTFILES_PATH}/.cargo/config ~/.cargo/
 ```
 
 Prepend the below section to `~/.gitconfig` file
