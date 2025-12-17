@@ -2,7 +2,7 @@
 
 This is naruto's dotfiles.
 
-The dotfiles aims to provide easily and smoothly operaions and recognizable syntax eye-candy in zsh of a terminal.
+The dotfiles aim to provide easily and smoothly operating and recognizable syntax eye-candy in zsh of a terminal.
 
 # Prepare
 
@@ -37,6 +37,7 @@ ln -sfn ${DOTFILES_PATH}/.config/lazygit ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/yazi ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/bat ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/zsh-abbr ~/.config/
+mkdir -p ~/.cargo
 ln -sfn ${DOTFILES_PATH}/.cargo/config ~/.cargo/
 ```
 
