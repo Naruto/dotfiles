@@ -72,3 +72,8 @@ keybind = ctrl+[=text:\x1B
 window-height = 28
 window-width = 82
 
+link-url = true
+link-previews = osc8
+
+
+
