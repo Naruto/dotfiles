@@ -4,6 +4,10 @@
     prune = true
 [commit]
     verbose = true
+[push]
+    autoSetupRemote = true
+[column]
+    ui = auto
 [core]
     pager = delta
 [alias]
@@ -39,4 +43,5 @@
     conflictstyle = zdiff3
 [diff]    
     colorMoved = default
+    algorithm = histogram
 

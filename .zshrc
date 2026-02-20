@@ -95,26 +95,29 @@ unset zle_bracketed_paste
 # export LANG="ja_JP.UTF-8"
 # export LC_ALL="ja_JP.UTF-8"
 
+typeset -U path PATH
+typeset -U fpath FPATH
+typeset -U manpath MANPATH
+
 if [[ -v HOMEBREW_PREFIX ]] ; then
   export LOCAL_PREFIX=${HOMEBREW_PREFIX}
 else 
   export LOCAL_PREFIX="/usr/local"
 
-  export PATH="${LOCAL_PREFIX}/bin:${PATH}"
-  export PATH="${LOCAL_PREFIX}/sbin:${PATH}"
+  path=("${LOCAL_PREFIX}/bin" "${LOCAL_PREFIX}/sbin" $path)
   export LD_LIBRARY_PATH="${LOCAL_PREFIX}/lib:$LD_LIBRARY_PATH"
   export PKG_CONFIG_PATH="${LOCAL_PREFIX}/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-  export MANPATH="${LOCAL_PREFIX}/man:${LOCAL_PREFIX}/share/man:/usr/share/man:$MANPATH"
+  manpath=("${LOCAL_PREFIX}/man" "${LOCAL_PREFIX}/share/man" "/usr/share/man" $manpath)
 fi
 
-export PATH="${HOME}/bin:${PATH}"
+path=("${HOME}/bin" $path)
 
 # cask
-export PATH="${HOME}/.cask/bin:${PATH}"
+path=("${HOME}/.cask/bin" $path)
 
 # Added by Antigravity
-export PATH="${HOME}/.antigravity/antigravity/bin:$PATH"
+path=("${HOME}/.antigravity/antigravity/bin" $path)
 
 # Setting Prompt
 if type "starship" > /dev/null; then
@@ -185,13 +188,12 @@ case ${OSTYPE} in
     export XDG_CONFIG_HOME="${HOME}/.config"
 
     # Jetbrains Toolbox
-    export PATH=${PATH}:~/Library/Application\ Support/JetBrains/Toolbox/scripts
+    path=("${HOME}/Library/Application Support/JetBrains/Toolbox/scripts" $path)
 
     # Android
     export JAVA_HOME=`/usr/libexec/java_home -v 17`
     export GRADLE_HOME=${LOCAL_PREFIX}/opt/gradle
     export ANDROID_NDK=/opt/ndk/android-ndk
-    export PATH=${ANDROID_NDK}:${PATH}
     export ANDROID_SDK=${HOME}/Library/Android/sdk
     export ANDROID_NDK_ROOT=${ANDROID_NDK}
     export NDK_ROOT=${ANDROID_NDK}
@@ -199,11 +201,11 @@ case ${OSTYPE} in
     export ANDROID_HOME=${ANDROID_SDK}
     export ANDROID_NDK_HOME=${ANDROID_NDK}
     export ANT_ROOT=${LOCAL_PREFIX}/opt/ant/bin
-    export PATH=${ANDROID_SDK}/platform-tools:${PATH}
-    export PATH=${ANDROID_SDK}/tools:${PATH}
+
+    path=(${ANDROID_SDK}/tools ${ANDROID_SDK}/platform-tools ${ANDROID_NDK} $path)
     if [[ -d ${ANDROID_SDK}/build-tools ]]; then
       latest=$(/bin/ls ${ANDROID_SDK}/build-tools | sort -r | head -n 1)
-      export PATH=${PATH}:${ANDROID_SDK}/build-tools/${latest}
+      path=($path ${ANDROID_SDK}/build-tools/${latest})
     fi
     ;;
 esac
@@ -219,7 +221,7 @@ export SCCACHE_DIR=~/.sccache
 export SCCACHE_CACHE_MULTIARCH="1"
 
 # rbenv
-export PATH="${HOME}/.rbenv/bin:${PATH}"
+path=("${HOME}/.rbenv/bin" $path)
 if type "rbenv" > /dev/null 2>&1; then
   eval "$(rbenv init -)"
 fi
@@ -227,11 +229,10 @@ fi
 # go
 export GOPATH=${HOME}/go
 export GOROOT=${LOCAL_PREFIX}/opt/go/libexec
-export PATH=${PATH}:${GOPATH}/bin
-export PATH=${PATH}:${GOROOT}/bin
+path=("${GOPATH}/bin" "${GOROOT}/bin" $path)
 
 # rust
-export PATH=${HOME}/.cargo/bin:${PATH}
+path=("${HOME}/.cargo/bin" $path)
 
 # zsh abbr
 [[ -f "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh" ]] && source "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh"
