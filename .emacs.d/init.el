@@ -147,22 +147,6 @@
   :tag "builtin"
   :global-minor-mode delete-selection-mode)
 
-;; (leaf paren
-;;   :doc "highlight matching paren"
-;;   :tag "builtin"
-;;   :custom ((show-paren-delay . 0.1))
-;;   :global-minor-mode show-paren-mode)
-
-;; (leaf simple
-;;   :doc "basic editing commands for Emacs"
-;;   :tag "builtin" "internal"
-;;   :custom ((kill-ring-max . 100)
-;;            (kill-read-only-ok . t)
-;;            (kill-whole-line . t)
-;;            (eval-expression-print-length . nil)
-;;            (eval-expression-print-level . nil)))
-
-
 (leaf auto-save-buffers-enhanced
   :doc "auto save buffers"
   :ensure t
@@ -210,134 +194,136 @@
          ("C-c C-<" . mc/mark-all-like-this))
   )
 
-(leaf company
-  :doc "Modular text completion framework"
-  :req "emacs-24.3"
-  :tag "matching" "convenience" "abbrev" "emacs>=24.3"
-  :url "http://company-mode.github.io/"
-  :emacs>= 24.3
+(leaf corfu
+  :doc "COmpletion in Region FUnction"
   :ensure t
-  :blackout t
-  :leaf-defer nil
-  :bind ((company-active-map
-          ("M-n" . nil)
-          ("M-p" . nil)
-          ("C-s" . company-filter-candidates)
-          ("C-n" . company-select-next)
-          ("C-p" . company-select-previous)
-          ("<tab>" . company-complete-selection))
-         (company-search-map
-          ("C-n" . company-select-next)
-          ("C-p" . company-select-previous)))
-  :custom ((company-idle-delay . 0)
-           (company-minimum-prefix-length . 1)
-           (company-transformers . '(company-sort-by-occurrence)))
-  :global-minor-mode global-company-mode)
-
-(leaf company-c-headers
-  :doc "Company mode backend for C/C++ header files"
-  :req "emacs-24.1" "company-0.8"
-  :tag "company" "development" "emacs>=24.1"
-  :added "2020-03-25"
-  :emacs>= 24.1
-  :ensure t
-  :after company
-  :defvar company-backends
+  :global-minor-mode global-corfu-mode
+  :custom ((corfu-auto . t)
+           (corfu-cycle . t)
+           (corfu-quit-at-boundary . t)
+           (corfu-quit-no-match . t)
+           (corfu-preselect . 'prompt))
   :config
-  (add-to-list 'company-backends 'company-c-headers))
+  ;; Enable indentation+completion using the TAB key.
+  (setq tab-always-indent 'completion))
 
-(leaf ivy
-  :doc "Incremental Vertical completYon"
-  :req "emacs-24.5"
-  :tag "matching" "emacs>=24.5"
-  :url "https://github.com/abo-abo/swiper"
-  :emacs>= 24.5
+(leaf cape
+  :doc "Completion At Point Extensions"
   :ensure t
-  :blackout t
-  :leaf-defer nil
-  :custom ((ivy-initial-inputs-alist . nil)
-           (ivy-use-selectable-prompt . t))
-  :global-minor-mode t
-  :config
-  (leaf swiper
-    :doc "Isearch with an overview. Oh, man!"
-    :req "emacs-24.5" "ivy-0.13.0"
-    :tag "matching" "emacs>=24.5"
-    :url "https://github.com/abo-abo/swiper"
-    :emacs>= 24.5
-    :ensure t
-    :bind (("C-s" . swiper)))
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-keyword))
 
-  (leaf counsel
-    :doc "Various completion functions using Ivy"
-    :req "emacs-24.5" "swiper-0.13.0"
-    :tag "tools" "matching" "convenience" "emacs>=24.5"
-    :url "https://github.com/abo-abo/swiper"
-    :emacs>= 24.5
-    :ensure t
-    :blackout t
-    :bind (("C-S-s" . counsel-imenu)
-           ("C-x C-r" . counsel-recentf))
-    :custom `((counsel-yank-pop-separator . "\n----------\n")
-              (counsel-find-file-ignore-regexp . ,(rx-to-string '(or "./" "../") 'no-group)))
-    :global-minor-mode t)
-
-  )
-
-(leaf prescient
-  :doc "Better sorting and filtering"
-  :req "emacs-25.1"
-  :tag "extensions" "emacs>=25.1"
-  :url "https://github.com/raxod502/prescient.el"
-  :emacs>= 25.1
+(leaf which-key
+  :doc "Display available keybindings in popup"
   :ensure t
-  :custom ((prescient-aggressive-file-save . t))
-  :global-minor-mode prescient-persist-mode)
-  
-(leaf ivy-prescient
-  :doc "prescient.el + Ivy"
-  :req "emacs-25.1" "prescient-4.0" "ivy-0.11.0"
-  :tag "extensions" "emacs>=25.1"
-  :url "https://github.com/raxod502/prescient.el"
-  :emacs>= 25.1
-  :ensure t
-  :after prescient ivy
-  :custom ((ivy-prescient-retain-classic-highlighting . t))
   :global-minor-mode t)
 
-(leaf counsel-gtags :ensure t
-  :after ivy counsel cc-mode
+(leaf embark
+  :doc "Contextual actions for candidates"
+  :ensure t
+  :bind (("C-." . embark-act)         ;; pick some comfortable binding
+         ("C-;" . embark-dwim)        ;; good for quick actions
+         ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings`
+  :init
+  ;; Option: minibuffer-completion-help is often redundant with Vertico
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+(leaf helpful
+  :doc "A better help buffer"
+  :ensure t
+  :bind (("C-h f" . helpful-callable)
+         ("C-h v" . helpful-variable)
+         ("C-h k" . helpful-key)
+         ("C-h x" . helpful-command)
+         ("C-c C-d" . helpful-at-point)))
+
+(leaf doom-themes
+  :doc "A collection of user-submitted themes"
+  :ensure t
   :config
-  (counsel-gtags-mode 1)
-  (add-hook 'c-mode-hook 'counsel-gtags-mode)
-  (add-hook 'c++-mode-hook 'counsel-gtags-mode)
-  (with-eval-after-load 'counsel-gtags
-    (define-key counsel-gtags-mode-map (kbd "M-t") 'counsel-gtags-find-definition)
-    (define-key counsel-gtags-mode-map (kbd "M-r") 'counsel-gtags-find-reference)
-    (define-key counsel-gtags-mode-map (kbd "M-s") 'counsel-gtags-find-symbol)
-    (define-key counsel-gtags-mode-map (kbd "M-,") 'counsel-gtags-go-backward))
-  )
+  (load-theme 'doom-one t)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config))
+
+(leaf doom-modeline
+  :doc "A fancy and fast mode-line"
+  :ensure t
+  :global-minor-mode t
+  :custom ((doom-modeline-buffer-file-name-style . 'truncate-with-project)
+           (doom-modeline-icon . t)
+           (doom-modeline-major-mode-icon . t)))
+
+(leaf gcmh
+  :doc "Garbage Collector Magic Hack"
+  :ensure t
+  :global-minor-mode gcmh-mode)
+
+(leaf vundo
+  :doc "Visual undo tree"
+  :ensure t
+  :bind (("C-x u" . vundo)))
+
+(leaf nerd-icons-dired
+  :doc "Icons for dired"
+  :ensure t
+  :hook (dired-mode-hook . nerd-icons-dired-mode))
+
+(leaf savehist
+  :doc "persist history"
+  :tag "builtin"
+  :global-minor-mode t)
+
+(leaf vertico
+  :doc "VERTical Interactive COmpletion"
+  :ensure t
+  :global-minor-mode t
+  :custom ((vertico-count . 20)
+           (vertico-cycle . t)))
+
+(leaf orderless
+  :doc "completion style for matching regexps"
+  :ensure t
+  :custom ((completion-styles . '(orderless basic))
+           (completion-category-overrides . '((file (styles basic partial-completion))))))
+
+(leaf marginalia
+  :doc "Enrich existing commands with completion annotations"
+  :ensure t
+  :global-minor-mode t)
+
+(leaf consult
+  :doc "Consulting completing-read"
+  :ensure t
+  :bind (("C-s" . consult-line)
+         ("C-S-s" . consult-imenu)
+         ("C-x C-r" . consult-recent-file)
+         ("M-y" . consult-yank-pop)
+         ("C-x b" . consult-buffer)
+         ;; Add project-wide search
+         ("M-s r" . consult-ripgrep)
+         ("M-s g" . consult-grep))
+  :custom ((consult-project-root-function .
+            (lambda ()
+              (when-let (project (project-current))
+                (project-root project))))))
 
 (leaf projectile :ensure t
   :require projectile
+  :global-minor-mode t
   :config
-  (projectile-mode +1)
   (with-eval-after-load 'projectile
     ;; Recommended keymap prefix on macOS
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+    (setq projectile-completion-system 'default)
     )
   )
 
-(leaf counsel-projectile :ensure t
-  :after ivy counsel projectile
-  :config
-  :require counsel-projectile
-  :config
-  (setq projectile-completion-system 'ivy)
-  (setq counsel-projectile-sort-files t)
-  (setq counsel-projectile-sort-projects t)
-  (counsel-projectile-mode 1)
-  )
+(leaf consult-projectile
+  :doc "Consult integration for projectile"
+  :ensure t
+  :after consult projectile)
 
 (provide 'init)
 
