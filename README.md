@@ -15,6 +15,7 @@ brew install git emacs tmux zsh eza bat less moor lstr
 brew install cmake ghq gh fzf git-delta rg fd gradle yazi lazygit
 brew install starship zoxide mcfly rustup-init mdcat bottom
 brew install sd hexyl
+brew install d-kuro/tap/gwq
 rustup-init
 ```
 
@@ -37,6 +38,7 @@ ln -sfn ${DOTFILES_PATH}/.config/lazygit ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/yazi ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/bat ~/.config/
 ln -sfn ${DOTFILES_PATH}/.config/zsh-abbr ~/.config/
+ln -sfn ${DOTFILES_PATH}/.config/gwq ~/.config/
 mkdir -p ~/.cargo
 ln -sfn ${DOTFILES_PATH}/.cargo/config ~/.cargo/
 ```
