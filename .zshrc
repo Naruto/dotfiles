@@ -178,37 +178,37 @@ if type "btm" > /dev/null; then
   alias top="btm"
 fi
 
-case ${OSTYPE} in
-  linux*)
-    alias open=xdg-open
-     # Java
-     export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
-     ;;
-  darwin*)
-    export XDG_CONFIG_HOME="${HOME}/.config"
+# case ${OSTYPE} in
+#  linux*)
+#    alias open=xdg-open
+#     # Java
+#     export JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::")
+#     ;;
+#  darwin*)
+#      ;;
+#esac
 
-    # Jetbrains Toolbox
-    path=("${HOME}/Library/Application Support/JetBrains/Toolbox/scripts" $path)
+export XDG_CONFIG_HOME="${HOME}/.config"
 
-    # Android
-    export JAVA_HOME=`/usr/libexec/java_home -v 17`
-    export GRADLE_HOME=${LOCAL_PREFIX}/opt/gradle
-    export ANDROID_NDK=/opt/ndk/android-ndk
-    export ANDROID_SDK=${HOME}/Library/Android/sdk
-    export ANDROID_NDK_ROOT=${ANDROID_NDK}
-    export NDK_ROOT=${ANDROID_NDK}
-    export ANDROID_SDK_ROOT=${ANDROID_SDK}
-    export ANDROID_HOME=${ANDROID_SDK}
-    export ANDROID_NDK_HOME=${ANDROID_NDK}
-    export ANT_ROOT=${LOCAL_PREFIX}/opt/ant/bin
+# Jetbrains Toolbox
+path=("${HOME}/Library/Application Support/JetBrains/Toolbox/scripts" $path)
 
-    path=(${ANDROID_SDK}/tools ${ANDROID_SDK}/platform-tools ${ANDROID_NDK} $path)
-    if [[ -d ${ANDROID_SDK}/build-tools ]]; then
-      latest=$(/bin/ls ${ANDROID_SDK}/build-tools | sort -r | head -n 1)
-      path=($path ${ANDROID_SDK}/build-tools/${latest})
-    fi
-    ;;
-esac
+# Android
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+export GRADLE_HOME=${LOCAL_PREFIX}/opt/gradle
+export ANDROID_NDK=/opt/ndk/android-ndk
+export ANDROID_SDK=${HOME}/Library/Android/sdk
+export ANDROID_NDK_ROOT=${ANDROID_NDK}
+export NDK_ROOT=${ANDROID_NDK}
+export ANDROID_SDK_ROOT=${ANDROID_SDK}
+export ANDROID_HOME=${ANDROID_SDK}
+export ANDROID_NDK_HOME=${ANDROID_NDK}
+
+path=(${ANDROID_SDK}/tools ${ANDROID_SDK}/platform-tools ${ANDROID_NDK} $path)
+if [[ -d ${ANDROID_SDK}/build-tools ]]; then
+    latest=$(/bin/ls ${ANDROID_SDK}/build-tools | sort -r | head -n 1)
+    path=($path ${ANDROID_SDK}/build-tools/${latest})
+fi
 
 # ccache
 export USE_CCACHE=1
@@ -325,11 +325,9 @@ if type "op" > /dev/null; then
     eval "$(op completion zsh)"; compdef _op op
 fi
 
-
 # Google Cloud SDK
 if [[ -f "${HOME}/google-cloud-sdk/path.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/path.zsh.inc"; fi
 if [[ -f "${HOME}/google-cloud-sdk/completion.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/completion.zsh.inc"; fi
-
 
 # local .zshrc
 if [[ -f "${HOME}/.zshrc.local" ]]; then source "${HOME}/.zshrc.local"; fi
