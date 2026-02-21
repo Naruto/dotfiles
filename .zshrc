@@ -1,6 +1,12 @@
-# homebrew
-[[ -f "/usr/local/bin/brew" ]] && eval $(/usr/local/bin/brew shellenv)
-[[ -f "/opt/homebrew/bin/brew" ]] && eval $(/opt/homebrew/bin/brew shellenv)
+typeset -U path PATH
+typeset -U fpath FPATH
+typeset -U manpath MANPATH
+
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /usr/local/bin/brew ]]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+fi
 
 # Emacs Keybind
 bindkey -e
@@ -107,10 +113,6 @@ unset zle_bracketed_paste
 # export LANG="ja_JP.UTF-8"
 # export LC_ALL="ja_JP.UTF-8"
 
-typeset -U path PATH
-typeset -U fpath FPATH
-typeset -U manpath MANPATH
-
 if [[ -v HOMEBREW_PREFIX ]] ; then
   export LOCAL_PREFIX=${HOMEBREW_PREFIX}
 else 
@@ -151,7 +153,7 @@ alias less="less -R"
 if (( $+commands[eza] )); then
   alias ls="eza -F"
 
-  alias l='eza -lbF --git'                                                # list, size, type, git
+  alias l='eza -lbF --git'                                               # list, size, type, git
   alias ll='eza -lbGF --git'                                             # long list
   alias llm='eza -lbGd --git --sort=modified'                            # long list, modified date sort
   alias la='eza -lbhHigUmuSa --time-style=long-iso --git --color-scale'  # all list
