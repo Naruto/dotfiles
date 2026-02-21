@@ -52,7 +52,7 @@ unsetopt menu_complete
 setopt complete_aliases
 setopt list_packed
 setopt list_types
-zstyle ':completion:*' list-colors di=34 fi=0
+zstyle ':completion:*' list-colors 'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34' 'su=41;30' 'sg=46;30' 'tw=42;30' 'ow=43;30'
 
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
@@ -263,6 +263,8 @@ path=("${HOME}/.cargo/bin" $path)
 if (( $+commands[fzf] )); then
   source <(fzf --zsh)
   export FZF_DEFAULT_COMMAND='fd -HL --exclude ".git"'
+  export FZF_CTRL_T_COMMAND='fd -HL --exclude ".git" --type f'
+  export FZF_ALT_C_COMMAND='fd -HL --exclude ".git" --type d'
   export FZF_DEFAULT_OPTS='--layout=reverse --ansi --border --bind ctrl-v:page-down,alt-v:page-up,ctrl-k:kill-line'
 fi
 
