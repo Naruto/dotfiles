@@ -9,16 +9,23 @@ bindkey -e
 HISTFILE=${HOME}/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=1000000
-function history-all { history -E 1}
+function history-all { history -E 1 }
 
 fpath=(${HOME}/.zfunc $fpath)
 
 [[ -v HOMEBREW_PREFIX && -d "${HOMEBREW_PREFIX}/share/zsh-completions" ]] && fpath=(${HOMEBREW_PREFIX}/share/zsh-completions $fpath)
 autoload -Uz compinit
-for dump in ~/.zcompdump(N.mh+24); do
+
+local dump_files=(~/.zcompdump(N.mh+24))
+if [[ ${#dump_files} -gt 0 || ! -f ~/.zcompdump ]]; then
   compinit
-done
-compinit -C
+else
+  compinit -C
+fi
+
+if [[ -s ~/.zcompdump && (! -s ~/.zcompdump.zwc || ~/.zcompdump -nt ~/.zcompdump.zwc) ]]; then
+  zcompile ~/.zcompdump
+fi
 
 autoload -U colors
 colors
@@ -40,6 +47,11 @@ setopt complete_aliases
 setopt list_packed
 setopt list_types
 zstyle ':completion:*' list-colors di=34 fi=0
+
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+[[ ! -d ~/.zsh/cache ]] && mkdir -p ~/.zsh/cache
+
 setopt nolistbeep
 
 ## expansion and globbing
@@ -120,7 +132,7 @@ path=("${HOME}/.cask/bin" $path)
 path=("${HOME}/.antigravity/antigravity/bin" $path)
 
 # Setting Prompt
-if type "starship" > /dev/null; then
+if (( $+commands[starship] )); then
   export STARSHIP_CONFIG=${HOME}/.starship/config.toml
   export STARSHIP_CACHE=${HOME}/.starship/cache
   eval "$(starship init zsh)"
@@ -129,14 +141,14 @@ else
 fi
 
 # gh command
-if type "gh" > /dev/null; then
+if (( $+commands[gh] )); then
   eval "$(gh completion -s zsh)"
 fi
 
 # Setting alias
 alias rm="rm -i"
 alias less="less -R"
-if type "eza" > /dev/null; then
+if (( $+commands[eza] )); then
   alias ls="eza -F"
 
   alias l='eza -lbF --git'                                                # list, size, type, git
@@ -147,26 +159,26 @@ if type "eza" > /dev/null; then
 else
   alias ls="ls -F --show-control-char --color=always"
 fi
-if type "rg" > /dev/null; then
+if (( $+commands[rg] )); then
   alias rg="rg -p"
 fi
-if type "ag" > /dev/null; then
+if (( $+commands[ag] )); then
   alias ag='ag --pager less'
 fi
-if type lstr > /dev/null; then
+if (( $+commands[lstr] )); then
   alias tree='lstr'
 fi
-if type "agy" > /dev/null; then
+if (( $+commands[agy] )); then
   export EDITOR="agy -w"
-elif type "code" > /dev/null; then
+elif (( $+commands[code] )); then
   export EDITOR="code -w"
 else
   export EDITOR="emacs"
 fi
-if type "bat" > /dev/null; then
+if (( $+commands[bat] )); then
   alias cat='bat'
 fi
-if type "moor" > /dev/null 2>&1; then
+if (( $+commands[moor] )); then
   export MOOR='-wrap --colors auto -mousemode auto -no-linenumbers -no-statusbar -no-clear-on-exit -style nord'
   export PAGER='moor'
   export BAT_PAGER='moor'
@@ -174,7 +186,7 @@ else
   export PAGER="less"
   export BAT_PAGER="less -R"
 fi
-if type "btm" > /dev/null; then
+if (( $+commands[btm] )); then
   alias top="btm"
 fi
 
@@ -206,8 +218,10 @@ export ANDROID_NDK_HOME=${ANDROID_NDK}
 
 path=(${ANDROID_SDK}/tools ${ANDROID_SDK}/platform-tools ${ANDROID_NDK} $path)
 if [[ -d ${ANDROID_SDK}/build-tools ]]; then
-    latest=$(/bin/ls ${ANDROID_SDK}/build-tools | sort -r | head -n 1)
-    path=($path ${ANDROID_SDK}/build-tools/${latest})
+    local build_tools=(${ANDROID_SDK}/build-tools/*(/Nn))
+    if [[ ${#build_tools} -gt 0 ]]; then
+        path=($path ${build_tools[-1]})
+    fi
 fi
 
 # ccache
@@ -222,7 +236,7 @@ export SCCACHE_CACHE_MULTIARCH="1"
 
 # rbenv
 path=("${HOME}/.rbenv/bin" $path)
-if type "rbenv" > /dev/null 2>&1; then
+if (( $+commands[rbenv] )); then
   eval "$(rbenv init -)"
 fi
 
@@ -244,7 +258,7 @@ path=("${HOME}/.cargo/bin" $path)
 [[ -f "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh" ]] && source "${HOME}/.zsh/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
 
 # fzf
-if type "fzf" > /dev/null 2>&1; then
+if (( $+commands[fzf] )); then
   source <(fzf --zsh)
   export FZF_DEFAULT_COMMAND='fd -HL --exclude ".git"'
   export FZF_DEFAULT_OPTS='--layout=reverse --ansi --border --bind ctrl-v:page-down,alt-v:page-up,ctrl-k:kill-line'
@@ -265,7 +279,7 @@ zle -N ghq-fzf
 bindkey "^]" ghq-fzf
 
 # zoxide
-if type "zoxide" > /dev/null 2>&1; then    
+if (( $+commands[zoxide] )); then    
     eval "$(zoxide init zsh)"
 
     function zi_() {
@@ -293,7 +307,7 @@ fi
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+	if cwd="$(<"$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
 		builtin cd -- "$cwd"
 	fi
 	/bin/rm -f -- "$tmp"
@@ -308,20 +322,19 @@ zle -N y_
 bindkey '^O' y_
 
 # lazygit
-function lg()
-{
-    export LAZYGIT_NEW_DIR_FILE=${HOME}/.lazygit/newdir
+function lg() {
+    export LAZYGIT_NEW_DIR_FILE="${HOME}/.lazygit/newdir"
 
     lazygit "$@"
 
-    if [[ -f $LAZYGIT_NEW_DIR_FILE ]]; then
-            cd "$(/bin/cat $LAZYGIT_NEW_DIR_FILE)"
-            /bin/rm -f $LAZYGIT_NEW_DIR_FILE > /dev/null
+    if [[ -f "$LAZYGIT_NEW_DIR_FILE" ]]; then
+            cd "$(<"$LAZYGIT_NEW_DIR_FILE")"
+            /bin/rm -f "$LAZYGIT_NEW_DIR_FILE" > /dev/null
     fi
 }
 
 # 1password
-if type "op" > /dev/null; then
+if (( $+commands[op] )); then
     eval "$(op completion zsh)"; compdef _op op
 fi
 
