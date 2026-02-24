@@ -2,10 +2,20 @@ typeset -U path PATH
 typeset -U fpath FPATH
 typeset -U manpath MANPATH
 
+# Create cache directory if it doesn't exist
+[[ ! -d ~/.zsh/cache ]] && mkdir -p ~/.zsh/cache
+
+# Cache brew shellenv
 if [[ -x /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  if [[ ! -f ~/.zsh/cache/brew_shellenv.zsh ]]; then
+    /opt/homebrew/bin/brew shellenv > ~/.zsh/cache/brew_shellenv.zsh
+  fi
+  source ~/.zsh/cache/brew_shellenv.zsh
 elif [[ -x /usr/local/bin/brew ]]; then
-  eval "$(/usr/local/bin/brew shellenv)"
+  if [[ ! -f ~/.zsh/cache/brew_shellenv.zsh ]]; then
+    /usr/local/bin/brew shellenv > ~/.zsh/cache/brew_shellenv.zsh
+  fi
+  source ~/.zsh/cache/brew_shellenv.zsh
 fi
 
 # Emacs Keybind
@@ -137,14 +147,21 @@ path=("${HOME}/.antigravity/antigravity/bin" $path)
 if (( $+commands[starship] )); then
   export STARSHIP_CONFIG=${HOME}/.starship/config.toml
   export STARSHIP_CACHE=${HOME}/.starship/cache
-  eval "$(starship init zsh)"
+  
+  if [[ ! -f ~/.zsh/cache/starship_init.zsh ]]; then
+    starship init zsh > ~/.zsh/cache/starship_init.zsh
+  fi
+  source ~/.zsh/cache/starship_init.zsh
 else
   export PROMPT='[$HOST %c]%(!.#.%%) '
 fi
 
 # gh command
 if (( $+commands[gh] )); then
-  eval "$(gh completion -s zsh)"
+  if [[ ! -f ~/.zsh/cache/gh_completion.zsh ]]; then
+    gh completion -s zsh > ~/.zsh/cache/gh_completion.zsh
+  fi
+  source ~/.zsh/cache/gh_completion.zsh
 fi
 
 # Setting alias
@@ -239,7 +256,10 @@ export SCCACHE_CACHE_MULTIARCH="1"
 # rbenv
 path=("${HOME}/.rbenv/bin" $path)
 if (( $+commands[rbenv] )); then
-  eval "$(rbenv init -)"
+  if [[ ! -f ~/.zsh/cache/rbenv_init.zsh ]]; then
+    rbenv init - > ~/.zsh/cache/rbenv_init.zsh
+  fi
+  source ~/.zsh/cache/rbenv_init.zsh
 fi
 
 # go
@@ -284,7 +304,10 @@ bindkey "^]" ghq-fzf
 
 # zoxide
 if (( $+commands[zoxide] )); then    
-    eval "$(zoxide init zsh)"
+    if [[ ! -f ~/.zsh/cache/zoxide_init.zsh ]]; then
+      zoxide init zsh > ~/.zsh/cache/zoxide_init.zsh
+    fi
+    source ~/.zsh/cache/zoxide_init.zsh
 
     function zi_() {
       BUFFER="zi"

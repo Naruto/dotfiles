@@ -400,7 +400,7 @@ set -sg escape-time 0
 #set -g status-position top
 
 # default shell
-set -g default-shell /opt/homebrew/bin/zsh
+set-option -g default-shell "${SHELL}"
 
 # -- tpm -----------------------------------------------------------------------
 

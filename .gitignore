@@ -1,3 +1,4 @@
+.zsh/cache
 .*~
 *~
 .emacs.d/history

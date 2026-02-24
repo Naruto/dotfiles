@@ -22,25 +22,9 @@ rustup-init
 # Clone the repository and Setup dotfiles
 
 ```bash
-mkdir -p ~/projects
-mkdir -p ~/.config
 git clone --recursive https://github.com/Naruto/dotfiles.git ~/projects/dotfiles
-DOTFILES_PATH=~/projects/dotfiles
-ln -sfn ${DOTFILES_PATH}/.emacs.d ~/
-ln -sfn ${DOTFILES_PATH}/.zshrc ~/
-ln -sfn ${DOTFILES_PATH}/.zsh ~/
-ln -sfn ${DOTFILES_PATH}/.zfunc ~/
-ln -sfn ${DOTFILES_PATH}/.tmux ~/
-ln -sfn ${DOTFILES_PATH}/.tmux/.tmux.conf ~/
-ln -sfn ${DOTFILES_PATH}/.tmux.conf.local ~/
-ln -sfn ${DOTFILES_PATH}/.starship ~/
-ln -sfn ${DOTFILES_PATH}/.config/lazygit ~/.config/
-ln -sfn ${DOTFILES_PATH}/.config/yazi ~/.config/
-ln -sfn ${DOTFILES_PATH}/.config/bat ~/.config/
-ln -sfn ${DOTFILES_PATH}/.config/zsh-abbr ~/.config/
-ln -sfn ${DOTFILES_PATH}/.config/gwq ~/.config/
-mkdir -p ~/.cargo
-ln -sfn ${DOTFILES_PATH}/.cargo/config ~/.cargo/
+cd ~/projects/dotfiles
+./install.sh
 ```
 
 Prepend the below section to `~/.gitconfig` file

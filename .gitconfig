@@ -2,6 +2,10 @@
     defaultBranch = main
 [fetch]
     prune = true
+[pull]
+    rebase = true
+[rebase]
+    autoStash = true
 [commit]
     verbose = true
 [push]
