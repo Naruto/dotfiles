@@ -2,7 +2,7 @@
 
 set -e
 
-DOTFILES_PATH=~/projects/dotfiles
+DOTFILES_PATH=$(dirname "$0")
 
 echo "Setting up dotfiles..."
 
