@@ -50,8 +50,8 @@ font-thicken-strength = 1
 
 alpha-blending = native
 
-adjust-cell-width = -1
-adjust-cell-height = 2
+#adjust-cell-width = -1
+adjust-cell-height = 1
 
 macos-titlebar-proxy-icon = hidden
 
@@ -70,7 +70,7 @@ keybind = ctrl+i=text:\x09
 keybind = ctrl+[=text:\x1B
 
 window-height = 28
-window-width = 82
+window-width = 83
 
 link-url = true
 link-previews = osc8
