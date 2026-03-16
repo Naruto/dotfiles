@@ -187,10 +187,10 @@ fi
 if (( $+commands[lstr] )); then
   alias tree='lstr'
 fi
-if (( $+commands[agy] )); then
-  export EDITOR="agy -w"
-elif (( $+commands[code] )); then
+if (( $+commands[code] )); then
   export EDITOR="code -w"
+elif (( $+commands[agy] )); then
+  export EDITOR="agy -w"
 else
   export EDITOR="emacs"
 fi
