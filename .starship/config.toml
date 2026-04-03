@@ -28,4 +28,4 @@ disabled = true
 disabled = true
 
 [cmd_duration]
-disabled = true
+min_time = 3_000
