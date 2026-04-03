@@ -66,7 +66,7 @@ zstyle ':completion:*' list-colors 'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'c
 
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
-[[ ! -d ~/.zsh/cache ]] && mkdir -p ~/.zsh/cache
+
 
 setopt nolistbeep
 
@@ -281,7 +281,10 @@ path=("${HOME}/.cargo/bin" $path)
 
 # fzf
 if (( $+commands[fzf] )); then
-  source <(fzf --zsh)
+  if [[ ! -f ~/.zsh/cache/fzf_init.zsh ]]; then
+    fzf --zsh > ~/.zsh/cache/fzf_init.zsh
+  fi
+  source ~/.zsh/cache/fzf_init.zsh
   export FZF_DEFAULT_COMMAND='fd -HL --exclude ".git"'
   export FZF_CTRL_T_COMMAND='fd -HL --exclude ".git" --type f'
   export FZF_ALT_C_COMMAND='fd -HL --exclude ".git" --type d'
@@ -362,12 +365,23 @@ function lg() {
 
 # 1password
 if (( $+commands[op] )); then
-    eval "$(op completion zsh)"; compdef _op op
+  if [[ ! -f ~/.zsh/cache/op_completion.zsh ]]; then
+    op completion zsh > ~/.zsh/cache/op_completion.zsh
+  fi
+  source ~/.zsh/cache/op_completion.zsh
+  compdef _op op
 fi
 
 # Google Cloud SDK
 if [[ -f "${HOME}/google-cloud-sdk/path.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/path.zsh.inc"; fi
 if [[ -f "${HOME}/google-cloud-sdk/completion.zsh.inc" ]]; then source "${HOME}/google-cloud-sdk/completion.zsh.inc"; fi
+
+# refresh cache
+function refresh-cache() {
+  rm -rf ~/.zsh/cache
+  mkdir -p ~/.zsh/cache
+  exec zsh
+}
 
 # local .zshrc
 if [[ -f "${HOME}/.zshrc.local" ]]; then source "${HOME}/.zshrc.local"; fi
