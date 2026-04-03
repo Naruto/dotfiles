@@ -2,7 +2,7 @@
 
 set -e
 
-DOTFILES_PATH=$(dirname "$0")
+DOTFILES_PATH=$(cd "$(dirname "$0")" && pwd)
 
 echo "Setting up dotfiles..."
 
@@ -10,20 +10,32 @@ mkdir -p ~/projects
 mkdir -p ~/.config
 mkdir -p ~/.cargo
 
+link() {
+  local src="$1"
+  local dest="$2"
+  if [[ -L "$dest" && "$(readlink "$dest")" == "$src" ]]; then
+    echo "  skip (already linked): $dest"
+  else
+    ln -sfn "$src" "$dest"
+    echo "  linked: $dest -> $src"
+  fi
+}
+
 echo "Creating symlinks..."
-ln -sfn ${DOTFILES_PATH}/.emacs.d ~/
-ln -sfn ${DOTFILES_PATH}/.zshrc ~/
-ln -sfn ${DOTFILES_PATH}/.zsh ~/
-ln -sfn ${DOTFILES_PATH}/.zfunc ~/
-ln -sfn ${DOTFILES_PATH}/.tmux ~/
-ln -sfn ${DOTFILES_PATH}/.tmux/.tmux.conf ~/
-ln -sfn ${DOTFILES_PATH}/.tmux.conf.local ~/
-ln -sfn ${DOTFILES_PATH}/.starship ~/
-ln -sfn ${DOTFILES_PATH}/.config/lazygit ~/.config/
-ln -sfn ${DOTFILES_PATH}/.config/yazi ~/.config/
-ln -sfn ${DOTFILES_PATH}/.config/bat ~/.config/
-ln -sfn ${DOTFILES_PATH}/.config/zsh-abbr ~/.config/
-ln -sfn ${DOTFILES_PATH}/.config/gwq ~/.config/
-ln -sfn ${DOTFILES_PATH}/.cargo/config ~/.cargo/
+link "${DOTFILES_PATH}/.emacs.d" ~/".emacs.d"
+link "${DOTFILES_PATH}/.zshrc" ~/".zshrc"
+link "${DOTFILES_PATH}/.zsh" ~/".zsh"
+link "${DOTFILES_PATH}/.zfunc" ~/".zfunc"
+link "${DOTFILES_PATH}/.tmux" ~/".tmux"
+link "${DOTFILES_PATH}/.tmux/.tmux.conf" ~/".tmux.conf"
+link "${DOTFILES_PATH}/.tmux.conf.local" ~/".tmux.conf.local"
+link "${DOTFILES_PATH}/.starship" ~/".starship"
+link "${DOTFILES_PATH}/.config/lazygit" ~/.config/"lazygit"
+link "${DOTFILES_PATH}/.config/yazi" ~/.config/"yazi"
+link "${DOTFILES_PATH}/.config/bat" ~/.config/"bat"
+link "${DOTFILES_PATH}/.config/zsh-abbr" ~/.config/"zsh-abbr"
+link "${DOTFILES_PATH}/.config/gwq" ~/.config/"gwq"
+link "${DOTFILES_PATH}/.config/ghostty" ~/.config/"ghostty"
+link "${DOTFILES_PATH}/.cargo/config" ~/.cargo/"config"
 
 echo "Dotfiles setup complete!"
