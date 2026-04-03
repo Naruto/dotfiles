@@ -45,7 +45,14 @@
     syntax-theme = Nord
 [merge]
     conflictstyle = zdiff3
-[diff]    
+[diff]
     colorMoved = default
     algorithm = histogram
-
+[rerere]
+    enabled = true
+[branch]
+    sort = -committerdate
+[tag]
+    sort = -version:refname
+[log]
+    date = iso
