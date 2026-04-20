@@ -37,5 +37,6 @@ link "${DOTFILES_PATH}/.config/zsh-abbr" ~/.config/"zsh-abbr"
 link "${DOTFILES_PATH}/.config/gwq" ~/.config/"gwq"
 link "${DOTFILES_PATH}/.config/ghostty" ~/.config/"ghostty"
 link "${DOTFILES_PATH}/.cargo/config" ~/.cargo/"config"
+link "${DOTFILES_PATH}/.ripgreprc" ~/".ripgreprc"
 
 echo "Dotfiles setup complete!"

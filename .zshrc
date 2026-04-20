@@ -119,6 +119,8 @@ setopt combining_chars
 setopt emacs
 unset zle_bracketed_paste
 
+WORDCHARS=${WORDCHARS//[\/]}
+
 
 # export LANG="ja_JP.UTF-8"
 # export LC_ALL="ja_JP.UTF-8"
@@ -180,6 +182,7 @@ else
 fi
 if (( $+commands[rg] )); then
   alias rg="rg -p"
+  export RIPGREP_CONFIG_PATH="${HOME}/.ripgreprc"
 fi
 if (( $+commands[ag] )); then
   alias ag='ag --pager less'
