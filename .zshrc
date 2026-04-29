@@ -386,5 +386,8 @@ function refresh-cache() {
   exec zsh
 }
 
+export RTK_TELEMETRY_DISABLED=1
+
 # local .zshrc
 if [[ -f "${HOME}/.zshrc.local" ]]; then source "${HOME}/.zshrc.local"; fi
+
