@@ -13,6 +13,7 @@ abbr -g "git sm"="git submodule"
 abbr -g "git st"="git status"
 abbr -g "git submodule u"="git submodule update --init --recursive"
 abbr -g "git wt"="git worktree"
+abbr -g "git please"="git push --force-with-lease"
 
 # cargo
 abbr -g "c"="cargo"
