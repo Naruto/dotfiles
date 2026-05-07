@@ -1,4 +1,5 @@
 # Microsoft.PowerShell_profile.ps1
+# Ported from .zshrc for consistent user experience on Windows
 
 # --- PSReadLine (Autosuggestions, Syntax Highlighting, History) ---
 Import-Module PSReadLine
@@ -20,9 +21,18 @@ $env:PAGER = "less"
 $env:BAT_PAGER = "less -R"
 
 # --- Aliases & Functions ---
+
+# 強力な保護がかかっている標準エイリアスを事前に削除する関数
+function Remove-ProtectedAlias {
+    param ([string]$AliasName)
+    if (Get-Alias $AliasName -ErrorAction SilentlyContinue) {
+        Remove-Item "Alias:$AliasName" -Force -ErrorAction SilentlyContinue
+    }
+}
+
 # rm -i equivalent
 function Remove-Item-Interactive { Remove-Item -Confirm $args }
-if (Get-Alias rm -ErrorAction SilentlyContinue) { Remove-Item Alias:rm -Force -ErrorAction SilentlyContinue }
+Remove-ProtectedAlias -AliasName "rm"
 Set-Alias rm Remove-Item-Interactive -Option AllScope -Force
 
 # eza aliases
@@ -32,15 +42,17 @@ function llm { eza -lbGd --git --sort=modified $args }
 function la { eza -lbhHigUmuSa --time-style=long-iso --git --color-scale $args }
 function lx { eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale $args }
 
-# エイリアスの上書きには -Force が必要
 if (Get-Command eza -ErrorAction SilentlyContinue) {
-    Set-Alias ls eza -Force
+    Remove-ProtectedAlias -AliasName "ls"
+    Set-Alias ls eza
 }
 if (Get-Command bat -ErrorAction SilentlyContinue) {
-    Set-Alias cat bat -Force
+    Remove-ProtectedAlias -AliasName "cat"
+    Set-Alias cat bat
 }
 if (Get-Command btm -ErrorAction SilentlyContinue) {
-    Set-Alias top btm -Force
+    Remove-ProtectedAlias -AliasName "top"
+    Set-Alias top btm
 }
 
 function rg { ripgrep.exe -p $args }
@@ -60,19 +72,22 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue) {
 
 # Fzf
 if (Get-Command fzf -ErrorAction SilentlyContinue) {
-    # fzf 0.48.0 以上なら --powershell が使える
-    $fzfVersionStr = (fzf --version).Split(" ")[0]
-    if ([Version]$fzfVersionStr -ge [Version]"0.48.0") {
-        Invoke-Expression (& { (fzf --powershell | Out-String) })
-    } else {
-        # 古いバージョンの場合は手動で最小限の設定
-        function fzf-completion {
-            $line = $null
-            $cursor = $null
-            [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
-            $res = fzf --query=$line
-            if ($res) {
-                [Microsoft.PowerShell.PSConsoleReadLine]::Replace(0, $line.Length, $res)
+    # fzf 0.48.0 以上なら --powershell が使えるかチェック
+    $fzfVersionOutput = (fzf --version).Split(" ")
+    if ($fzfVersionOutput.Length -ge 1) {
+        $fzfVersionStr = $fzfVersionOutput[0]
+        if ([Version]$fzfVersionStr -ge [Version]"0.48.0") {
+            Invoke-Expression (& { (fzf --powershell | Out-String) })
+        } else {
+            # 古いバージョンの場合は手動で最小限の設定
+            function fzf-completion {
+                $line = $null
+                $cursor = $null
+                [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+                $res = fzf --query=$line
+                if ($res) {
+                    [Microsoft.PowerShell.PSConsoleReadLine]::Replace(0, $line.Length, $res)
+                }
             }
         }
     }
