@@ -1,27 +1,29 @@
 # Microsoft.PowerShell_profile.ps1
 
 # --- PSReadLine (Autosuggestions, Syntax Highlighting, History) ---
-# Ensure PSReadLine is updated: Install-Module PSReadLine -Force
 Import-Module PSReadLine
 Set-PSReadLineOption -EditMode Emacs
-Set-PSReadLineOption -PredictionSource History
-Set-PSReadLineOption -PredictionViewStyle InlineView
-Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 Set-PSReadLineOption -BellStyle None
+
+# 予測補完機能（Prediction）は PSReadLine 2.1.0 以上が必要
+$psrVersion = (Get-Module PSReadLine).Version
+if ($psrVersion -ge [Version]"2.1.0") {
+    Set-PSReadLineOption -PredictionSource History
+    if ($psrVersion -ge [Version]"2.2.0") {
+        Set-PSReadLineOption -PredictionViewStyle InlineView
+    }
+}
 
 # --- Environment Variables ---
 $env:EDITOR = "code -w"
 $env:PAGER = "less"
 $env:BAT_PAGER = "less -R"
 
-# Path additions (Adjust as needed for your Windows setup)
-# $env:PATH = "$HOME\bin;$HOME\.cargo\bin;$env:PATH"
-
 # --- Aliases & Functions ---
 # rm -i equivalent
 function Remove-Item-Interactive { Remove-Item -Confirm $args }
-if (Get-Alias rm -ErrorAction SilentlyContinue) { Remove-Item Alias:rm -Force }
-Set-Alias rm Remove-Item-Interactive -Option AllScope
+if (Get-Alias rm -ErrorAction SilentlyContinue) { Remove-Item Alias:rm -Force -ErrorAction SilentlyContinue }
+Set-Alias rm Remove-Item-Interactive -Option AllScope -Force
 
 # eza aliases
 function l { eza -lbF --git $args }
@@ -29,13 +31,18 @@ function ll { eza -lbGF --git $args }
 function llm { eza -lbGd --git --sort=modified $args }
 function la { eza -lbhHigUmuSa --time-style=long-iso --git --color-scale $args }
 function lx { eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale $args }
+
+# エイリアスの上書きには -Force が必要
 if (Get-Command eza -ErrorAction SilentlyContinue) {
-    Set-Alias ls eza
+    Set-Alias ls eza -Force
+}
+if (Get-Command bat -ErrorAction SilentlyContinue) {
+    Set-Alias cat bat -Force
+}
+if (Get-Command btm -ErrorAction SilentlyContinue) {
+    Set-Alias top btm -Force
 }
 
-# other aliases
-Set-Alias cat bat
-Set-Alias top btm
 function rg { ripgrep.exe -p $args }
 $env:RIPGREP_CONFIG_PATH = "$HOME\.ripgreprc"
 
@@ -53,7 +60,22 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue) {
 
 # Fzf
 if (Get-Command fzf -ErrorAction SilentlyContinue) {
-    Invoke-Expression (& { (fzf --powershell | Out-String) })
+    # fzf 0.48.0 以上なら --powershell が使える
+    $fzfVersionStr = (fzf --version).Split(" ")[0]
+    if ([Version]$fzfVersionStr -ge [Version]"0.48.0") {
+        Invoke-Expression (& { (fzf --powershell | Out-String) })
+    } else {
+        # 古いバージョンの場合は手動で最小限の設定
+        function fzf-completion {
+            $line = $null
+            $cursor = $null
+            [Microsoft.PowerShell.PSConsoleReadLine]::GetBufferState([ref]$line, [ref]$cursor)
+            $res = fzf --query=$line
+            if ($res) {
+                [Microsoft.PowerShell.PSConsoleReadLine]::Replace(0, $line.Length, $res)
+            }
+        }
+    }
     $env:FZF_DEFAULT_COMMAND = 'fd -HL --exclude ".git"'
     $env:FZF_CTRL_T_COMMAND = 'fd -HL --exclude ".git" --type f'
     $env:FZF_ALT_C_COMMAND = 'fd -HL --exclude ".git" --type d'
