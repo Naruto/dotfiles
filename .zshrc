@@ -138,12 +138,10 @@ else
 fi
 
 path=("${HOME}/bin" $path)
+path=("${HOME}/.local/bin" $path)
 
 # cask
 path=("${HOME}/.cask/bin" $path)
-
-# Added by Antigravity
-path=("${HOME}/.antigravity/antigravity/bin" $path)
 
 # Setting Prompt
 if (( $+commands[starship] )); then
@@ -271,7 +269,8 @@ export GOROOT=${LOCAL_PREFIX}/opt/go/libexec
 path=("${GOPATH}/bin" "${GOROOT}/bin" $path)
 
 # rust
-path=("${HOME}/.cargo/bin" $path)
+[[ -d "${LOCAL_PREFIX}/opt/rustup/bin" ]] && path=("${LOCAL_PREFIX}/opt/rustup/bin" $path)
+[[ -d "${HOME}/.cargo/bin" ]] && path=("${HOME}/.cargo/bin" $path)
 
 # zsh abbr
 [[ -f "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh" ]] && source "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh"
@@ -390,4 +389,3 @@ export RTK_TELEMETRY_DISABLED=1
 
 # local .zshrc
 if [[ -f "${HOME}/.zshrc.local" ]]; then source "${HOME}/.zshrc.local"; fi
-
