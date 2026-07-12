@@ -168,7 +168,7 @@ fi
 alias rm="rm -i"
 alias less="less -R"
 if (( $+commands[eza] )); then
-  alias ls="eza -F"
+  alias ls="eza --classify=auto"
 
   alias l='eza -lbF --git'                                               # list, size, type, git
   alias ll='eza -lbGF --git'                                             # long list
