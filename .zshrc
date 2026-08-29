@@ -156,6 +156,11 @@ else
   export PROMPT='[$HOST %c]%(!.#.%%) '
 fi
 
+# sccache
+if (( $+commands[sccache] )); then
+    export RUSTC_WRAPPER=sccache
+fi
+
 # gh command
 if (( $+commands[gh] )); then
   if [[ ! -f ~/.zsh/cache/gh_completion.zsh ]]; then
