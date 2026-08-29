@@ -45,9 +45,11 @@
     syntax-theme = Nord
 [merge]
     conflictstyle = zdiff3
+    tool = Kaleidoscope
 [diff]
     colorMoved = default
     algorithm = histogram
+    tool = Kaleidoscope
 [rerere]
     enabled = true
 [branch]
@@ -56,3 +58,15 @@
     sort = -version:refname
 [log]
     date = iso
+[difftool]
+    prompt = false
+    trustExitCode = true
+[difftool "Kaleidoscope"]
+    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[mergetool]
+    prompt = false
+[mergetool "Kaleidoscope"]
+    cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+    trustExitCode = true
+[ghq]
+    root = ~/projects/
