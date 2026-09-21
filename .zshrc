@@ -233,8 +233,13 @@ path=("${HOME}/Library/Application Support/JetBrains/Toolbox/scripts" $path)
 # Android
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 export GRADLE_HOME=${LOCAL_PREFIX}/opt/gradle
-export ANDROID_NDK=/opt/ndk/android-ndk
 export ANDROID_SDK=${HOME}/Library/Android/sdk
+if [[ -d ${ANDROID_SDK}/ndk ]]; then
+    local ndks=(${ANDROID_SDK}/ndk/*(/Nn))
+    if [[ ${#ndks} -gt 0 ]]; then
+        export ANDROID_NDK=${ndks[-1]}
+    fi
+fi
 export ANDROID_NDK_ROOT=${ANDROID_NDK}
 export NDK_ROOT=${ANDROID_NDK}
 export ANDROID_SDK_ROOT=${ANDROID_SDK}
@@ -394,3 +399,7 @@ export RTK_TELEMETRY_DISABLED=1
 
 # local .zshrc
 if [[ -f "${HOME}/.zshrc.local" ]]; then source "${HOME}/.zshrc.local"; fi
+
+# Unity CLI
+. ~/.unity/env
+
