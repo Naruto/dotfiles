@@ -36,6 +36,7 @@ Prepend the below section to `~/.gitconfig` file
 
 `install.sh` also merges `.claude/settings.common.json` into `~/.claude/settings.json`.
 Keys in the dotfiles win; keys Claude Code writes itself (`/model`, `/config`, `/plugin`, ...) are kept.
+Arrays such as `permissions.allow` keep the entries added on each machine, and entries removed from the dotfiles side are removed there too.
 Re-run `./install.sh` after editing the dotfiles side.
 
 Execute the below commands in zsh shell.

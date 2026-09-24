@@ -23,22 +23,41 @@ link() {
 }
 
 # Keys in src win; keys only in dest (written by the app itself) are kept.
-# Arrays are replaced, not concatenated, so entries removed from src go away too.
+# Arrays keep the entries added in dest. The src merged last time is kept next
+# to dest, so entries removed from src are removed from dest too.
 merge_json() {
   local src="$1"
   local dest="$2"
+  local last
+  last="$(dirname "$dest")/.$(basename "$src")"
+  local prev=null
+  if [[ -f "$last" ]]; then
+    prev=$(cat "$last")
+  fi
   local merged
   if [[ -f "$dest" ]]; then
-    merged=$(jq -s '.[0] * .[1]' "$dest" "$src")
-    if [[ "$merged" == "$(jq . "$dest")" ]]; then
-      echo "  skip (already merged): $dest"
-      return
-    fi
+    merged=$(jq --argjson prev "$prev" --slurpfile src "$src" '
+      def merge($prev; $src):
+        if ($src | type) == "object" and type == "object" then
+          reduce ($src | keys_unsorted[]) as $k (.;
+            .[$k] |= merge($prev | if type == "object" then .[$k] else null end; $src[$k]))
+        elif ($src | type) == "array" and type == "array" then
+          ($src + ($prev | if type == "array" then . else [] end)) as $known
+          | $src + map(select(. as $x | $known | any(.[]; . == $x) | not))
+        else
+          $src
+        end;
+      merge($prev; $src[0])' "$dest")
   else
     merged=$(jq . "$src")
   fi
-  printf '%s\n' "$merged" > "$dest"
-  echo "  merged: $src -> $dest"
+  if [[ -f "$dest" && "$merged" == "$(jq . "$dest")" ]]; then
+    echo "  skip (already merged): $dest"
+  else
+    printf '%s\n' "$merged" > "$dest"
+    echo "  merged: $src -> $dest"
+  fi
+  cp "$src" "$last"
 }
 
 echo "Creating symlinks..."
