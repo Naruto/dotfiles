@@ -9,6 +9,7 @@ echo "Setting up dotfiles..."
 mkdir -p ~/projects
 mkdir -p ~/.config
 mkdir -p ~/.cargo
+mkdir -p ~/.claude
 
 link() {
   local src="$1"
@@ -19,6 +20,25 @@ link() {
     ln -sfn "$src" "$dest"
     echo "  linked: $dest -> $src"
   fi
+}
+
+# Keys in src win; keys only in dest (written by the app itself) are kept.
+# Arrays are replaced, not concatenated, so entries removed from src go away too.
+merge_json() {
+  local src="$1"
+  local dest="$2"
+  local merged
+  if [[ -f "$dest" ]]; then
+    merged=$(jq -s '.[0] * .[1]' "$dest" "$src")
+    if [[ "$merged" == "$(jq . "$dest")" ]]; then
+      echo "  skip (already merged): $dest"
+      return
+    fi
+  else
+    merged=$(jq . "$src")
+  fi
+  printf '%s\n' "$merged" > "$dest"
+  echo "  merged: $src -> $dest"
 }
 
 echo "Creating symlinks..."
@@ -38,5 +58,8 @@ link "${DOTFILES_PATH}/.config/gwq" ~/.config/"gwq"
 link "${DOTFILES_PATH}/.config/ghostty" ~/.config/"ghostty"
 link "${DOTFILES_PATH}/.cargo/config" ~/.cargo/"config"
 link "${DOTFILES_PATH}/.ripgreprc" ~/".ripgreprc"
+
+echo "Merging settings..."
+merge_json "${DOTFILES_PATH}/.claude/settings.common.json" ~/.claude/"settings.json"
 
 echo "Dotfiles setup complete!"

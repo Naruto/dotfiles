@@ -34,6 +34,10 @@ Prepend the below section to `~/.gitconfig` file
     path = ~/projects/dotfiles/.gitconfig
 ```
 
+`install.sh` also merges `.claude/settings.common.json` into `~/.claude/settings.json`.
+Keys in the dotfiles win; keys Claude Code writes itself (`/model`, `/config`, `/plugin`, ...) are kept.
+Re-run `./install.sh` after editing the dotfiles side.
+
 Execute the below commands in zsh shell.
 
 ```bash
