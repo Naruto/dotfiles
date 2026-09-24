@@ -376,6 +376,9 @@ set -g history-limit 100000
 # start with mouse mode enabled
 setw -g mouse on
 
+# pass OSC 8 hyperlinks through to Ghostty
+set -as terminal-features ',xterm-ghostty:hyperlinks'
+
 # force Vi mode
 setw -g status-keys vi
 setw -g mode-keys vi
