@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "allow": [
+      "Bash(mkdir *)",
+      "Bash(sort *)",
+      "Bash(rg *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git grep *)",
+      "Bash(git log *)",
+      "Bash(git ls-tree *)",
+      "Bash(git check-ignore *)",
+      "Bash(git show *)",
+      "Bash(cargo test *)",
+      "Bash(cargo check *)",
+      "Bash(cargo build *)",
+      "Bash(cargo fmt *)",
+      "Bash(jq *)",
+      "Bash(ast-grep scan *)",
+      "Bash(ast-grep outline *)",
+      "Bash(npm run *)",
+      "Bash(rtk ls *)",
+      "Bash(rtk wc *)",
+      "Bash(rtk du *)",
+      "Bash(rtk grep *)",
+      "Bash(rtk find *)",
+      "Bash(rtk read *)",
+      "Bash(rtk diff *)",
+      "Bash(rtk rg *)",
+      "Bash(rtk git status *)",
+      "Bash(rtk git diff *)",
+      "Bash(rtk git grep *)",
+      "Bash(rtk git log *)",
+      "Bash(rtk git ls-tree *)",
+      "Bash(rtk git check-ignore *)",
+      "Bash(rtk git show *)",
+      "Bash(rtk jq *)"
+    ],
+    "deny": [
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.gnupg/**)",
+      "Read(.env)"
+    ],
+    "defaultMode": "auto"
+  },
+  "disableRemoteControl": true,
+  "tui": "default",
+  "theme": "auto",
+  "cleanupPeriodDays": 90
+}
