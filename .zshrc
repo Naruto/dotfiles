@@ -5,17 +5,21 @@ typeset -U manpath MANPATH
 # Create cache directory if it doesn't exist
 [[ ! -d ~/.zsh/cache ]] && mkdir -p ~/.zsh/cache
 
+# Write the output of `$@` to ~/.zsh/cache/$1.zsh and set REPLY to that path.
+# The cache is regenerated when the command is newer than it (e.g. after an upgrade).
+function _cache_output() {
+  REPLY=~/.zsh/cache/$1.zsh
+  shift
+  if [[ ! -s $REPLY || ${commands[$1]:-$1} -nt $REPLY ]]; then
+    "$@" >| $REPLY
+  fi
+}
+
 # Cache brew shellenv
 if [[ -x /opt/homebrew/bin/brew ]]; then
-  if [[ ! -f ~/.zsh/cache/brew_shellenv.zsh ]]; then
-    /opt/homebrew/bin/brew shellenv > ~/.zsh/cache/brew_shellenv.zsh
-  fi
-  source ~/.zsh/cache/brew_shellenv.zsh
+  _cache_output brew_shellenv /opt/homebrew/bin/brew shellenv && source $REPLY
 elif [[ -x /usr/local/bin/brew ]]; then
-  if [[ ! -f ~/.zsh/cache/brew_shellenv.zsh ]]; then
-    /usr/local/bin/brew shellenv > ~/.zsh/cache/brew_shellenv.zsh
-  fi
-  source ~/.zsh/cache/brew_shellenv.zsh
+  _cache_output brew_shellenv /usr/local/bin/brew shellenv && source $REPLY
 fi
 
 # Emacs Keybind
@@ -117,7 +121,6 @@ setopt nopromptcr
 unsetopt beep
 setopt combining_chars
 setopt emacs
-unset zle_bracketed_paste
 
 WORDCHARS=${WORDCHARS//[\/]}
 
@@ -140,18 +143,11 @@ fi
 path=("${HOME}/bin" $path)
 path=("${HOME}/.local/bin" $path)
 
-# cask
-path=("${HOME}/.cask/bin" $path)
-
 # Setting Prompt
 if (( $+commands[starship] )); then
   export STARSHIP_CONFIG=${HOME}/.starship/config.toml
   export STARSHIP_CACHE=${HOME}/.starship/cache
-  
-  if [[ ! -f ~/.zsh/cache/starship_init.zsh ]]; then
-    starship init zsh > ~/.zsh/cache/starship_init.zsh
-  fi
-  source ~/.zsh/cache/starship_init.zsh
+  _cache_output starship_init starship init zsh && source $REPLY
 else
   export PROMPT='[$HOST %c]%(!.#.%%) '
 fi
@@ -163,10 +159,7 @@ fi
 
 # gh command
 if (( $+commands[gh] )); then
-  if [[ ! -f ~/.zsh/cache/gh_completion.zsh ]]; then
-    gh completion -s zsh > ~/.zsh/cache/gh_completion.zsh
-  fi
-  source ~/.zsh/cache/gh_completion.zsh
+  _cache_output gh_completion gh completion -s zsh && source $REPLY
 fi
 
 # Setting alias
@@ -246,7 +239,7 @@ export ANDROID_SDK_ROOT=${ANDROID_SDK}
 export ANDROID_HOME=${ANDROID_SDK}
 export ANDROID_NDK_HOME=${ANDROID_NDK}
 
-path=(${ANDROID_SDK}/tools ${ANDROID_SDK}/platform-tools ${ANDROID_NDK} $path)
+path=(${ANDROID_SDK}/cmdline-tools/latest/bin ${ANDROID_SDK}/platform-tools ${ANDROID_NDK} $path)
 if [[ -d ${ANDROID_SDK}/build-tools ]]; then
     local build_tools=(${ANDROID_SDK}/build-tools/*(/Nn))
     if [[ ${#build_tools} -gt 0 ]]; then
@@ -267,16 +260,12 @@ export SCCACHE_CACHE_MULTIARCH="1"
 # rbenv
 path=("${HOME}/.rbenv/bin" $path)
 if (( $+commands[rbenv] )); then
-  if [[ ! -f ~/.zsh/cache/rbenv_init.zsh ]]; then
-    rbenv init - > ~/.zsh/cache/rbenv_init.zsh
-  fi
-  source ~/.zsh/cache/rbenv_init.zsh
+  _cache_output rbenv_init rbenv init - && source $REPLY
 fi
 
 # go
 export GOPATH=${HOME}/go
-export GOROOT=${LOCAL_PREFIX}/opt/go/libexec
-path=("${GOPATH}/bin" "${GOROOT}/bin" $path)
+path=("${GOPATH}/bin" $path)
 
 # rust
 [[ -d "${LOCAL_PREFIX}/opt/rustup/bin" ]] && path=("${LOCAL_PREFIX}/opt/rustup/bin" $path)
@@ -293,10 +282,7 @@ path=("${GOPATH}/bin" "${GOROOT}/bin" $path)
 
 # fzf
 if (( $+commands[fzf] )); then
-  if [[ ! -f ~/.zsh/cache/fzf_init.zsh ]]; then
-    fzf --zsh > ~/.zsh/cache/fzf_init.zsh
-  fi
-  source ~/.zsh/cache/fzf_init.zsh
+  _cache_output fzf_init fzf --zsh && source $REPLY
   export FZF_DEFAULT_COMMAND='fd -HL --exclude ".git"'
   export FZF_CTRL_T_COMMAND='fd -HL --exclude ".git" --type f'
   export FZF_ALT_C_COMMAND='fd -HL --exclude ".git" --type d'
@@ -308,7 +294,7 @@ function ghq-fzf() {
   local target_dir=$(ghq list -p | fzf --query="$LBUFFER")
 
   if [[ -n "$target_dir" ]]; then
-    BUFFER="cd ${target_dir}"
+    BUFFER="cd ${(q)target_dir}"
     zle accept-line
   fi
 
@@ -318,11 +304,8 @@ zle -N ghq-fzf
 bindkey "^]" ghq-fzf
 
 # zoxide
-if (( $+commands[zoxide] )); then    
-    if [[ ! -f ~/.zsh/cache/zoxide_init.zsh ]]; then
-      zoxide init zsh > ~/.zsh/cache/zoxide_init.zsh
-    fi
-    source ~/.zsh/cache/zoxide_init.zsh
+if (( $+commands[zoxide] )); then
+    _cache_output zoxide_init zoxide init zsh && source $REPLY
 
     function zi_() {
       BUFFER="zi"
@@ -377,10 +360,7 @@ function lg() {
 
 # 1password
 if (( $+commands[op] )); then
-  if [[ ! -f ~/.zsh/cache/op_completion.zsh ]]; then
-    op completion zsh > ~/.zsh/cache/op_completion.zsh
-  fi
-  source ~/.zsh/cache/op_completion.zsh
+  _cache_output op_completion op completion zsh && source $REPLY
   compdef _op op
 fi
 
@@ -399,7 +379,4 @@ export RTK_TELEMETRY_DISABLED=1
 
 # local .zshrc
 if [[ -f "${HOME}/.zshrc.local" ]]; then source "${HOME}/.zshrc.local"; fi
-
-# Unity CLI
-. ~/.unity/env
 
