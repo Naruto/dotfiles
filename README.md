@@ -15,7 +15,6 @@ brew install git emacs tmux zsh eza bat less moor lstr
 brew install cmake ghq gh fzf git-delta git-absorb rg fd ast-grep gradle yazi lazygit
 brew install starship zoxide rustup-init mdcat bottom
 brew install sd hexyl
-brew install d-kuro/tap/gwq
 rustup-init
 ```
 
