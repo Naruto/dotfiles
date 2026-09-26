@@ -275,6 +275,7 @@ path=("${GOPATH}/bin" $path)
 [[ -f "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh" ]] && source "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh"
 
 # zsh suggestion
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 [[ -f "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ]] && source "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 # fast syntax highlighting
