@@ -8,7 +8,6 @@ echo "Setting up dotfiles..."
 
 mkdir -p ~/projects
 mkdir -p ~/.config
-mkdir -p ~/.cargo
 mkdir -p ~/.claude
 
 link() {
@@ -74,7 +73,6 @@ link "${DOTFILES_PATH}/.config/yazi" ~/.config/"yazi"
 link "${DOTFILES_PATH}/.config/bat" ~/.config/"bat"
 link "${DOTFILES_PATH}/.config/zsh-abbr" ~/.config/"zsh-abbr"
 link "${DOTFILES_PATH}/.config/ghostty" ~/.config/"ghostty"
-link "${DOTFILES_PATH}/.cargo/config" ~/.cargo/"config"
 link "${DOTFILES_PATH}/.ripgreprc" ~/".ripgreprc"
 
 echo "Merging settings..."
