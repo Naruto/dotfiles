@@ -7,3 +7,6 @@
 [submodule ".zsh/zsh-abbr"]
 	path = .zsh/zsh-abbr
 	url = https://github.com/olets/zsh-abbr.git
+[submodule ".zsh/fzf-tab"]
+	path = .zsh/fzf-tab
+	url = https://github.com/Aloxaf/fzf-tab.git

@@ -271,6 +271,13 @@ path=("${GOPATH}/bin" $path)
 [[ -d "${LOCAL_PREFIX}/opt/rustup/bin" ]] && path=("${LOCAL_PREFIX}/opt/rustup/bin" $path)
 [[ -d "${HOME}/.cargo/bin" ]] && path=("${HOME}/.cargo/bin" $path)
 
+# fzf-tab: after compinit, before the plugins below that wrap widgets
+if (( $+commands[fzf] )) && [[ -f "${HOME}/.zsh/fzf-tab/fzf-tab.plugin.zsh" ]]; then
+  source "${HOME}/.zsh/fzf-tab/fzf-tab.plugin.zsh"
+  # let fzf-tab take the unambiguous prefix instead of zsh's own menu
+  zstyle ':completion:*' menu no
+fi
+
 # zsh abbr
 [[ -f "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh" ]] && source "${HOME}/.zsh/zsh-abbr/zsh-abbr.plugin.zsh"
 
