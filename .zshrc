@@ -211,7 +211,7 @@ fi
 # Claude Code
 if [[ -n $CLAUDECODE ]]; then
   unalias rm ls cat rg 2>/dev/null
-  setopt clobber
+  setopt clobber sh_word_split
   unsetopt equals nomatch
 fi
 
@@ -244,6 +244,7 @@ export ANDROID_NDK_ROOT=${ANDROID_NDK}
 export NDK_ROOT=${ANDROID_NDK}
 export ANDROID_SDK_ROOT=${ANDROID_SDK}
 export ANDROID_HOME=${ANDROID_SDK}
+export ANDROID_AVD_HOME=${XDG_CONFIG_HOME}/.android/avd
 export ANDROID_NDK_HOME=${ANDROID_NDK}
 
 path=(${ANDROID_SDK}/cmdline-tools/latest/bin ${ANDROID_SDK}/platform-tools ${ANDROID_NDK} $path)
