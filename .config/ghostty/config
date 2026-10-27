@@ -43,6 +43,7 @@
 # resize-overlay-duration = 4s 200ms
 font-size = 12
 font-family = JetBrainsMonoNL Nerd Font Mono
+font-family = BIZ UDGothic
 font-feature = -dlig
 
 font-thicken = true
