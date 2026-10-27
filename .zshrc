@@ -208,13 +208,6 @@ if (( $+commands[btm] )); then
   alias top="btm"
 fi
 
-# Claude Code
-if [[ -n $CLAUDECODE ]]; then
-  unalias rm ls cat rg 2>/dev/null
-  setopt clobber sh_word_split
-  unsetopt equals nomatch
-fi
-
 # case ${OSTYPE} in
 #  linux*)
 #    alias open=xdg-open
@@ -392,6 +385,13 @@ function refresh-cache() {
 }
 
 export RTK_TELEMETRY_DISABLED=1
+
+# Claude Code
+if [[ -n $CLAUDECODE ]]; then
+  unalias rm ls cat rg 2>/dev/null
+  setopt clobber sh_word_split
+  unsetopt equals nomatch glob_dots
+fi
 
 # local .zshrc
 if [[ -f "${HOME}/.zshrc.local" ]]; then source "${HOME}/.zshrc.local"; fi
