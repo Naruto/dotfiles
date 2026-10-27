@@ -208,6 +208,13 @@ if (( $+commands[btm] )); then
   alias top="btm"
 fi
 
+# Claude Code
+if [[ -n $CLAUDECODE ]]; then
+  unalias rm ls cat rg 2>/dev/null
+  setopt clobber
+  unsetopt equals
+fi
+
 # case ${OSTYPE} in
 #  linux*)
 #    alias open=xdg-open
