@@ -212,7 +212,7 @@ fi
 if [[ -n $CLAUDECODE ]]; then
   unalias rm ls cat rg 2>/dev/null
   setopt clobber
-  unsetopt equals
+  unsetopt equals nomatch
 fi
 
 # case ${OSTYPE} in
