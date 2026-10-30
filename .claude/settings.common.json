@@ -45,12 +45,14 @@
       "Read(~/.ssh/**)",
       "Read(~/.aws/**)",
       "Read(~/.gnupg/**)",
-      "Read(.env)"
+      "Read(.env)",
+      "Read(~/Downloads/**/CLAUDE.md)",
+      "Read(~/Downloads/**/AGENTS.md)"
     ],
     "defaultMode": "auto"
   },
   "disableRemoteControl": true,
   "tui": "default",
   "theme": "auto",
-  "cleanupPeriodDays": 90
+  "cleanupPeriodDays": 60
 }
