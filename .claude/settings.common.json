@@ -54,5 +54,6 @@
   "disableRemoteControl": true,
   "tui": "default",
   "theme": "auto",
-  "cleanupPeriodDays": 60
+  "cleanupPeriodDays": 60,
+  "claudeMdExcludes": ["**/Downloads/**"]
 }
